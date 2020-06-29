@@ -19,6 +19,25 @@ Feel free to leave any feedback [here](https://github.com/jorgefspereira/persona
 
 Add `persona_flutter` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
+### iOS
+
+You need to add the following key to your `ios/Runner/Info.plist`:
+
+```xml
+<key>NSCameraUsageDescription</key>
+<string>Can I use the camera please?</string>
+```
+
+**Note:** iOS 11.0 or later is required.
+
+### Android
+
+Change the minimum Android sdk version to 21 (or higher) in your `android/app/build.gradle` file.
+
+```
+minSdkVersion 21
+```
+
 ## TODOs
 
 - [ ] Support for replacement strings customization
