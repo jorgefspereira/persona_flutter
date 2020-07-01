@@ -54,7 +54,10 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                                                       theme: nil);
                     }
                     else {
-                        config = InquiryConfiguration(templateId: templateId!);
+                        config = InquiryConfiguration(templateId: templateId!,
+                                                      environment: env,
+                                                      note: note,
+                                                      theme: nil);
                     }
                 }
                 
