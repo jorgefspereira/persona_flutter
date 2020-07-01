@@ -1,3 +1,7 @@
+## 1.0.2
+
+* Bug fix: environment not passed when inquiry initiated with template id. 
+
 ## 1.0.1
 
 * Changed integration guide.
