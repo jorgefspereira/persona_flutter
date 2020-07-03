@@ -126,7 +126,7 @@ class Inquiry {
   }
 
   /// Helper method to parse map of attributes
-  InquiryAttributes _parseAttributes(Map<String, String> attributes) {
+  InquiryAttributes _parseAttributes(dynamic attributes) {
     return InquiryAttributes(
       firstName: attributes["firstName"],
       middleName: attributes["middleName"],
@@ -143,7 +143,7 @@ class Inquiry {
 
   /// Helper method to parse array of relationships
   InquiryRelationships _parseRelationships(
-    List<Map<String, String>> relationships,
+    dynamic relationships,
   ) {
     List<InquiryVerification> verifications = [];
 

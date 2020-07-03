@@ -73,7 +73,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         let attributesMap = attributesToMap(attributes: attributes);
         let relationshipsArray = relationshipsToArray(relationships: relationships);
         
-        self.channel.invokeMethod("onSuccess", arguments: ["attributes" : attributesMap, "relationships": relationshipsArray])
+        self.channel.invokeMethod("onSuccess", arguments: ["inquiryId": inquiryId, "attributes" : attributesMap, "relationships": relationshipsArray])
     }
 
     public func inquiryCancelled() {
@@ -84,7 +84,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         let attributesMap = attributesToMap(attributes: attributes);
         let relationshipsArray = relationshipsToArray(relationships: relationships);
         
-        self.channel.invokeMethod("onFailed", arguments: ["attributes" : attributesMap, "relationships": relationshipsArray])
+        self.channel.invokeMethod("onFailed", arguments: ["inquiryId": inquiryId, "attributes" : attributesMap, "relationships": relationshipsArray])
     }
 
     public func inquiryError(_ error: Error) {
