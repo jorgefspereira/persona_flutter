@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Updated Persona SDK to version 0.11.0
+
 ## 1.0.3
 
 * Bug fix: onSuccess and onFailed not being called correctly
