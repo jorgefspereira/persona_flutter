@@ -94,7 +94,8 @@ class Inquiry {
           InquiryRelationships relationships = _parseRelationships(
             call.arguments['relationships'],
           );
-          this.onSuccess(call.arguments['inquiryId'], attributes, relationships);
+          this.onSuccess(
+              call.arguments['inquiryId'], attributes, relationships);
         }
         return null;
 
@@ -122,7 +123,8 @@ class Inquiry {
         }
         return null;
     }
-    throw MissingPluginException('${call.method} was invoked but has no handler');
+    throw MissingPluginException(
+        '${call.method} was invoked but has no handler');
   }
 
   /// Helper method to parse map of attributes
@@ -148,7 +150,8 @@ class Inquiry {
     List<InquiryVerification> verifications = [];
 
     for (var item in relationships) {
-      verifications.add(InquiryVerification(id: item["id"], status: item["status"]));
+      verifications
+          .add(InquiryVerification(id: item["id"], status: item["status"]));
     }
 
     return InquiryRelationships(verifications: verifications);
@@ -164,7 +167,8 @@ class Inquiry {
         'inquiryId': inquiryId,
         'accountId': accountId,
         'referenceId': referenceId,
-        'environment': environment != null ? environment.toString().split('.').last : null,
+        'environment':
+            environment != null ? environment.toString().split('.').last : null,
         'note': note,
       },
     );
