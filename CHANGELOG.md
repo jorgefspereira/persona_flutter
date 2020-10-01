@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Updated Persona SDK to version 1.0.0
+
 ## 1.0.5
 
 * Updated Persona SDK to version 0.12.4

@@ -47,5 +47,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.withpersona.sdk:inquiry:0.12.4"
+    implementation "com.withpersona.sdk:inquiry:1.0.0"
 }
