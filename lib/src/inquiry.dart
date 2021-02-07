@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
-import 'constants.dart';
-import 'interface.dart';
+import 'package:persona_flutter/src/fields.dart';
+import 'enums.dart';
+import 'attributes.dart';
+import 'relationships.dart';
 
 /// A function-type description for onSuccess callback
 typedef void SuccessCallback(
@@ -28,11 +30,13 @@ class Inquiry {
   /// The Persona Inquiry verification flow is initiated with an configuration which
   /// can be initialized with either a templateId or an inquiryId.
   Inquiry({
-    this.templateId,
     this.inquiryId,
+    this.accessToken,
+    this.templateId,
     this.referenceId,
     this.accountId,
     this.environment,
+    this.fields,
     this.note,
     this.onSuccess,
     this.onCancelled,
@@ -43,11 +47,14 @@ class Inquiry {
     _channel.setMethodCallHandler(_onMethodCall);
   }
 
-  /// An existing template that determines how the flow is customized.
-  final String templateId;
-
   /// An existing inquiry.
   final String inquiryId;
+
+  /// accessToken 
+  final String accessToken;
+
+  /// An existing template that determines how the flow is customized.
+  final String templateId;
 
   /// The account to associate this inquiry with. The account can be used to monitor user progress in newly created inquiries.
   final String accountId;
@@ -55,11 +62,15 @@ class Inquiry {
   /// The identifier can be used to monitor user progress in newly created inquiries.
   final String referenceId;
 
+  /// Any existing user data you want to attach to the inquiry.
+  final InquiryFields fields;
+
   /// Any string you want for your own bookkeeping.
   final String note;
 
   /// The environment on which to create inquiries.
-  final PersonaEnvironment environment;
+  final InquiryEnvironment environment;
+
 
   /// The [MethodChannel] over which this class communicates.
   final MethodChannel _channel;
@@ -88,12 +99,9 @@ class Inquiry {
     switch (call.method) {
       case 'onSuccess':
         if (this.onSuccess != null) {
-          InquiryAttributes attributes = _parseAttributes(
-            call.arguments['attributes'],
-          );
-          InquiryRelationships relationships = _parseRelationships(
-            call.arguments['relationships'],
-          );
+          InquiryAttributes attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
+          InquiryRelationships relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
+          
           this.onSuccess(
               call.arguments['inquiryId'], attributes, relationships);
         }
@@ -107,12 +115,9 @@ class Inquiry {
 
       case 'onFailed':
         if (this.onFailed != null) {
-          InquiryAttributes attributes = _parseAttributes(
-            call.arguments['attributes'],
-          );
-          InquiryRelationships relationships = _parseRelationships(
-            call.arguments['relationships'],
-          );
+          InquiryAttributes attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
+          InquiryRelationships relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
+
           this.onFailed(call.arguments['inquiryId'], attributes, relationships);
         }
         return null;
@@ -127,36 +132,6 @@ class Inquiry {
         '${call.method} was invoked but has no handler');
   }
 
-  /// Helper method to parse map of attributes
-  InquiryAttributes _parseAttributes(dynamic attributes) {
-    return InquiryAttributes(
-      firstName: attributes["firstName"],
-      middleName: attributes["middleName"],
-      lastName: attributes["lastName"],
-      street1: attributes["street1"],
-      street2: attributes["street2"],
-      city: attributes["city"],
-      subdivision: attributes["subdivision"],
-      postalCode: attributes["postalCode"],
-      countryCode: attributes["countryCode"],
-      birthdate: DateTime.parse(attributes["birthdate"]),
-    );
-  }
-
-  /// Helper method to parse array of relationships
-  InquiryRelationships _parseRelationships(
-    dynamic relationships,
-  ) {
-    List<InquiryVerification> verifications = [];
-
-    for (var item in relationships) {
-      verifications
-          .add(InquiryVerification(id: item["id"], status: item["status"]));
-    }
-
-    return InquiryRelationships(verifications: verifications);
-  }
-
   /// This starts the Inquiry flow and takes control of the user interface.
   /// Once the flow completes, the control of the user interface is returned to the app and the appropriate callbacks are called.
   void start() {
@@ -164,11 +139,12 @@ class Inquiry {
       'start',
       <String, dynamic>{
         'templateId': templateId,
+        'accesstoken': accessToken,
         'inquiryId': inquiryId,
         'accountId': accountId,
         'referenceId': referenceId,
-        'environment':
-            environment != null ? environment.toString().split('.').last : null,
+        'environment': environment != null ? environment.toString().split('.').last : null,
+        'fields': fields?.toJson(),
         'note': note,
       },
     );

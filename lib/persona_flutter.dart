@@ -1,3 +1,6 @@
-export 'src/constants.dart';
-export 'src/interface.dart';
+export 'src/enums.dart';
+export 'src/attributes.dart';
 export 'src/inquiry.dart';
+export 'src/verifications.dart';
+export 'src/relationships.dart';
+export 'src/fields.dart';
