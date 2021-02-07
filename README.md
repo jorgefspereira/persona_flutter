@@ -1,6 +1,9 @@
 # Persona Inquiry for Flutter
 
 [![pub](https://img.shields.io/pub/v/persona_flutter.svg)](https://pub.dev/packages/persona_flutter)
+[![points](https://badges.bar/persona_flutter/pub%20points)](https://pub.dev/packages/persona_flutter)
+[![popularity](https://badges.bar/persona_flutter/popularity)](https://pub.dev/packages/persona_flutter)
+[![likes](https://badges.bar/persona_flutter/likes)](https://pub.dev/packages/persona_flutter)
 [![donate](https://img.shields.io/badge/Buy%20me%20a%20beer-orange.svg)](https://www.buymeacoffee.com/jpereira)
 
 Native implementation of the [Persona Inquiry flow](https://docs.withpersona.com/docs) for Flutter.
@@ -22,10 +25,13 @@ You need to add the following key to your `ios/Runner/Info.plist`:
 
 ```xml
 <key>NSCameraUsageDescription</key>
-<string>Can I use the camera please?</string>
+<string>This app requires access to the camera.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app requires access to the photo library.</string>
 ```
 
 #### Requirements
+
 - iOS 11.0 or later is required.
 - Cocoapods 1.9.3 has a bug that prevents builds from selecting the correct architecture. See more details [here.](https://github.com/CocoaPods/CocoaPods/pull/9790) Please downgrade to 1.8.x or upgrade to 1.10.x
 
@@ -39,6 +45,5 @@ minSdkVersion 21
 
 ## TODOs
 
-- [ ] Support for replacement strings customization
-- [ ] Support for custom styling
-- [ ] Implement tests
+- Support for replacement strings customization
+- Support for custom styling
