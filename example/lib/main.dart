@@ -19,10 +19,29 @@ class _MyAppState extends State<MyApp> {
 
     _inquiry = Inquiry(
       templateId: "TEMPLATE_ID",
-      environment: PersonaEnvironment.sandbox,
+      environment: InquiryEnvironment.sandbox,
+      fields: InquiryFields(name: InquiryName(first: "John", middle: "Apple" ,last: "Seed")),
       onSuccess: (String inquiryId, InquiryAttributes attributes, InquiryRelationships relationships) {
         print("onSuccess");
         print("- inquiryId: $inquiryId");
+        print("- attributes:");
+        print("--- name_first: ${attributes.name.first}");
+        print("--- name_middle: ${attributes.name.middle}");
+        print("--- name_last: ${attributes.name.last}");
+        print("--- address_street1: ${attributes.address.street1}");
+        print("--- address_street2: ${attributes.address.street2}");
+        print("--- address_city: ${attributes.address.city}");
+        print("--- address_postalCode: ${attributes.address.postalCode}");
+        print("--- address_countryCode: ${attributes.address.countryCode}");
+        print("--- address_subdivision: ${attributes.address.subdivision}");
+        print("--- address_subdivisionAbbr: ${attributes.address.subdivisionAbbr}");
+        print("- relationships:");
+
+        for(var item in relationships.verifications) {
+          print("--- id: ${item.id}");
+          print("--- status: ${item.status}");
+          print("--- type: ${item.type}");
+        }
       },
       onCancelled: () {
         print("onCancelled");
