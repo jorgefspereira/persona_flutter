@@ -20,60 +20,111 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
             case "start":
                 let controller = UIApplication.shared.keyWindow!.rootViewController!
                 let arguments = call.arguments as! NSDictionary
-                let templateId = arguments.value(forKey: "templateId") as? String
-                let inquiryId = arguments.value(forKey: "inquiryId") as? String
-                let referenceId = arguments.value(forKey: "referenceId") as? String
-                let accountId = arguments.value(forKey: "accountId") as? String
-                let environment = arguments.value(forKey: "environment") as? String
-                let note = arguments.value(forKey: "note") as? String
+                
+                // input values
+                let templateIdInput = arguments.value(forKey: "templateId") as? String
+                let inquiryIdInput = arguments.value(forKey: "inquiryId") as? String
+                let accessTokenInput = arguments.value(forKey: "accessToken") as? String
+                let referenceIdInput = arguments.value(forKey: "referenceId") as? String
+                let accountIdInput = arguments.value(forKey: "accountId") as? String
+                let noteInput = arguments.value(forKey: "note") as? String
                 
                 var config: InquiryConfiguration?
-                var env: Environment?
-                                
-                if environment != nil {
-                    env = Environment.init(rawValue: environment!)
-                    
+                var environment: Environment?
+                var fields: Fields?
+                
+                // Environment raw value parse
+                if let env = arguments.value(forKey: "environment") as? String {
+                    environment = Environment.init(rawValue: env)
                 }
                 
-                if inquiryId != nil {
-                    config = InquiryConfiguration(inquiryId: inquiryId!);
+                // Build Fields
+                if let fieldsDict = arguments.value(forKey: "fields") as? Dictionary<String, Any> {
+                    
+                    var name: Name?
+                    var address: Address?
+                    var birthdate: Date?
+                    let phoneNumber = fieldsDict["phoneNumber"] as? String;
+                    let emailAddress = fieldsDict["emailAddress"] as? String;
+                    
+                    if let birthdateString = fieldsDict["birthdate"] as? String {
+                        birthdate = dateFormatter().date(from: birthdateString);
+                    }
+                    
+                    if let nameDict = fieldsDict["name"] as? Dictionary<String, String> {
+                        name = Name.init(first: nameDict["first"],
+                                         middle: nameDict["middle"],
+                                         last: nameDict["last"]);
+                    }
+                    
+                    if let addressDict = fieldsDict["address"] as? Dictionary<String, String> {
+                        address = Address.init(street1: addressDict["street1"],
+                                               street2: addressDict["street2"],
+                                               city: addressDict["city"],
+                                               subdivision: addressDict["subdivision"],
+                                               subdivisionAbbr: addressDict["subdivisionAbbr"],
+                                               postalCode: addressDict["postalCode"],
+                                               countryCode: addressDict["countryCode"]);
+                    }
+                    
+                    fields = Fields.init(name: name,
+                                         address: address,
+                                         birthdate: birthdate,
+                                         phoneNumber: phoneNumber,
+                                         emailAddress: emailAddress,
+                                         additionalFields: nil);
                 }
-                else if templateId != nil {
-                    if accountId != nil {
-                        config = InquiryConfiguration(templateId: templateId!,
-                                                      accountId: accountId!,
-                                                      environment: env,
-                                                      note: note,
+                
+                // Configuration
+                if let inquiryId = inquiryIdInput {
+                    config = InquiryConfiguration(inquiryId: inquiryId,
+                                                accessToken: accessTokenInput,
+                                                      theme: nil);
+                }
+                else if let templateId = templateIdInput {
+                    if let accountId = accountIdInput {
+                        config = InquiryConfiguration(templateId: templateId,
+                                                      accountId: accountId,
+                                                      environment: environment,
+                                                      note: noteInput,
+                                                      fields: fields,
                                                       theme: nil);
                     }
-                    else if referenceId != nil {
-                        config = InquiryConfiguration(templateId: templateId!,
-                                                      referenceId: referenceId!,
-                                                      environment: env,
-                                                      note: note,
+                    else if let referenceId = referenceIdInput {
+                        config = InquiryConfiguration(templateId: templateId,
+                                                      referenceId: referenceId,
+                                                      environment: environment,
+                                                      note: noteInput,
+                                                      fields: fields,
                                                       theme: nil);
                     }
                     else {
-                        config = InquiryConfiguration(templateId: templateId!,
-                                                      environment: env,
-                                                      note: note,
+                        config = InquiryConfiguration(templateId: templateId,
+                                                      environment: environment,
+                                                      note: noteInput,
+                                                      fields: fields,
                                                       theme: nil);
                     }
                 }
                 
-                if config != nil {
-                    Inquiry.init(config: config!, delegate: self).start(from: controller)
+                // Launch Inquiry
+                if let configuration = config {
+                    Inquiry.init(config: configuration, delegate: self).start(from: controller)
                 }
             default:
                 result(FlutterMethodNotImplemented)
         }
     }
 
+    //MARK:- InquiryDelegate
+    
     public func inquirySuccess(inquiryId: String, attributes: Attributes, relationships:Relationships) {
         let attributesMap = attributesToMap(attributes: attributes);
-        let relationshipsArray = relationshipsToArray(relationships: relationships);
+        let relationshipsArray = relationshipsToArrayMap(relationships: relationships);
         
-        self.channel.invokeMethod("onSuccess", arguments: ["inquiryId": inquiryId, "attributes" : attributesMap, "relationships": relationshipsArray])
+        self.channel.invokeMethod("onSuccess", arguments: ["inquiryId": inquiryId,
+                                                           "attributes" : attributesMap,
+                                                           "relationships": relationshipsArray])
     }
 
     public func inquiryCancelled() {
@@ -82,41 +133,70 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
 
     public func inquiryFailed(inquiryId: String, attributes: Attributes, relationships:Relationships) {
         let attributesMap = attributesToMap(attributes: attributes);
-        let relationshipsArray = relationshipsToArray(relationships: relationships);
+        let relationshipsArray = relationshipsToArrayMap(relationships: relationships);
         
-        self.channel.invokeMethod("onFailed", arguments: ["inquiryId": inquiryId, "attributes" : attributesMap, "relationships": relationshipsArray])
+        self.channel.invokeMethod("onFailed", arguments: ["inquiryId": inquiryId,
+                                                          "attributes" : attributesMap,
+                                                          "relationships": relationshipsArray])
     }
 
     public func inquiryError(_ error: Error) {
         self.channel.invokeMethod("onError", arguments: ["error" : error.localizedDescription]);
     }
     
-    func attributesToMap(attributes: Attributes) -> [String: String?] {
+    //MARK:- Convert Functions
+    
+    func attributesToMap(attributes: Attributes) -> [String: Any] {
         let name = attributes.name;
         let address = attributes.address;
         
-        var result = ["firstName": name?.first, "middleName": name?.middle, "lastName": name?.last,
-                      "street1" : address?.street1, "street2" : address?.street2, "city" : address?.city,
-                      "subdivision" : address?.subdivision, "postalCode" : address?.postalCode,
-                      "countryCode" : address?.countryCode]
+        let resultName = ["first": name?.first, "middle": name?.middle, "last": name?.last];
+        let resultAddress = ["street1" : address?.street1, "street2" : address?.street2, "city" : address?.city,
+                             "subdivision" : address?.subdivision, "subdivisionAbbr": address?.subdivisionAbbr, "postalCode" : address?.postalCode,
+                             "countryCode" : address?.countryCode]
+        
+        var result: [String: Any] = ["name": resultName, "address" : resultAddress];
         
         if let birthdate = attributes.birthdate {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
-            result["birthdate"] = formatter.string(from: birthdate);
+            result["birthdate"] = dateFormatter().string(from: birthdate);
         }
         
         return result
     }
     
-    func relationshipsToArray(relationships: Relationships) -> [[String: String?]] {
-        var result = [[String:String?]]();
+    func relationshipsToArrayMap(relationships: Relationships) -> [[String: Any?]] {
+        var result = [[String:Any?]]();
         
         for verification in relationships.verifications {
-            result.append(["id": verification.id, "status": "\(verification.status)" ])
+            var type: String?
+            
+            switch(verification) {
+                case is GovernmentIdVerification:
+                    type = "governmentId";
+                case is SelfieVerification:
+                    type = "selfie";
+                case is PhoneNumberVerification:
+                    type = "phoneNumber";
+                case is DatabaseVerification:
+                    type = "database";
+                case is DocumentVerification:
+                    type = "document";
+                default:
+                    break;
+
+            }
+            
+            result.append(["id": verification.id, "status": "\(verification.status)", "type": type ])
         }
         
         return result;
     }
     
+    //MARK:- Helpers
+    
+    func dateFormatter() -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+        return formatter;
+    }
 }
