@@ -1,5 +1,3 @@
-import 'package:persona_flutter/src/inquiry.dart';
-
 import 'verifications.dart';
 
 /// Individual components that are collected through the Inquiry
