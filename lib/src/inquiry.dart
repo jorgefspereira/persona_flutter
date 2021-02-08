@@ -50,7 +50,7 @@ class Inquiry {
   /// An existing inquiry.
   final String inquiryId;
 
-  /// accessToken 
+  /// accessToken
   final String accessToken;
 
   /// An existing template that determines how the flow is customized.
@@ -70,7 +70,6 @@ class Inquiry {
 
   /// The environment on which to create inquiries.
   final InquiryEnvironment environment;
-
 
   /// The [MethodChannel] over which this class communicates.
   final MethodChannel _channel;
@@ -99,9 +98,11 @@ class Inquiry {
     switch (call.method) {
       case 'onSuccess':
         if (this.onSuccess != null) {
-          InquiryAttributes attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
-          InquiryRelationships relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
-          
+          InquiryAttributes attributes =
+              InquiryAttributes.fromJson(call.arguments['attributes']);
+          InquiryRelationships relationships =
+              InquiryRelationships.fromJson(call.arguments['relationships']);
+
           this.onSuccess(
               call.arguments['inquiryId'], attributes, relationships);
         }
@@ -115,8 +116,10 @@ class Inquiry {
 
       case 'onFailed':
         if (this.onFailed != null) {
-          InquiryAttributes attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
-          InquiryRelationships relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
+          InquiryAttributes attributes =
+              InquiryAttributes.fromJson(call.arguments['attributes']);
+          InquiryRelationships relationships =
+              InquiryRelationships.fromJson(call.arguments['relationships']);
 
           this.onFailed(call.arguments['inquiryId'], attributes, relationships);
         }
@@ -143,7 +146,8 @@ class Inquiry {
         'inquiryId': inquiryId,
         'accountId': accountId,
         'referenceId': referenceId,
-        'environment': environment != null ? environment.toString().split('.').last : null,
+        'environment':
+            environment != null ? environment.toString().split('.').last : null,
         'fields': fields?.toJson(),
         'note': note,
       },

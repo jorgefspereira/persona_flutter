@@ -24,17 +24,17 @@ class InquiryVerification {
     InquiryVerificationStatus status;
 
     InquiryVerificationStatus.values.forEach((item) {
-      if(item.toString().split('.').last == json["status"]){
+      if (item.toString().split('.').last == json["status"]) {
         status = item;
       }
     });
 
     InquiryVerificationType.values.forEach((item) {
-      if(item.toString().split('.').last == json["type"]){
+      if (item.toString().split('.').last == json["type"]) {
         type = item;
       }
     });
-  
+
     return InquiryVerification(id: json["id"], status: status, type: type);
   }
 }
