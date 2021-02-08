@@ -1,9 +1,11 @@
 ## 1.1.0
 
 * Upgraded iOS SDK to 1.0.6.
+* Upgraded Android SDK to 1.0.11.
 * Added support for Fields in Inquiry class.
 * Added InquiryVerificationStatus, InquiryVerificationType, InquiryName and InquiryAddress.
 * Changed PersonaEnvironment to InquiryEnvironment.
+
 ## 1.0.6
 
 * Updated Persona SDK to version 1.0.0
