@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
         print("--- address_countryCode: ${attributes.address.countryCode}");
         print("--- address_subdivision: ${attributes.address.subdivision}");
         print("--- address_subdivisionAbbr: ${attributes.address.subdivisionAbbr}");
+        print("--- birthdate: ${attributes.birthdate.toString()}");
         print("- relationships:");
 
         for(var item in relationships.verifications) {
