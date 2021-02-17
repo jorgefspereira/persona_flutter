@@ -1,3 +1,7 @@
+## 1.1.0+1
+
+* Fix intl dependency version
+* Minor fixes
 ## 1.1.0
 
 * Upgraded iOS SDK to 1.0.6.
