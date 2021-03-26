@@ -10,112 +10,184 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         let instance = SwiftPersonaFlutterPlugin(withChannel: channel)
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
-
+    
     init(withChannel channel: FlutterMethodChannel) {
         self.channel = channel;
     }
-
+    
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-            case "start":
-                let controller = UIApplication.shared.keyWindow!.rootViewController!
-                let arguments = call.arguments as! NSDictionary
+        case "start":
+            let controller = UIApplication.shared.keyWindow!.rootViewController!
+            let arguments = call.arguments as! NSDictionary
+            
+            // input values
+            let templateIdInput = arguments.value(forKey: "templateId") as? String
+            let inquiryIdInput = arguments.value(forKey: "inquiryId") as? String
+            let accessTokenInput = arguments.value(forKey: "accessToken") as? String
+            let referenceIdInput = arguments.value(forKey: "referenceId") as? String
+            let accountIdInput = arguments.value(forKey: "accountId") as? String
+            let noteInput = arguments.value(forKey: "note") as? String
+            
+            var config: InquiryConfiguration?
+            var environment: Environment?
+            var fields: Fields?
+            var theme: InquiryTheme?
+            
+            // Environment raw value parse
+            if let env = arguments.value(forKey: "environment") as? String {
+                environment = Environment.init(rawValue: env)
+            }
+            
+            // Build Fields
+            if let fieldsDict = arguments.value(forKey: "fields") as? Dictionary<String, Any> {
                 
-                // input values
-                let templateIdInput = arguments.value(forKey: "templateId") as? String
-                let inquiryIdInput = arguments.value(forKey: "inquiryId") as? String
-                let accessTokenInput = arguments.value(forKey: "accessToken") as? String
-                let referenceIdInput = arguments.value(forKey: "referenceId") as? String
-                let accountIdInput = arguments.value(forKey: "accountId") as? String
-                let noteInput = arguments.value(forKey: "note") as? String
+                var name: Name?
+                var address: Address?
+                var birthdate: Date?
+                let phoneNumber = fieldsDict["phoneNumber"] as? String;
+                let emailAddress = fieldsDict["emailAddress"] as? String;
                 
-                var config: InquiryConfiguration?
-                var environment: Environment?
-                var fields: Fields?
-                
-                // Environment raw value parse
-                if let env = arguments.value(forKey: "environment") as? String {
-                    environment = Environment.init(rawValue: env)
+                if let birthdateString = fieldsDict["birthdate"] as? String {
+                    birthdate = dateFormatter().date(from: birthdateString);
                 }
                 
-                // Build Fields
-                if let fieldsDict = arguments.value(forKey: "fields") as? Dictionary<String, Any> {
-                    
-                    var name: Name?
-                    var address: Address?
-                    var birthdate: Date?
-                    let phoneNumber = fieldsDict["phoneNumber"] as? String;
-                    let emailAddress = fieldsDict["emailAddress"] as? String;
-                    
-                    if let birthdateString = fieldsDict["birthdate"] as? String {
-                        birthdate = dateFormatter().date(from: birthdateString);
-                    }
-                    
-                    if let nameDict = fieldsDict["name"] as? Dictionary<String, String> {
-                        name = Name.init(first: nameDict["first"],
-                                         middle: nameDict["middle"],
-                                         last: nameDict["last"]);
-                    }
-                    
-                    if let addressDict = fieldsDict["address"] as? Dictionary<String, String> {
-                        address = Address.init(street1: addressDict["street1"],
-                                               street2: addressDict["street2"],
-                                               city: addressDict["city"],
-                                               subdivision: addressDict["subdivision"],
-                                               subdivisionAbbr: addressDict["subdivisionAbbr"],
-                                               postalCode: addressDict["postalCode"],
-                                               countryCode: addressDict["countryCode"]);
-                    }
-                    
-                    fields = Fields.init(name: name,
-                                         address: address,
-                                         birthdate: birthdate,
-                                         phoneNumber: phoneNumber,
-                                         emailAddress: emailAddress,
-                                         additionalFields: nil);
+                if let nameDict = fieldsDict["name"] as? Dictionary<String, String> {
+                    name = Name.init(first: nameDict["first"],
+                                     middle: nameDict["middle"],
+                                     last: nameDict["last"]);
                 }
                 
-                // Configuration
-                if let inquiryId = inquiryIdInput {
-                    config = InquiryConfiguration(inquiryId: inquiryId,
-                                                accessToken: accessTokenInput,
-                                                      theme: nil);
-                }
-                else if let templateId = templateIdInput {
-                    if let accountId = accountIdInput {
-                        config = InquiryConfiguration(templateId: templateId,
-                                                      accountId: accountId,
-                                                      environment: environment,
-                                                      note: noteInput,
-                                                      fields: fields,
-                                                      theme: nil);
-                    }
-                    else if let referenceId = referenceIdInput {
-                        config = InquiryConfiguration(templateId: templateId,
-                                                      referenceId: referenceId,
-                                                      environment: environment,
-                                                      note: noteInput,
-                                                      fields: fields,
-                                                      theme: nil);
-                    }
-                    else {
-                        config = InquiryConfiguration(templateId: templateId,
-                                                      environment: environment,
-                                                      note: noteInput,
-                                                      fields: fields,
-                                                      theme: nil);
-                    }
+                if let addressDict = fieldsDict["address"] as? Dictionary<String, String> {
+                    address = Address.init(street1: addressDict["street1"],
+                                           street2: addressDict["street2"],
+                                           city: addressDict["city"],
+                                           subdivision: addressDict["subdivision"],
+                                           subdivisionAbbr: addressDict["subdivisionAbbr"],
+                                           postalCode: addressDict["postalCode"],
+                                           countryCode: addressDict["countryCode"]);
                 }
                 
-                // Launch Inquiry
-                if let configuration = config {
-                    Inquiry.init(config: configuration, delegate: self).start(from: controller)
+                fields = Fields.init(name: name,
+                                     address: address,
+                                     birthdate: birthdate,
+                                     phoneNumber: phoneNumber,
+                                     emailAddress: emailAddress,
+                                     additionalFields: nil);
+            }
+            
+            // Build Theme
+            if let themeDict = arguments.value(forKey: "theme") as? Dictionary<String, Any> {
+                
+                theme = InquiryTheme();
+                
+                // Colors
+                if let backgroundColor = themeDict["backgroundColor"] as? String {
+                    theme?.backgroundColor = UIColor.init(hex: backgroundColor);
                 }
-            default:
-                result(FlutterMethodNotImplemented)
+                if let textFieldBorderColor = themeDict["textFieldBorderColor"] as? String {
+                    theme?.textFieldBorderColor = UIColor.init(hex: textFieldBorderColor);
+                }
+                if let buttonBackgroundColor = themeDict["buttonBackgroundColor"] as? String {
+                    theme?.buttonBackgroundColor = UIColor.init(hex: buttonBackgroundColor);
+                }
+                if let buttonTouchedBackgroundColor = themeDict["buttonTouchedBackgroundColor"] as? String {
+                    theme?.buttonTouchedBackgroundColor = UIColor.init(hex: buttonTouchedBackgroundColor);
+                }
+                if let buttonDisabledBackgroundColor = themeDict["buttonDisabledBackgroundColor"] as? String {
+                    theme?.buttonDisabledBackgroundColor = UIColor.init(hex: buttonDisabledBackgroundColor);
+                }
+                if let closeButtonTintColor = themeDict["closeButtonTintColor"] as? String {
+                    theme?.closeButtonTintColor = UIColor.init(hex: closeButtonTintColor);
+                }
+                if let cancelButtonBackgroundColor = themeDict["cancelButtonBackgroundColor"] as? String {
+                    theme?.cancelButtonBackgroundColor = UIColor.init(hex: cancelButtonBackgroundColor);
+                }
+                if let selectedCellBackgroundColor = themeDict["selectedCellBackgroundColor"] as? String {
+                    theme?.selectedCellBackgroundColor = UIColor.init(hex: selectedCellBackgroundColor);
+                }
+                if let accentColor = themeDict["accentColor"] as? String {
+                    theme?.accentColor = UIColor.init(hex: accentColor);
+                }
+                if let darkPrimaryColor = themeDict["darkPrimaryColor"] as? String {
+                    theme?.darkPrimaryColor = UIColor.init(hex: darkPrimaryColor);
+                }
+                if let primaryColor = themeDict["primaryColor"] as? String {
+                    theme?.primaryColor = UIColor.init(hex: primaryColor);
+                }
+                if let titleTextColor = themeDict["titleTextColor"] as? String {
+                    theme?.titleTextColor = UIColor.init(hex: titleTextColor);
+                }
+                if let bodyTextColor = themeDict["bodyTextColor"] as? String {
+                    theme?.bodyTextColor = UIColor.init(hex: bodyTextColor);
+                }
+                if let formLabelTextColor = themeDict["formLabelTextColor"] as? String {
+                    theme?.formLabelTextColor = UIColor.init(hex: formLabelTextColor);
+                }
+                if let buttonTextColor = themeDict["buttonTextColor"] as? String {
+                    theme?.buttonTextColor = UIColor.init(hex: buttonTextColor);
+                }
+                if let pickerTextColor = themeDict["pickerTextColor"] as? String {
+                    theme?.pickerTextColor = UIColor.init(hex: pickerTextColor);
+                }
+                if let textFieldTextColor = themeDict["textFieldTextColor"] as? String {
+                    theme?.textFieldTextColor = UIColor.init(hex: textFieldTextColor);
+                }
+                if let footnoteTextColor = themeDict["footnoteTextColor"] as? String {
+                    theme?.footnoteTextColor = UIColor.init(hex: footnoteTextColor);
+                }
+                
+                // Corner Radius
+                if let buttonCornerRadius = themeDict["buttonCornerRadius"] as? CGFloat {
+                    theme?.buttonCornerRadius = buttonCornerRadius;
+                }
+                
+                if let textFieldCornerRadius = themeDict["textFieldCornerRadius"] as? CGFloat {
+                    theme?.textFieldCornerRadius = textFieldCornerRadius;
+                }
+            }
+            
+            // Configuration
+            if let inquiryId = inquiryIdInput {
+                config = InquiryConfiguration(inquiryId: inquiryId,
+                                              accessToken: accessTokenInput,
+                                              theme: theme);
+            }
+            else if let templateId = templateIdInput {
+                if let accountId = accountIdInput {
+                    config = InquiryConfiguration(templateId: templateId,
+                                                  accountId: accountId,
+                                                  environment: environment,
+                                                  note: noteInput,
+                                                  fields: fields,
+                                                  theme: theme);
+                }
+                else if let referenceId = referenceIdInput {
+                    config = InquiryConfiguration(templateId: templateId,
+                                                  referenceId: referenceId,
+                                                  environment: environment,
+                                                  note: noteInput,
+                                                  fields: fields,
+                                                  theme: theme);
+                }
+                else {
+                    config = InquiryConfiguration(templateId: templateId,
+                                                  environment: environment,
+                                                  note: noteInput,
+                                                  fields: fields,
+                                                  theme: theme);
+                }
+            }
+            
+            // Launch Inquiry
+            if let configuration = config {
+                Inquiry.init(config: configuration, delegate: self).start(from: controller)
+            }
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
-
+    
     //MARK:- InquiryDelegate
     
     public func inquirySuccess(inquiryId: String, attributes: Attributes, relationships:Relationships) {
@@ -126,11 +198,11 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                                                            "attributes" : attributesMap,
                                                            "relationships": relationshipsArray])
     }
-
+    
     public func inquiryCancelled() {
         self.channel.invokeMethod("onCancelled", arguments: nil);
     }
-
+    
     public func inquiryFailed(inquiryId: String, attributes: Attributes, relationships:Relationships) {
         let attributesMap = attributesToMap(attributes: attributes);
         let relationshipsArray = relationshipsToArrayMap(relationships: relationships);
@@ -139,7 +211,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                                                           "attributes" : attributesMap,
                                                           "relationships": relationshipsArray])
     }
-
+    
     public func inquiryError(_ error: Error) {
         self.channel.invokeMethod("onError", arguments: ["error" : error.localizedDescription]);
     }
@@ -171,19 +243,19 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
             var type: String?
             
             switch(verification) {
-                case is GovernmentIdVerification:
-                    type = "governmentId";
-                case is SelfieVerification:
-                    type = "selfie";
-                case is PhoneNumberVerification:
-                    type = "phoneNumber";
-                case is DatabaseVerification:
-                    type = "database";
-                case is DocumentVerification:
-                    type = "document";
-                default:
-                    break;
-
+            case is GovernmentIdVerification:
+                type = "governmentId";
+            case is SelfieVerification:
+                type = "selfie";
+            case is PhoneNumberVerification:
+                type = "phoneNumber";
+            case is DatabaseVerification:
+                type = "database";
+            case is DocumentVerification:
+                type = "document";
+            default:
+                break;
+                
             }
             
             result.append(["id": verification.id, "status": "\(verification.status)", "type": type ])
@@ -198,5 +270,33 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
         return formatter;
+    }
+}
+
+extension UIColor {
+    public convenience init(hex: String) {
+        let r, g, b, a: CGFloat
+        
+        if hex.hasPrefix("#") {
+            let start = hex.index(hex.startIndex, offsetBy: 1)
+            let hexColor = String(hex[start...])
+            
+            if hexColor.count == 8 {
+                let scanner = Scanner(string: hexColor)
+                var hexNumber: UInt64 = 0
+                
+                if scanner.scanHexInt64(&hexNumber) {
+                    a = CGFloat((hexNumber & 0xff000000) >> 24) / 255
+                    r = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
+                    g = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
+                    b = CGFloat(hexNumber & 0x000000ff) / 255
+                    
+                    self.init(red: r, green: g, blue: b, alpha: a)
+                    return
+                }
+            }
+        }
+        
+        self.init()
     }
 }

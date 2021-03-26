@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BlueDemoTheme" parent="@style/Persona.Inquiry.Theme">
+        <item name="colorPrimary">#22CB8E</item>
+        <item name="colorAccent">#22CB8E</item>
+        <!-- <item name="buttonBackgroundColor">#22CB8E</item> -->
+    </style>
+</resources>
+
+

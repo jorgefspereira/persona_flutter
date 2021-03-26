@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:persona_flutter/src/fields.dart';
+import 'package:persona_flutter/src/theme.dart';
 import 'enums.dart';
 import 'attributes.dart';
 import 'relationships.dart';
@@ -37,6 +38,7 @@ class Inquiry {
     this.accountId,
     this.environment,
     this.fields,
+    this.iOSTheme,
     this.note,
     this.onSuccess,
     this.onCancelled,
@@ -64,6 +66,9 @@ class Inquiry {
 
   /// Any existing user data you want to attach to the inquiry.
   final InquiryFields fields;
+
+  /// Theme to use for iOS.
+  final InquiryTheme iOSTheme;
 
   /// Any string you want for your own bookkeeping.
   final String note;
@@ -149,6 +154,7 @@ class Inquiry {
         'environment':
             environment != null ? environment.toString().split('.').last : null,
         'fields': fields?.toJson(),
+        'theme': iOSTheme?.toJson(),
         'note': note,
       },
     );
