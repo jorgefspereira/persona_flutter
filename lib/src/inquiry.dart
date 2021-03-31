@@ -109,7 +109,7 @@ class Inquiry {
               InquiryRelationships.fromJson(call.arguments['relationships']);
 
           this.onSuccess(
-              call.arguments['inquiryId'], attributes, relationships);
+              call.arguments['inquiryId'] as String, attributes, relationships);
         }
         return null;
 
@@ -126,13 +126,14 @@ class Inquiry {
           InquiryRelationships relationships =
               InquiryRelationships.fromJson(call.arguments['relationships']);
 
-          this.onFailed(call.arguments['inquiryId'], attributes, relationships);
+          this.onFailed(
+              call.arguments['inquiryId'] as String, attributes, relationships);
         }
         return null;
 
       case 'onError':
         if (this.onError != null) {
-          this.onError(call.arguments['error']);
+          this.onError(call.arguments['error'] as String);
         }
         return null;
     }

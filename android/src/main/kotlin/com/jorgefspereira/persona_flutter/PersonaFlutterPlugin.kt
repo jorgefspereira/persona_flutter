@@ -64,7 +64,6 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
 
         if (inquiryId != null) {
           Inquiry.fromInquiry(inquiryId)
-                  .theme(R.style.BlueDemoTheme)
                   .accessToken(accessToken)
                   .build().start(activity, requestCode);
 

@@ -35,6 +35,7 @@ class InquiryVerification {
       }
     });
 
-    return InquiryVerification(id: json["id"], status: status, type: type);
+    return InquiryVerification(
+        id: json["id"] as String, status: status, type: type);
   }
 }
