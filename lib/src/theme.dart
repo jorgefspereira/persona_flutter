@@ -78,36 +78,4 @@ class InquiryTheme {
   String _toHex(Color color) {
     return color != null ? '#${color.value.toRadixString(16)}' : null;
   }
-
-  // final Color backgroundColor = backgroundColor
-  // theme.textFieldBorderColor = darkLabelColor
-  // theme.buttonBackgroundColor = primaryLabelColor
-  // theme.buttonTouchedBackgroundColor = errorColor
-  // theme.buttonDisabledBackgroundColor = primaryLabelColor.withAlphaComponent(0.25)
-  // theme.closeButtonTintColor = darkLabelColor
-  // theme.cancelButtonBackgroundColor = primaryLabelColor
-  // theme.selectedCellBackgroundColor = alternateBackgroundColor.withAlphaComponent(0.25)
-  // theme.accentColor = alternateBackgroundColor
-  // theme.darkPrimaryColor = darkLabelColor
-  // theme.primaryColor = alternateBackgroundColor
-  // theme.titleTextColor = darkLabelColor
-  // theme.bodyTextColor = primaryLabelColor
-  // theme.formLabelTextColor = secondaryLabelColor
-  // theme.buttonTextColor = .white
-  // theme.pickerTextColor = primaryLabelColor
-  // theme.textFieldTextColor = primaryLabelColor
-  // theme.footnoteTextColor = primaryLabelColor
-
-  // theme.textFieldCornerRadius = 16
-  // theme.buttonCornerRadius = 16
-
-  // theme.titleTextFont = londrinaFont.withSize(36)
-  // theme.cardTitleTextFont = londrinaFont.withSize(20)
-  // theme.bodyTextFont = londrinaFont.withSize(24)
-  // theme.footnoteTextFont = rubikFont.withSize(14)
-  // theme.formLabelTextFont = rubikFont.withSize(16)
-  // theme.textFieldFont = rubikFont.withSize(16)
-  // theme.textFieldPlaceholderFont = rubikFont.withSize(16)
-  // theme.pickerTextFont = rubikFont.withSize(18)
-  // theme.buttonFont = rubikFont.withSize(18)
 }
