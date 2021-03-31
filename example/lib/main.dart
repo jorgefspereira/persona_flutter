@@ -20,8 +20,10 @@ class _MyAppState extends State<MyApp> {
     _inquiry = Inquiry(
       templateId: "TEMPLATE_ID",
       environment: InquiryEnvironment.sandbox,
-      fields: InquiryFields(name: InquiryName(first: "John", middle: "Apple" ,last: "Seed")),
-      onSuccess: (String inquiryId, InquiryAttributes attributes, InquiryRelationships relationships) {
+      fields: InquiryFields(
+          name: InquiryName(first: "John", middle: "Apple", last: "Seed")),
+      onSuccess: (String inquiryId, InquiryAttributes attributes,
+          InquiryRelationships relationships) {
         print("onSuccess");
         print("- inquiryId: $inquiryId");
         print("- attributes:");
@@ -34,20 +36,30 @@ class _MyAppState extends State<MyApp> {
         print("--- address_postalCode: ${attributes.address.postalCode}");
         print("--- address_countryCode: ${attributes.address.countryCode}");
         print("--- address_subdivision: ${attributes.address.subdivision}");
-        print("--- address_subdivisionAbbr: ${attributes.address.subdivisionAbbr}");
+        print(
+            "--- address_subdivisionAbbr: ${attributes.address.subdivisionAbbr}");
         print("--- birthdate: ${attributes.birthdate.toString()}");
         print("- relationships:");
 
-        for(var item in relationships.verifications) {
+        for (var item in relationships.verifications) {
           print("--- id: ${item.id}");
           print("--- status: ${item.status}");
           print("--- type: ${item.type}");
         }
       },
+      iOSTheme: InquiryTheme(
+        accentColor: Color(0xff22CB8E),
+        primaryColor: Color(0xff22CB8E),
+        buttonBackgroundColor: Color(0xff22CB8E),
+        darkPrimaryColor: Color(0xff167755),
+        buttonCornerRadius: 8,
+        textFieldCornerRadius: 0,
+      ),
       onCancelled: () {
         print("onCancelled");
       },
-      onFailed: (String inquiryId, InquiryAttributes attributes, InquiryRelationships relationships) {
+      onFailed: (String inquiryId, InquiryAttributes attributes,
+          InquiryRelationships relationships) {
         print("onFailed");
         print("- inquiryId: $inquiryId");
       },
