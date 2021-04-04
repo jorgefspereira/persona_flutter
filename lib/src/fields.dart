@@ -31,9 +31,9 @@ class InquiryFields {
     return InquiryFields(
       name: InquiryName.fromJson(json["name"]),
       address: InquiryAddress.fromJson(json["address"]),
-      birthdate: DateTime.parse(json["birthdate"]),
-      phoneNumber: json["phoneNumber"],
-      emailAddress: json["emailAddress"],
+      birthdate: DateTime.parse(json["birthdate"] as String),
+      phoneNumber: json["phoneNumber"] as String,
+      emailAddress: json["emailAddress"] as String,
     );
   }
 

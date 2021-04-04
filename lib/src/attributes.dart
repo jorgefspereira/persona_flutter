@@ -19,7 +19,7 @@ class InquiryAttributes {
     return InquiryAttributes(
       name: InquiryName.fromJson(json["name"]),
       address: InquiryAddress.fromJson(json["address"]),
-      birthdate: DateTime.parse(json["birthdate"]),
+      birthdate: DateTime.parse(json["birthdate"] as String),
     );
   }
 }
@@ -39,9 +39,9 @@ class InquiryName {
 
   factory InquiryName.fromJson(dynamic json) {
     return InquiryName(
-      first: json["first"],
-      middle: json["middle"],
-      last: json["last"],
+      first: json["first"] as String,
+      middle: json["middle"] as String,
+      last: json["last"] as String,
     );
   }
 
@@ -89,13 +89,13 @@ class InquiryAddress {
 
   factory InquiryAddress.fromJson(dynamic json) {
     return InquiryAddress(
-      street1: json["street1"],
-      street2: json["street2"],
-      city: json["city"],
-      subdivision: json["subdivision"],
-      subdivisionAbbr: json["subdivisionAbbr"],
-      postalCode: json["postalCode"],
-      countryCode: json["countryCode"],
+      street1: json["street1"] as String,
+      street2: json["street2"] as String,
+      city: json["city"] as String,
+      subdivision: json["subdivision"] as String,
+      subdivisionAbbr: json["subdivisionAbbr"] as String,
+      postalCode: json["postalCode"] as String,
+      countryCode: json["countryCode"] as String,
     );
   }
 
