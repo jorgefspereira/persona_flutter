@@ -4,6 +4,18 @@ import 'dart:ui';
 /// text sizes, and corner radius.
 class InquiryTheme {
   InquiryTheme({
+    this.buttonShadowColor,
+    this.buttonShadowRadius,
+    this.cancelButtonShadowRadius,
+    this.errorColor,
+    this.overlayBackgroundColor,
+    this.textFieldBackgroundColor,
+    this.buttonDisabledTextColor,
+    this.checkboxBackgroundColor,
+    this.checkboxForegroundColor,
+    this.cancelButtonTextColor,
+    this.cancelButtonShadowColor,
+    this.progressColor,
     this.backgroundColor,
     this.textFieldBorderColor,
     this.buttonBackgroundColor,
@@ -26,29 +38,101 @@ class InquiryTheme {
     this.textFieldCornerRadius,
   });
 
-  // Colors
+  /// The background color for all views.
   final Color backgroundColor;
-  final Color textFieldBorderColor;
-  final Color buttonBackgroundColor;
-  final Color buttonTouchedBackgroundColor;
-  final Color buttonDisabledBackgroundColor;
-  final Color closeButtonTintColor;
-  final Color cancelButtonBackgroundColor;
-  final Color selectedCellBackgroundColor;
-  final Color accentColor;
-  final Color darkPrimaryColor;
+
+  /// The primary color.
   final Color primaryColor;
+
+  /// The darker, primary color.
+  final Color darkPrimaryColor;
+
+  /// The error color.
+  final Color errorColor;
+
+  /// The accent color.
+  final Color accentColor;
+
+  /// The background color for overlay views.
+  final Color overlayBackgroundColor;
+
+  /// The text color for title labels.
   final Color titleTextColor;
+
+  /// The text color for body labels.
   final Color bodyTextColor;
-  final Color formLabelTextColor;
-  final Color buttonTextColor;
-  final Color pickerTextColor;
-  final Color textFieldTextColor;
+
+  /// The text color for footnote labels.
   final Color footnoteTextColor;
 
-  // Corner Radius
-  final double buttonCornerRadius;
+  /// The text color for form labels.
+  final Color formLabelTextColor;
+
+  /// The text color for text fields.
+  final Color textFieldTextColor;
+
+  /// The background color for text fields.
+  final Color textFieldBackgroundColor;
+
+  /// The border color for text fields.
+  final Color textFieldBorderColor;
+
+  /// The corner radius for text fields.
   final double textFieldCornerRadius;
+
+  /// The text color for picker items.
+  final Color pickerTextColor;
+
+  /// The background color for buttons, in the normal state.
+  final Color buttonBackgroundColor;
+
+  /// The background color for buttons, in the disabled state.
+  final Color buttonDisabledBackgroundColor;
+
+  /// The background color for buttons, in the touched state.
+  final Color buttonTouchedBackgroundColor;
+
+  /// The text color for button text, in the normal state.
+  final Color buttonTextColor;
+
+  /// The text color for button text, in the disabled state.
+  final Color buttonDisabledTextColor;
+
+  /// The corner radius to apply to buttons.
+  final double buttonCornerRadius;
+
+  /// The shadow color for buttons (this should include the desired opacity)
+  final Color buttonShadowColor;
+
+  /// The blur radius (in points) used to render the shadow.
+  final double buttonShadowRadius;
+
+  /// The background color for checkboxes, in the normal state.
+  final Color checkboxBackgroundColor;
+
+  /// The foreground color for checkboxes, in the normal state.
+  final Color checkboxForegroundColor;
+
+  /// The text color for a selected table view cell.
+  final Color selectedCellBackgroundColor;
+
+  /// The tint to apply to the close button.
+  final Color closeButtonTintColor;
+
+  /// The background color for buttons when cancelling a verification.
+  final Color cancelButtonBackgroundColor;
+
+  /// The text color for buttons when cancelling a verification.
+  final Color cancelButtonTextColor;
+
+  /// The shadow color for buttons (this should include the desired opacity)
+  final Color cancelButtonShadowColor;
+
+  /// The blur radius (in points) used to render the shadow.
+  final double cancelButtonShadowRadius;
+
+  /// The tint to apply to the progress animation items.
+  final Color progressColor;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
@@ -72,6 +156,18 @@ class InquiryTheme {
       'footnoteTextColor': _toHex(footnoteTextColor),
       'buttonCornerRadius': buttonCornerRadius,
       'textFieldCornerRadius': textFieldCornerRadius,
+      'errorColor': _toHex(errorColor),
+      'overlayBackgroundColor': _toHex(overlayBackgroundColor),
+      'textFieldBackgroundColor': _toHex(textFieldBackgroundColor),
+      'buttonDisabledTextColor': _toHex(buttonDisabledTextColor),
+      'checkboxBackgroundColor': _toHex(checkboxBackgroundColor),
+      'checkboxForegroundColor': _toHex(checkboxForegroundColor),
+      'cancelButtonTextColor': _toHex(cancelButtonTextColor),
+      'cancelButtonShadowColor': _toHex(cancelButtonShadowColor),
+      'progressColor': _toHex(progressColor),
+      'buttonShadowColor': _toHex(buttonShadowColor),
+      'buttonShadowRadius': buttonShadowRadius,
+      'cancelButtonShadowRadius': cancelButtonShadowRadius,
     };
   }
 

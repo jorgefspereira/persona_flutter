@@ -136,7 +136,45 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 if let footnoteTextColor = themeDict["footnoteTextColor"] as? String {
                     theme?.footnoteTextColor = UIColor.init(hex: footnoteTextColor);
                 }
+                if let errorColor = themeDict["errorColor"] as? String {
+                    theme?.errorColor = UIColor.init(hex: errorColor);
+                }
+                if let overlayBackgroundColor = themeDict["overlayBackgroundColor"] as? String {
+                    theme?.overlayBackgroundColor = UIColor.init(hex: overlayBackgroundColor);
+                }
+                if let textFieldBackgroundColor = themeDict["textFieldBackgroundColor"] as? String {
+                    theme?.textFieldBackgroundColor = UIColor.init(hex: textFieldBackgroundColor);
+                }
+                if let buttonDisabledTextColor = themeDict["buttonDisabledTextColor"] as? String {
+                    theme?.buttonDisabledTextColor = UIColor.init(hex: buttonDisabledTextColor);
+                }
+                if let checkboxBackgroundColor = themeDict["checkboxBackgroundColor"] as? String {
+                    theme?.checkboxBackgroundColor = UIColor.init(hex: checkboxBackgroundColor);
+                }
+                if let checkboxForegroundColor = themeDict["checkboxForegroundColor"] as? String {
+                    theme?.checkboxForegroundColor = UIColor.init(hex: checkboxForegroundColor);
+                }
+                if let cancelButtonTextColor = themeDict["cancelButtonTextColor"] as? String {
+                    theme?.cancelButtonTextColor = UIColor.init(hex: cancelButtonTextColor);
+                }
+                if let cancelButtonShadowColor = themeDict["cancelButtonShadowColor"] as? String {
+                    theme?.cancelButtonShadowColor = UIColor.init(hex: cancelButtonShadowColor);
+                }
+                if let progressColor = themeDict["progressColor"] as? String {
+                    theme?.progressColor = UIColor.init(hex: progressColor);
+                }
+                if let buttonShadowColor = themeDict["buttonShadowColor"] as? String {
+                    theme?.buttonShadowColor = UIColor.init(hex: buttonShadowColor);
+                }
                 
+                // Shadow Radius
+                if let buttonShadowRadius = themeDict["buttonShadowRadius"] as? CGFloat {
+                    theme?.buttonShadowRadius = buttonShadowRadius;
+                }
+                if let cancelButtonShadowRadius = themeDict["cancelButtonShadowRadius"] as? CGFloat {
+                    theme?.cancelButtonShadowRadius = cancelButtonShadowRadius;
+                }
+            
                 // Corner Radius
                 if let buttonCornerRadius = themeDict["buttonCornerRadius"] as? CGFloat {
                     theme?.buttonCornerRadius = buttonCornerRadius;
