@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
         body: Container(
           color: Colors.lightBlue,
           child: Center(
-            child: RaisedButton(
+            child: ElevatedButton(
               onPressed: () {
                 _inquiry.start();
               },
