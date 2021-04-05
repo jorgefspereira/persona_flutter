@@ -15,9 +15,18 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    _inquiry = Inquiry(
+     _inquiry = Inquiry(
       templateId: "TEMPLATE_ID",
-      environment: PersonaEnvironment.sandbox,
+      environment: InquiryEnvironment.sandbox,
+      fields: InquiryFields(name: InquiryName(first: "John", middle: "Apple", last: "Seed")),
+      iOSTheme: InquiryTheme(
+        accentColor: Color(0xff22CB8E),
+        primaryColor: Color(0xff22CB8E),
+        buttonBackgroundColor: Color(0xff22CB8E),
+        darkPrimaryColor: Color(0xff167755),
+        buttonCornerRadius: 8,
+        textFieldCornerRadius: 0,
+      ),
       onSuccess: (String inquiryId, InquiryAttributes attributes, InquiryRelationships relationships) {
         print("onSuccess");
         print("- inquiryId: $inquiryId");
@@ -34,6 +43,7 @@ class _MyAppState extends State<MyApp> {
         print("- $error");
       },
     );
+
   }
 
   @override
@@ -41,9 +51,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Container(
-          color: Colors.lightBlue,
+          color: Colors.grey[200],
           child: Center(
-            child: RaisedButton(
+            child: ElevatedButton(
               onPressed: () {
                 _inquiry.start();
               },
