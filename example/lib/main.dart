@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Container(
-          color: Colors.lightBlue,
+          color: Colors.grey[200],
           child: Center(
             child: ElevatedButton(
               onPressed: () {
