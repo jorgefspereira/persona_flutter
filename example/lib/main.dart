@@ -21,9 +21,10 @@ class _MyAppState extends State<MyApp> {
       templateId: "TEMPLATE_ID",
       environment: InquiryEnvironment.sandbox,
       fields: InquiryFields(
-          name: InquiryName(first: "John", middle: "Apple", last: "Seed")),
-      onSuccess: (String inquiryId, InquiryAttributes attributes,
-          InquiryRelationships relationships) {
+        name: InquiryName(first: "John", middle: "Apple", last: "Seed"),
+        additionalFields: {"test-1": "test-2", "test-3": 2, "test-4": true},
+      ),
+      onSuccess: (String inquiryId, InquiryAttributes attributes, InquiryRelationships relationships) {
         print("onSuccess");
         print("- inquiryId: $inquiryId");
         print("- attributes:");
@@ -36,8 +37,7 @@ class _MyAppState extends State<MyApp> {
         print("--- address_postalCode: ${attributes.address.postalCode}");
         print("--- address_countryCode: ${attributes.address.countryCode}");
         print("--- address_subdivision: ${attributes.address.subdivision}");
-        print(
-            "--- address_subdivisionAbbr: ${attributes.address.subdivisionAbbr}");
+        print("--- address_subdivisionAbbr: ${attributes.address.subdivisionAbbr}");
         print("--- birthdate: ${attributes.birthdate.toString()}");
         print("- relationships:");
 
@@ -58,8 +58,7 @@ class _MyAppState extends State<MyApp> {
       onCancelled: () {
         print("onCancelled");
       },
-      onFailed: (String inquiryId, InquiryAttributes attributes,
-          InquiryRelationships relationships) {
+      onFailed: (String inquiryId, InquiryAttributes attributes, InquiryRelationships relationships) {
         print("onFailed");
         print("- inquiryId: $inquiryId");
       },

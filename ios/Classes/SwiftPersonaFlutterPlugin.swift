@@ -45,6 +45,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 var name: Name?
                 var address: Address?
                 var birthdate: Date?
+                var additionalFields: [String : InquiryField]?
                 let phoneNumber = fieldsDict["phoneNumber"] as? String;
                 let emailAddress = fieldsDict["emailAddress"] as? String;
                 
@@ -68,12 +69,31 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                                            countryCode: addressDict["countryCode"]);
                 }
                 
+                if let additionalFieldsDict = fieldsDict["additionalFields"] as? Dictionary<String, Any> {
+                    var auxFields = [String : InquiryField]();
+                    
+                    for (key, value) in additionalFieldsDict{
+                        switch value {
+                            case is Int:
+                                auxFields[key] = InquiryField.int(value as! Int);
+                            case is String:
+                                auxFields[key] = InquiryField.string(value as! String);
+                            case is Bool:
+                                auxFields[key] = InquiryField.bool(value as! Bool);
+                            default:
+                                break;
+                        }
+                    }
+                    
+                    additionalFields = auxFields;
+                }
+                
                 fields = Fields.init(name: name,
                                      address: address,
                                      birthdate: birthdate,
                                      phoneNumber: phoneNumber,
                                      emailAddress: emailAddress,
-                                     additionalFields: nil);
+                                     additionalFields: additionalFields);
             }
             
             // Build Theme

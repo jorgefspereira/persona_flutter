@@ -19,12 +19,16 @@ class InquiryFields {
   /// The email address of the individual
   final String emailAddress;
 
+  /// Any additional data of the individual
+  final Map<String, dynamic> additionalFields;
+
   InquiryFields({
     this.name,
     this.address,
     this.birthdate,
     this.phoneNumber,
     this.emailAddress,
+    this.additionalFields,
   });
 
   factory InquiryFields.fromJson(dynamic json) {
@@ -34,6 +38,7 @@ class InquiryFields {
       birthdate: DateTime.parse(json["birthdate"] as String),
       phoneNumber: json["phoneNumber"] as String,
       emailAddress: json["emailAddress"] as String,
+      additionalFields: json["additionalFields"],
     );
   }
 
@@ -46,6 +51,7 @@ class InquiryFields {
       'birthdate': birthdate != null ? formatter.format(birthdate) : null,
       'phoneNumber': phoneNumber,
       'emailAddress': emailAddress,
+      'additionalFields': additionalFields,
     };
   }
 }
