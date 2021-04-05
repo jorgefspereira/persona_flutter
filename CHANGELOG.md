@@ -1,3 +1,10 @@
+## 1.2.0
+
+* Added InquiryTheme to support ios theming. Thank you @tomaash
+* Added support for android theme via styles.xml. Thank you @tomaash
+* Upgraded iOS SDK to 1.1.3
+* Added additionalFields support on iOS and Android.
+
 ## 1.1.0+1
 
 * Fix intl dependency version
