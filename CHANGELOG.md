@@ -1,3 +1,10 @@
+## 2.0.0
+
+* BREAKING CHANGE: Added InquiryConfiguration to Inquiry object
+* Fix typo on InquiryVerificationType 
+* Null-safety support
+* Added type unknown to InquiryVerificationStatus and InquiryVerificationType
+
 ## 1.2.0
 
 * Added InquiryTheme to support ios theming. Thank you @tomaash
