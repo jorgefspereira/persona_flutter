@@ -44,5 +44,5 @@ enum InquiryVerificationType {
   /// When the individual takes a video of their face in real-time, Persona will check that the
   /// individual is live and real. If the individual also submits a government ID, the face captured
   /// in the selfie is compared against the face in the government ID.
-  selfe
+  selfie
 }
