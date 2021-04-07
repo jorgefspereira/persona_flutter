@@ -18,14 +18,23 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     _inquiry = Inquiry(
-      templateId: "TEMPLATE_ID",
-      environment: InquiryEnvironment.sandbox,
-      fields: InquiryFields(
-        name: InquiryName(first: "John", middle: "Apple", last: "Seed"),
-        additionalFields: {"test-1": "test-2", "test-3": 2, "test-4": true},
+      configuration: TemplateIdConfiguration(
+        templateId: "TEMPLATE_ID",
+        environment: InquiryEnvironment.sandbox,
+        fields: InquiryFields(
+          name: InquiryName(first: "John", middle: "Apple", last: "Seed"),
+          additionalFields: {"test-1": "test-2", "test-3": 2, "test-4": true},
+        ),
+        iOSTheme: InquiryTheme(
+          accentColor: Color(0xff22CB8E),
+          primaryColor: Color(0xff22CB8E),
+          buttonBackgroundColor: Color(0xff22CB8E),
+          darkPrimaryColor: Color(0xff167755),
+          buttonCornerRadius: 8,
+          textFieldCornerRadius: 0,
+        ),
       ),
-      onSuccess: (String inquiryId, InquiryAttributes attributes,
-          InquiryRelationships relationships) {
+      onSuccess: (String inquiryId, InquiryAttributes attributes, InquiryRelationships relationships) {
         print("onSuccess");
         print("- inquiryId: $inquiryId");
         print("- attributes:");
@@ -38,8 +47,7 @@ class _MyAppState extends State<MyApp> {
         print("--- address_postalCode: ${attributes.address.postalCode}");
         print("--- address_countryCode: ${attributes.address.countryCode}");
         print("--- address_subdivision: ${attributes.address.subdivision}");
-        print(
-            "--- address_subdivisionAbbr: ${attributes.address.subdivisionAbbr}");
+        print("--- address_subdivisionAbbr: ${attributes.address.subdivisionAbbr}");
         print("--- birthdate: ${attributes.birthdate.toString()}");
         print("- relationships:");
 
@@ -49,19 +57,10 @@ class _MyAppState extends State<MyApp> {
           print("--- type: ${item.type}");
         }
       },
-      iOSTheme: InquiryTheme(
-        accentColor: Color(0xff22CB8E),
-        primaryColor: Color(0xff22CB8E),
-        buttonBackgroundColor: Color(0xff22CB8E),
-        darkPrimaryColor: Color(0xff167755),
-        buttonCornerRadius: 8,
-        textFieldCornerRadius: 0,
-      ),
       onCancelled: () {
         print("onCancelled");
       },
-      onFailed: (String inquiryId, InquiryAttributes attributes,
-          InquiryRelationships relationships) {
+      onFailed: (String inquiryId, InquiryAttributes attributes, InquiryRelationships relationships) {
         print("onFailed");
         print("- inquiryId: $inquiryId");
       },

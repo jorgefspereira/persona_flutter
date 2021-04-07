@@ -1,29 +1,8 @@
 import 'package:flutter/services.dart';
-import 'package:persona_flutter/src/fields.dart';
-import 'package:persona_flutter/src/theme.dart';
-import 'enums.dart';
+import 'configurations.dart';
+import 'types.dart';
 import 'attributes.dart';
 import 'relationships.dart';
-
-/// A function-type description for onSuccess callback
-typedef void SuccessCallback(
-  String inquiryId,
-  InquiryAttributes attributes,
-  InquiryRelationships relationships,
-);
-
-/// A function-type description for onFailed callback
-typedef void FailedCallback(
-  String inquiryId,
-  InquiryAttributes attributes,
-  InquiryRelationships relationships,
-);
-
-/// A function-type description for onCancelled callback
-typedef void CancelledCallback();
-
-/// A function-type description for onError callback
-typedef void ErrorCallback(String error);
 
 class Inquiry {
   /// Create a Inquiry object.
@@ -31,50 +10,17 @@ class Inquiry {
   /// The Persona Inquiry verification flow is initiated with an configuration which
   /// can be initialized with either a templateId or an inquiryId.
   Inquiry({
-    this.inquiryId,
-    this.accessToken,
-    this.templateId,
-    this.referenceId,
-    this.accountId,
-    this.environment,
-    this.fields,
-    this.iOSTheme,
-    this.note,
+    this.configuration,
     this.onSuccess,
     this.onCancelled,
     this.onFailed,
     this.onError,
-  })  : _channel = MethodChannel('persona_flutter'),
-        assert(templateId != null || inquiryId != null) {
+  }) : _channel = MethodChannel('persona_flutter') {
     _channel.setMethodCallHandler(_onMethodCall);
   }
 
-  /// An existing inquiry.
-  final String inquiryId;
-
-  /// accessToken
-  final String accessToken;
-
-  /// An existing template that determines how the flow is customized.
-  final String templateId;
-
-  /// The account to associate this inquiry with. The account can be used to monitor user progress in newly created inquiries.
-  final String accountId;
-
-  /// The identifier can be used to monitor user progress in newly created inquiries.
-  final String referenceId;
-
-  /// Any existing user data you want to attach to the inquiry.
-  final InquiryFields fields;
-
-  /// Theme to use for iOS.
-  final InquiryTheme iOSTheme;
-
-  /// Any string you want for your own bookkeeping.
-  final String note;
-
-  /// The environment on which to create inquiries.
-  final InquiryEnvironment environment;
+  /// The Inquiry configuration.
+  final InquiryConfiguration configuration;
 
   /// The [MethodChannel] over which this class communicates.
   final MethodChannel _channel;
@@ -103,13 +49,10 @@ class Inquiry {
     switch (call.method) {
       case 'onSuccess':
         if (this.onSuccess != null) {
-          InquiryAttributes attributes =
-              InquiryAttributes.fromJson(call.arguments['attributes']);
-          InquiryRelationships relationships =
-              InquiryRelationships.fromJson(call.arguments['relationships']);
+          InquiryAttributes attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
+          InquiryRelationships relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
 
-          this.onSuccess(
-              call.arguments['inquiryId'] as String, attributes, relationships);
+          this.onSuccess(call.arguments['inquiryId'] as String, attributes, relationships);
         }
         return null;
 
@@ -121,13 +64,10 @@ class Inquiry {
 
       case 'onFailed':
         if (this.onFailed != null) {
-          InquiryAttributes attributes =
-              InquiryAttributes.fromJson(call.arguments['attributes']);
-          InquiryRelationships relationships =
-              InquiryRelationships.fromJson(call.arguments['relationships']);
+          InquiryAttributes attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
+          InquiryRelationships relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
 
-          this.onFailed(
-              call.arguments['inquiryId'] as String, attributes, relationships);
+          this.onFailed(call.arguments['inquiryId'] as String, attributes, relationships);
         }
         return null;
 
@@ -137,27 +77,12 @@ class Inquiry {
         }
         return null;
     }
-    throw MissingPluginException(
-        '${call.method} was invoked but has no handler');
+    throw MissingPluginException('${call.method} was invoked but has no handler');
   }
 
   /// This starts the Inquiry flow and takes control of the user interface.
   /// Once the flow completes, the control of the user interface is returned to the app and the appropriate callbacks are called.
   void start() {
-    _channel.invokeMethod(
-      'start',
-      <String, dynamic>{
-        'templateId': templateId,
-        'accesstoken': accessToken,
-        'inquiryId': inquiryId,
-        'accountId': accountId,
-        'referenceId': referenceId,
-        'environment':
-            environment != null ? environment.toString().split('.').last : null,
-        'fields': fields?.toJson(),
-        'theme': iOSTheme?.toJson(),
-        'note': note,
-      },
-    );
+    _channel.invokeMethod('start', configuration.toJson());
   }
 }
