@@ -14,14 +14,14 @@ class InquiryVerification {
   final InquiryVerificationType type;
 
   InquiryVerification({
-    this.id,
-    this.status,
-    this.type,
+    required this.id,
+    required this.status,
+    required this.type,
   });
 
   factory InquiryVerification.fromJson(dynamic json) {
-    InquiryVerificationType type;
-    InquiryVerificationStatus status;
+    late InquiryVerificationType type;
+    late InquiryVerificationStatus status;
 
     InquiryVerificationStatus.values.forEach((item) {
       if (item.toString().split('.').last == json["status"]) {

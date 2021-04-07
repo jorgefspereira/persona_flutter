@@ -8,23 +8,23 @@ abstract class InquiryConfiguration {
   });
 
   /// Theme to use for iOS.
-  final InquiryTheme iOSTheme;
+  final InquiryTheme? iOSTheme;
 
   Map<String, dynamic> toJson();
 }
 
 class InquiryIdConfiguration extends InquiryConfiguration {
   InquiryIdConfiguration({
-    this.inquiryId,
+    required this.inquiryId,
     this.accessToken,
-    InquiryTheme iOSTheme,
+    InquiryTheme? iOSTheme,
   }) : super(iOSTheme: iOSTheme);
 
   /// An existing inquiry.
   final String inquiryId;
 
   /// accessToken
-  final String accessToken;
+  final String? accessToken;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
@@ -37,32 +37,32 @@ class InquiryIdConfiguration extends InquiryConfiguration {
 
 class TemplateIdConfiguration extends InquiryConfiguration {
   TemplateIdConfiguration({
-    this.templateId,
+    required this.templateId,
     this.accountId,
     this.referenceId,
     this.environment,
     this.fields,
     this.note,
-    InquiryTheme iOSTheme,
+    InquiryTheme? iOSTheme,
   }) : super(iOSTheme: iOSTheme);
 
   /// An existing template that determines how the flow is customized.
   final String templateId;
 
   /// The account to associate this inquiry with. The account can be used to monitor user progress in newly created inquiries.
-  final String accountId;
+  final String? accountId;
 
   /// The identifier can be used to monitor user progress in newly created inquiries.
-  final String referenceId;
+  final String? referenceId;
 
   /// The environment on which to create inquiries.
-  final InquiryEnvironment environment;
+  final InquiryEnvironment? environment;
 
   /// Any existing user data you want to attach to the inquiry.
-  final InquiryFields fields;
+  final InquiryFields? fields;
 
   /// Any string you want for your own bookkeeping.
-  final String note;
+  final String? note;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{

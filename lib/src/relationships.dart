@@ -5,7 +5,7 @@ class InquiryRelationships {
   /// List of verifications
   final List<InquiryVerification> verifications;
 
-  InquiryRelationships({this.verifications});
+  InquiryRelationships({required this.verifications});
 
   factory InquiryRelationships.fromJson(dynamic json) {
     List<InquiryVerification> verifications = [];
