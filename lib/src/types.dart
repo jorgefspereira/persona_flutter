@@ -1,3 +1,26 @@
+import 'attributes.dart';
+import 'relationships.dart';
+
+/// A function-type description for onSuccess callback
+typedef void SuccessCallback(
+  String inquiryId,
+  InquiryAttributes attributes,
+  InquiryRelationships relationships,
+);
+
+/// A function-type description for onFailed callback
+typedef void FailedCallback(
+  String inquiryId,
+  InquiryAttributes attributes,
+  InquiryRelationships relationships,
+);
+
+/// A function-type description for onCancelled callback
+typedef void CancelledCallback();
+
+/// A function-type description for onError callback
+typedef void ErrorCallback(String error);
+
 /// The Persona API environment on which to create inquiries.
 enum InquiryEnvironment {
   /// The development environment.
@@ -17,6 +40,9 @@ enum InquiryVerificationStatus {
 
   /// Persona has enough information to determine that the individual should not be verified.
   failed,
+
+  /// If a conversion error occur an unknown type is returned.
+  unknown
 }
 
 /// The type for a verification
@@ -44,5 +70,8 @@ enum InquiryVerificationType {
   /// When the individual takes a video of their face in real-time, Persona will check that the
   /// individual is live and real. If the individual also submits a government ID, the face captured
   /// in the selfie is compared against the face in the government ID.
-  selfe
+  selfie,
+
+  /// If a conversion error occur an unknown type is returned.
+  unknown
 }

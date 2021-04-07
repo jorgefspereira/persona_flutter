@@ -14,26 +14,22 @@ class InquiryVerification {
   final InquiryVerificationType type;
 
   InquiryVerification({
-    this.id,
-    this.status,
-    this.type,
+    required this.id,
+    required this.status,
+    required this.type,
   });
 
   factory InquiryVerification.fromJson(dynamic json) {
-    InquiryVerificationType type;
-    InquiryVerificationStatus status;
+    InquiryVerificationStatus status =
+        InquiryVerificationStatus.values.firstWhere(
+      (item) => item.toString().split('.').last == json["status"],
+      orElse: () => InquiryVerificationStatus.unknown,
+    );
 
-    InquiryVerificationStatus.values.forEach((item) {
-      if (item.toString().split('.').last == json["status"]) {
-        status = item;
-      }
-    });
-
-    InquiryVerificationType.values.forEach((item) {
-      if (item.toString().split('.').last == json["type"]) {
-        type = item;
-      }
-    });
+    InquiryVerificationType type = InquiryVerificationType.values.firstWhere(
+      (item) => item.toString().split('.').last == json["type"],
+      orElse: () => InquiryVerificationType.unknown,
+    );
 
     return InquiryVerification(
         id: json["id"] as String, status: status, type: type);
