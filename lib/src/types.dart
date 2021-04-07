@@ -1,3 +1,26 @@
+import 'attributes.dart';
+import 'relationships.dart';
+
+/// A function-type description for onSuccess callback
+typedef void SuccessCallback(
+  String inquiryId,
+  InquiryAttributes attributes,
+  InquiryRelationships relationships,
+);
+
+/// A function-type description for onFailed callback
+typedef void FailedCallback(
+  String inquiryId,
+  InquiryAttributes attributes,
+  InquiryRelationships relationships,
+);
+
+/// A function-type description for onCancelled callback
+typedef void CancelledCallback();
+
+/// A function-type description for onError callback
+typedef void ErrorCallback(String error);
+
 /// The Persona API environment on which to create inquiries.
 enum InquiryEnvironment {
   /// The development environment.
