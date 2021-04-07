@@ -48,9 +48,12 @@ class Inquiry {
   Future<dynamic> _onMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'onSuccess':
-        InquiryAttributes attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
-        InquiryRelationships relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
-        onSuccess?.call(call.arguments['inquiryId'] as String, attributes, relationships);
+        InquiryAttributes attributes =
+            InquiryAttributes.fromJson(call.arguments['attributes']);
+        InquiryRelationships relationships =
+            InquiryRelationships.fromJson(call.arguments['relationships']);
+        onSuccess?.call(
+            call.arguments['inquiryId'] as String, attributes, relationships);
         break;
 
       case 'onCancelled':
@@ -58,9 +61,12 @@ class Inquiry {
         break;
 
       case 'onFailed':
-        InquiryAttributes attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
-        InquiryRelationships relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
-        onFailed?.call(call.arguments['inquiryId'] as String, attributes, relationships);
+        InquiryAttributes attributes =
+            InquiryAttributes.fromJson(call.arguments['attributes']);
+        InquiryRelationships relationships =
+            InquiryRelationships.fromJson(call.arguments['relationships']);
+        onFailed?.call(
+            call.arguments['inquiryId'] as String, attributes, relationships);
         break;
 
       case 'onError':
@@ -68,7 +74,8 @@ class Inquiry {
         break;
 
       default:
-        throw MissingPluginException('${call.method} was invoked but has no handler');
+        throw MissingPluginException(
+            '${call.method} was invoked but has no handler');
     }
   }
 

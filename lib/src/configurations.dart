@@ -69,7 +69,8 @@ class TemplateIdConfiguration extends InquiryConfiguration {
       'templateId': templateId,
       'accountId': accountId,
       'referenceId': referenceId,
-      'environment': environment != null ? environment.toString().split('.').last : null,
+      'environment':
+          environment != null ? environment.toString().split('.').last : null,
       'fields': fields?.toJson(),
       'note': note,
       'theme': iOSTheme?.toJson(),
