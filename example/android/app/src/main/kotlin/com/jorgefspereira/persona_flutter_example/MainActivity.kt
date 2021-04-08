@@ -1,4 +1,4 @@
-package com.example.persona_flutter_example
+package com.jorgefspereira.persona_flutter_example
 
 import io.flutter.embedding.android.FlutterActivity
 
