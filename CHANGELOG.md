@@ -1,3 +1,7 @@
+## 2.0.1
+
+* Upgraded iOS SDK to 1.1.4
+ 
 ## 2.0.0
 
 * BREAKING CHANGE: Added InquiryConfiguration to Inquiry object
