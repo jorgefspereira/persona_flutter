@@ -4,6 +4,21 @@ import 'dart:ui';
 /// text sizes, and corner radius.
 class InquiryTheme {
   InquiryTheme({
+    this.buttonShadowColor,
+    this.buttonShadowRadius,
+    this.buttonShadowAlpha,
+    this.buttonShadowWidth,
+    this.buttonShadowHeight,
+    this.cancelButtonShadowRadius,
+    this.errorColor,
+    this.overlayBackgroundColor,
+    this.textFieldBackgroundColor,
+    this.buttonDisabledTextColor,
+    this.checkboxBackgroundColor,
+    this.checkboxForegroundColor,
+    this.cancelButtonTextColor,
+    this.cancelButtonShadowColor,
+    this.progressColor,
     this.backgroundColor,
     this.textFieldBorderColor,
     this.buttonBackgroundColor,
@@ -24,31 +39,136 @@ class InquiryTheme {
     this.footnoteTextColor,
     this.buttonCornerRadius,
     this.textFieldCornerRadius,
+    this.titleFontFamily,
+    this.titleFontSize,
+    this.bodyFontFamily,
+    this.bodyFontSize,
+    this.buttonFontFamily,
+    this.buttonFontSize,
   });
 
-  // Colors
-  final Color backgroundColor;
-  final Color textFieldBorderColor;
-  final Color buttonBackgroundColor;
-  final Color buttonTouchedBackgroundColor;
-  final Color buttonDisabledBackgroundColor;
-  final Color closeButtonTintColor;
-  final Color cancelButtonBackgroundColor;
-  final Color selectedCellBackgroundColor;
-  final Color accentColor;
-  final Color darkPrimaryColor;
-  final Color primaryColor;
-  final Color titleTextColor;
-  final Color bodyTextColor;
-  final Color formLabelTextColor;
-  final Color buttonTextColor;
-  final Color pickerTextColor;
-  final Color textFieldTextColor;
-  final Color footnoteTextColor;
+  /// The background color for all views.
+  final Color? backgroundColor;
 
-  // Corner Radius
-  final double buttonCornerRadius;
-  final double textFieldCornerRadius;
+  /// The primary color.
+  final Color? primaryColor;
+
+  /// The darker, primary color.
+  final Color? darkPrimaryColor;
+
+  /// The error color.
+  final Color? errorColor;
+
+  /// The accent color.
+  final Color? accentColor;
+
+  /// The background color for overlay views.
+  final Color? overlayBackgroundColor;
+
+  /// The text color for title labels.
+  final Color? titleTextColor;
+
+  /// The text color for body labels.
+  final Color? bodyTextColor;
+
+  /// The text color for footnote labels.
+  final Color? footnoteTextColor;
+
+  /// The text color for form labels.
+  final Color? formLabelTextColor;
+
+  /// The text color for text fields.
+  final Color? textFieldTextColor;
+
+  /// The background color for text fields.
+  final Color? textFieldBackgroundColor;
+
+  /// The border color for text fields.
+  final Color? textFieldBorderColor;
+
+  /// The corner radius for text fields.
+  final double? textFieldCornerRadius;
+
+  /// The text color for picker items.
+  final Color? pickerTextColor;
+
+  /// The background color for buttons, in the normal state.
+  final Color? buttonBackgroundColor;
+
+  /// The background color for buttons, in the disabled state.
+  final Color? buttonDisabledBackgroundColor;
+
+  /// The background color for buttons, in the touched state.
+  final Color? buttonTouchedBackgroundColor;
+
+  /// The text color for button text, in the normal state.
+  final Color? buttonTextColor;
+
+  /// The text color for button text, in the disabled state.
+  final Color? buttonDisabledTextColor;
+
+  /// The corner radius to apply to buttons.
+  final double? buttonCornerRadius;
+
+  /// The shadow color for buttons (this should include the desired opacity)
+  final Color? buttonShadowColor;
+
+  /// The alpha value (0..1) used to render the shadow.
+  final double? buttonShadowAlpha;
+
+  /// The blur width used to render the shadow..
+  final double? buttonShadowWidth;
+
+  /// The blur height used to render the shadow..
+  final double? buttonShadowHeight;
+
+  /// The blur radius (in points) used to render the shadow.
+  final double? buttonShadowRadius;
+
+  /// The background color for checkboxes, in the normal state.
+  final Color? checkboxBackgroundColor;
+
+  /// The foreground color for checkboxes, in the normal state.
+  final Color? checkboxForegroundColor;
+
+  /// The text color for a selected table view cell.
+  final Color? selectedCellBackgroundColor;
+
+  /// The tint to apply to the close button.
+  final Color? closeButtonTintColor;
+
+  /// The background color for buttons when cancelling a verification.
+  final Color? cancelButtonBackgroundColor;
+
+  /// The text color for buttons when cancelling a verification.
+  final Color? cancelButtonTextColor;
+
+  /// The shadow color for buttons (this should include the desired opacity)
+  final Color? cancelButtonShadowColor;
+
+  /// The blur radius (in points) used to render the shadow.
+  final double? cancelButtonShadowRadius;
+
+  /// The tint to apply to the progress animation items.
+  final Color? progressColor;
+
+  /// Title font family
+  final String? titleFontFamily;
+
+  /// Title font size (pt)
+  final double? titleFontSize;
+
+  /// Body font family
+  final String? bodyFontFamily;
+
+  /// Body font size (pt)
+  final double? bodyFontSize;
+
+  /// Button font family
+  final String? buttonFontFamily;
+
+  /// Button font size (pt)
+  final double? buttonFontSize;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
@@ -72,10 +192,31 @@ class InquiryTheme {
       'footnoteTextColor': _toHex(footnoteTextColor),
       'buttonCornerRadius': buttonCornerRadius,
       'textFieldCornerRadius': textFieldCornerRadius,
+      'errorColor': _toHex(errorColor),
+      'overlayBackgroundColor': _toHex(overlayBackgroundColor),
+      'textFieldBackgroundColor': _toHex(textFieldBackgroundColor),
+      'buttonDisabledTextColor': _toHex(buttonDisabledTextColor),
+      'checkboxBackgroundColor': _toHex(checkboxBackgroundColor),
+      'checkboxForegroundColor': _toHex(checkboxForegroundColor),
+      'cancelButtonTextColor': _toHex(cancelButtonTextColor),
+      'cancelButtonShadowColor': _toHex(cancelButtonShadowColor),
+      'progressColor': _toHex(progressColor),
+      'buttonShadowColor': _toHex(buttonShadowColor),
+      'buttonShadowAlpha': buttonShadowAlpha,
+      'buttonShadowRadius': buttonShadowRadius,
+      'buttonShadowWidth': buttonShadowWidth,
+      'buttonShadowHeight': buttonShadowHeight,
+      'cancelButtonShadowRadius': cancelButtonShadowRadius,
+      'titleFontFamily': titleFontFamily,
+      'titleFontSize': titleFontSize,
+      'bodyFontFamily': bodyFontFamily,
+      'bodyFontSize': bodyFontSize,
+      'buttonFontFamily': buttonFontFamily,
+      'buttonFontSize': buttonFontSize,
     };
   }
 
-  String _toHex(Color color) {
+  String? _toHex(Color? color) {
     return color != null ? '#${color.value.toRadixString(16)}' : null;
   }
 }

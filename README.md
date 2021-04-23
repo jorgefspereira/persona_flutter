@@ -43,7 +43,14 @@ Change the minimum Android sdk version to 21 (or higher) in your `android/app/bu
 minSdkVersion 21
 ```
 
-## TODOs
+#### Theming
 
-- Support for replacement strings customization
-- Support for custom styling
+Using the `styles.xml` of your app, you can set colors, buttons and more to customize the Persona flow to your own style. Just extend the base Persona style `Base.Persona.Inquiry.Theme` and name it `Persona.Inquiry.Theme`.
+
+```xml
+<style name="Persona.Inquiry.Theme" parent="@style/Base.Persona.Inquiry.Theme">
+    <item name="colorPrimary">#22CB8E</item>
+    <item name="colorAccent">#22CB8E</item>
+    <item name="colorPrimaryDark">#167755</item>
+</style>
+```

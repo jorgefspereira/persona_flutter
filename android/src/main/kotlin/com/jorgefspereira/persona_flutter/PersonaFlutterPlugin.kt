@@ -79,6 +79,7 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
             val emailAddress = fieldsMap["emailAddress"] as? String
             val phoneNumber = fieldsMap["phoneNumber"] as? String
             val birthdate = fieldsMap["birthdate"] as? String
+            val additionalFields = fieldsMap["additionalFields"] as? Map<String, *>
 
             if(nameMap != null) {
               val first = nameMap["first"] as String?
@@ -111,6 +112,16 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
               val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
               formatter.format(birthdate);
               fieldsBuilder.birthdate(formatter.calendar)
+            }
+
+            if(additionalFields != null) {
+              for ((key, value) in additionalFields) {
+                when(value) {
+                  is Int -> fieldsBuilder.field(key, value)
+                  is String -> fieldsBuilder.field(key, value)
+                  is Boolean -> fieldsBuilder.field(key, value)
+                }
+              }
             }
           }
 

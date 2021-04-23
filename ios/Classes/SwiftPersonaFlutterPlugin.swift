@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import Persona
+import os
 
 public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate {
     let channel: FlutterMethodChannel;
@@ -45,6 +46,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 var name: Name?
                 var address: Address?
                 var birthdate: Date?
+                var additionalFields: [String : InquiryField]?
                 let phoneNumber = fieldsDict["phoneNumber"] as? String;
                 let emailAddress = fieldsDict["emailAddress"] as? String;
                 
@@ -68,12 +70,31 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                                            countryCode: addressDict["countryCode"]);
                 }
                 
+                if let additionalFieldsDict = fieldsDict["additionalFields"] as? Dictionary<String, Any> {
+                    var auxFields = [String : InquiryField]();
+                    
+                    for (key, value) in additionalFieldsDict{
+                        switch value {
+                            case is Int:
+                                auxFields[key] = InquiryField.int(value as! Int);
+                            case is String:
+                                auxFields[key] = InquiryField.string(value as! String);
+                            case is Bool:
+                                auxFields[key] = InquiryField.bool(value as! Bool);
+                            default:
+                                break;
+                        }
+                    }
+                    
+                    additionalFields = auxFields;
+                }
+                
                 fields = Fields.init(name: name,
                                      address: address,
                                      birthdate: birthdate,
                                      phoneNumber: phoneNumber,
                                      emailAddress: emailAddress,
-                                     additionalFields: nil);
+                                     additionalFields: additionalFields);
             }
             
             // Build Theme
@@ -136,7 +157,51 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 if let footnoteTextColor = themeDict["footnoteTextColor"] as? String {
                     theme?.footnoteTextColor = UIColor.init(hex: footnoteTextColor);
                 }
+                if let errorColor = themeDict["errorColor"] as? String {
+                    theme?.errorColor = UIColor.init(hex: errorColor);
+                }
+                if let overlayBackgroundColor = themeDict["overlayBackgroundColor"] as? String {
+                    theme?.overlayBackgroundColor = UIColor.init(hex: overlayBackgroundColor);
+                }
+                if let textFieldBackgroundColor = themeDict["textFieldBackgroundColor"] as? String {
+                    theme?.textFieldBackgroundColor = UIColor.init(hex: textFieldBackgroundColor);
+                }
+                if let buttonDisabledTextColor = themeDict["buttonDisabledTextColor"] as? String {
+                    theme?.buttonDisabledTextColor = UIColor.init(hex: buttonDisabledTextColor);
+                }
+                if let checkboxBackgroundColor = themeDict["checkboxBackgroundColor"] as? String {
+                    theme?.checkboxBackgroundColor = UIColor.init(hex: checkboxBackgroundColor);
+                }
+                if let checkboxForegroundColor = themeDict["checkboxForegroundColor"] as? String {
+                    theme?.checkboxForegroundColor = UIColor.init(hex: checkboxForegroundColor);
+                }
+                if let cancelButtonTextColor = themeDict["cancelButtonTextColor"] as? String {
+                    theme?.cancelButtonTextColor = UIColor.init(hex: cancelButtonTextColor);
+                }
+                if let cancelButtonShadowColor = themeDict["cancelButtonShadowColor"] as? String {
+                    theme?.cancelButtonShadowColor = UIColor.init(hex: cancelButtonShadowColor);
+                }
+                if let progressColor = themeDict["progressColor"] as? String {
+                    theme?.progressColor = UIColor.init(hex: progressColor);
+                }
+                if let buttonShadowColor = themeDict["buttonShadowColor"] as? String {
+                    let buttonShadowAlpha = themeDict["buttonShadowAlpha"] as? CGFloat;
+                    theme?.buttonShadowColor = UIColor.init(hex: buttonShadowColor).withAlphaComponent(buttonShadowAlpha ?? 0.5);   //UIColor.init(hex: buttonShadowColor);
+                }
+
+                let buttonShadowWidth = themeDict["buttonShadowWidth"] as? CGFloat;
+                let buttonShadowHeight = themeDict["buttonShadowHeight"] as? CGFloat;
+
+                theme?.buttonShadowOffset = CGSize(width:buttonShadowWidth ?? 0, height:buttonShadowHeight ?? 0);
                 
+                // Shadow Radius
+                if let buttonShadowRadius = themeDict["buttonShadowRadius"] as? CGFloat {
+                    theme?.buttonShadowRadius = buttonShadowRadius;
+                }
+                if let cancelButtonShadowRadius = themeDict["cancelButtonShadowRadius"] as? CGFloat {
+                    theme?.cancelButtonShadowRadius = cancelButtonShadowRadius;
+                }
+            
                 // Corner Radius
                 if let buttonCornerRadius = themeDict["buttonCornerRadius"] as? CGFloat {
                     theme?.buttonCornerRadius = buttonCornerRadius;
@@ -145,6 +210,25 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 if let textFieldCornerRadius = themeDict["textFieldCornerRadius"] as? CGFloat {
                     theme?.textFieldCornerRadius = textFieldCornerRadius;
                 }
+
+                if let titleFontFamily = themeDict["titleFontFamily"] as? String {
+                    if let titleFont = UIFont(name: titleFontFamily, size: themeDict["titleFontSize"] as? CGFloat ?? 24) {
+                        theme?.titleTextFont = titleFont;
+                    } 
+                }
+
+                if let bodyFontFamily = themeDict["bodyFontFamily"] as? String {
+                    if let bodyFont = UIFont(name: bodyFontFamily, size: themeDict["bodyFontSize"] as? CGFloat ?? 14) {
+                        theme?.bodyTextFont = bodyFont;
+                    } 
+                }
+
+                if let buttonFontFamily = themeDict["buttonFontFamily"] as? String {
+                    if let buttonFont = UIFont(name: buttonFontFamily, size: themeDict["buttonFontSize"] as? CGFloat ?? 18) {
+                        theme?.buttonFont = buttonFont;
+                    } 
+                }
+                
             }
             
             // Configuration

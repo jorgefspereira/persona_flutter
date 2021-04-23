@@ -1,7 +1,26 @@
+## 2.0.1
+
+* Upgraded iOS SDK to 1.1.4
+ 
+## 2.0.0
+
+* BREAKING CHANGE: Added InquiryConfiguration to Inquiry object
+* Fix typo on InquiryVerificationType 
+* Null-safety support
+* Added type unknown to InquiryVerificationStatus and InquiryVerificationType
+
+## 1.2.0
+
+* Added InquiryTheme to support ios theming. Thank you @tomaash
+* Added support for android theme via styles.xml. Thank you @tomaash
+* Upgraded iOS SDK to 1.1.3
+* Added additionalFields support on iOS and Android.
+
 ## 1.1.0+1
 
 * Fix intl dependency version
 * Minor fixes
+
 ## 1.1.0
 
 * Upgraded iOS SDK to 1.0.6.
