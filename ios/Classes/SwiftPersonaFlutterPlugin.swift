@@ -1,7 +1,6 @@
 import Flutter
 import UIKit
 import Persona
-import os
 
 public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate {
     let channel: FlutterMethodChannel;
@@ -184,9 +183,10 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 if let progressColor = themeDict["progressColor"] as? String {
                     theme?.progressColor = UIColor.init(hex: progressColor);
                 }
+
                 if let buttonShadowColor = themeDict["buttonShadowColor"] as? String {
                     let buttonShadowAlpha = themeDict["buttonShadowAlpha"] as? CGFloat;
-                    theme?.buttonShadowColor = UIColor.init(hex: buttonShadowColor).withAlphaComponent(buttonShadowAlpha ?? 0.5);   //UIColor.init(hex: buttonShadowColor);
+                    theme?.buttonShadowColor = UIColor.init(hex: buttonShadowColor).withAlphaComponent(buttonShadowAlpha ?? 0.5); 
                 }
 
                 let buttonShadowWidth = themeDict["buttonShadowWidth"] as? CGFloat;
