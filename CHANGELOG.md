@@ -1,3 +1,7 @@
+## 2.0.2
+
+* Improved iOS theming. Thank you @tomaash.
+
 ## 2.0.1
 
 * Upgraded iOS SDK to 1.1.4
