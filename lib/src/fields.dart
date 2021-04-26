@@ -38,7 +38,7 @@ class InquiryFields {
       birthdate: DateTime.parse(json["birthdate"] as String),
       phoneNumber: json["phoneNumber"] as String?,
       emailAddress: json["emailAddress"] as String?,
-      additionalFields: json["additionalFields"],
+      additionalFields: json["additionalFields"] as Map<String, dynamic>,
     );
   }
 

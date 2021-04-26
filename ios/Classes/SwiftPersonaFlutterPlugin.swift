@@ -183,9 +183,16 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 if let progressColor = themeDict["progressColor"] as? String {
                     theme?.progressColor = UIColor.init(hex: progressColor);
                 }
+
                 if let buttonShadowColor = themeDict["buttonShadowColor"] as? String {
-                    theme?.buttonShadowColor = UIColor.init(hex: buttonShadowColor);
+                    let buttonShadowAlpha = themeDict["buttonShadowAlpha"] as? CGFloat;
+                    theme?.buttonShadowColor = UIColor.init(hex: buttonShadowColor).withAlphaComponent(buttonShadowAlpha ?? 0.5); 
                 }
+
+                let buttonShadowWidth = themeDict["buttonShadowWidth"] as? CGFloat;
+                let buttonShadowHeight = themeDict["buttonShadowHeight"] as? CGFloat;
+
+                theme?.buttonShadowOffset = CGSize(width:buttonShadowWidth ?? 0, height:buttonShadowHeight ?? 0);
                 
                 // Shadow Radius
                 if let buttonShadowRadius = themeDict["buttonShadowRadius"] as? CGFloat {
@@ -203,6 +210,25 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 if let textFieldCornerRadius = themeDict["textFieldCornerRadius"] as? CGFloat {
                     theme?.textFieldCornerRadius = textFieldCornerRadius;
                 }
+
+                if let titleFontFamily = themeDict["titleFontFamily"] as? String {
+                    if let titleFont = UIFont(name: titleFontFamily, size: themeDict["titleFontSize"] as? CGFloat ?? 24) {
+                        theme?.titleTextFont = titleFont;
+                    } 
+                }
+
+                if let bodyFontFamily = themeDict["bodyFontFamily"] as? String {
+                    if let bodyFont = UIFont(name: bodyFontFamily, size: themeDict["bodyFontSize"] as? CGFloat ?? 14) {
+                        theme?.bodyTextFont = bodyFont;
+                    } 
+                }
+
+                if let buttonFontFamily = themeDict["buttonFontFamily"] as? String {
+                    if let buttonFont = UIFont(name: buttonFontFamily, size: themeDict["buttonFontSize"] as? CGFloat ?? 18) {
+                        theme?.buttonFont = buttonFont;
+                    } 
+                }
+                
             }
             
             // Configuration

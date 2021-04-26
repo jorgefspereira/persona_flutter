@@ -6,6 +6,9 @@ class InquiryTheme {
   InquiryTheme({
     this.buttonShadowColor,
     this.buttonShadowRadius,
+    this.buttonShadowAlpha,
+    this.buttonShadowWidth,
+    this.buttonShadowHeight,
     this.cancelButtonShadowRadius,
     this.errorColor,
     this.overlayBackgroundColor,
@@ -36,6 +39,12 @@ class InquiryTheme {
     this.footnoteTextColor,
     this.buttonCornerRadius,
     this.textFieldCornerRadius,
+    this.titleFontFamily,
+    this.titleFontSize,
+    this.bodyFontFamily,
+    this.bodyFontSize,
+    this.buttonFontFamily,
+    this.buttonFontSize,
   });
 
   /// The background color for all views.
@@ -104,6 +113,15 @@ class InquiryTheme {
   /// The shadow color for buttons (this should include the desired opacity)
   final Color? buttonShadowColor;
 
+  /// The alpha value (0..1) used to render the shadow.
+  final double? buttonShadowAlpha;
+
+  /// The blur width used to render the shadow..
+  final double? buttonShadowWidth;
+
+  /// The blur height used to render the shadow..
+  final double? buttonShadowHeight;
+
   /// The blur radius (in points) used to render the shadow.
   final double? buttonShadowRadius;
 
@@ -133,6 +151,24 @@ class InquiryTheme {
 
   /// The tint to apply to the progress animation items.
   final Color? progressColor;
+
+  /// Title font family
+  final String? titleFontFamily;
+
+  /// Title font size (pt)
+  final double? titleFontSize;
+
+  /// Body font family
+  final String? bodyFontFamily;
+
+  /// Body font size (pt)
+  final double? bodyFontSize;
+
+  /// Button font family
+  final String? buttonFontFamily;
+
+  /// Button font size (pt)
+  final double? buttonFontSize;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
@@ -166,8 +202,17 @@ class InquiryTheme {
       'cancelButtonShadowColor': _toHex(cancelButtonShadowColor),
       'progressColor': _toHex(progressColor),
       'buttonShadowColor': _toHex(buttonShadowColor),
+      'buttonShadowAlpha': buttonShadowAlpha,
       'buttonShadowRadius': buttonShadowRadius,
+      'buttonShadowWidth': buttonShadowWidth,
+      'buttonShadowHeight': buttonShadowHeight,
       'cancelButtonShadowRadius': cancelButtonShadowRadius,
+      'titleFontFamily': titleFontFamily,
+      'titleFontSize': titleFontSize,
+      'bodyFontFamily': bodyFontFamily,
+      'bodyFontSize': bodyFontSize,
+      'buttonFontFamily': buttonFontFamily,
+      'buttonFontSize': buttonFontSize,
     };
   }
 
