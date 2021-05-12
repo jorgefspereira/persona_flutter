@@ -18,7 +18,7 @@ class InquiryTheme {
     this.checkboxForegroundColor,
     this.cancelButtonTextColor,
     this.cancelButtonShadowColor,
-    this.progressColor,
+    this.separatorColor,
     this.backgroundColor,
     this.textFieldBorderColor,
     this.buttonBackgroundColor,
@@ -45,6 +45,26 @@ class InquiryTheme {
     this.bodyFontSize,
     this.buttonFontFamily,
     this.buttonFontSize,
+    this.showGovernmentIdIcons,
+    this.errorFontFamily,
+    this.errorFontSize,
+    this.navigationBarTextColor,
+    this.navigationBarTextFontFamily,
+    this.navigationBarTextFontSize,
+    this.textFieldFontFamily,
+    this.textFieldFontSize,
+    this.textFieldPlaceholderFontFamily,
+    this.textFieldPlaceholderFontSize,
+    this.pickerFontFamily,
+    this.pickerFontSize,
+    this.cameraInstructionsTextColor,
+    this.cameraButtonAlternateBackgroundColor,
+    this.cameraButtonAlternateTextColor,
+    this.cameraButtonBackgroundColor,
+    this.cameraButtonTextColor,
+    this.cameraGuideCornersColor,
+    this.cameraGuideHintTextColor,
+    this.cameraHintTextColor,
   });
 
   /// The background color for all views.
@@ -56,20 +76,47 @@ class InquiryTheme {
   /// The darker, primary color.
   final Color? darkPrimaryColor;
 
+  /// The accent color.
+  final Color? accentColor;
+
   /// The error color.
   final Color? errorColor;
 
-  /// The accent color.
-  final Color? accentColor;
+  /// Error font family
+  final String? errorFontFamily;
+
+  /// Error font size (pt)
+  final double? errorFontSize;
 
   /// The background color for overlay views.
   final Color? overlayBackgroundColor;
 
   /// The text color for title labels.
+  final Color? navigationBarTextColor;
+
+  /// Navigation bar font family
+  final String? navigationBarTextFontFamily;
+
+  /// Navigation bar font size
+  final double? navigationBarTextFontSize;
+
+  /// The text color for title labels.
   final Color? titleTextColor;
+
+  /// Title font family
+  final String? titleFontFamily;
+
+  /// Title font size (pt)
+  final double? titleFontSize;
 
   /// The text color for body labels.
   final Color? bodyTextColor;
+
+  /// Body font family
+  final String? bodyFontFamily;
+
+  /// Body font size (pt)
+  final double? bodyFontSize;
 
   /// The text color for footnote labels.
   final Color? footnoteTextColor;
@@ -88,6 +135,24 @@ class InquiryTheme {
 
   /// The corner radius for text fields.
   final double? textFieldCornerRadius;
+
+  /// Text fields font family
+  final String? textFieldFontFamily;
+
+  /// Text fields font size
+  final double? textFieldFontSize;
+
+  /// Placeholder text font family
+  final String? textFieldPlaceholderFontFamily;
+
+  /// Placeholder text font size
+  final double? textFieldPlaceholderFontSize;
+
+  /// Picker font family
+  final String? pickerFontFamily;
+
+  /// Picker font size
+  final double? pickerFontSize;
 
   /// The text color for picker items.
   final Color? pickerTextColor;
@@ -109,6 +174,12 @@ class InquiryTheme {
 
   /// The corner radius to apply to buttons.
   final double? buttonCornerRadius;
+
+  /// Button font family
+  final String? buttonFontFamily;
+
+  /// Button font size (pt)
+  final double? buttonFontSize;
 
   /// The shadow color for buttons (this should include the desired opacity)
   final Color? buttonShadowColor;
@@ -149,26 +220,35 @@ class InquiryTheme {
   /// The blur radius (in points) used to render the shadow.
   final double? cancelButtonShadowRadius;
 
-  /// The tint to apply to the progress animation items.
-  final Color? progressColor;
+  /// The border color for separators.
+  final Color? separatorColor;
 
-  /// Title font family
-  final String? titleFontFamily;
+  /// Whether or not to show the icons next to government ID types
+  final bool? showGovernmentIdIcons;
 
-  /// Title font size (pt)
-  final double? titleFontSize;
+  /// The text color for camera hint titles.
+  final Color? cameraInstructionsTextColor;
 
-  /// Body font family
-  final String? bodyFontFamily;
+  /// The background color for the button that takes a photo.
+  final Color? cameraButtonBackgroundColor;
 
-  /// Body font size (pt)
-  final double? bodyFontSize;
+  /// The text color for the button that takes a photo.
+  final Color? cameraButtonTextColor;
 
-  /// Button font family
-  final String? buttonFontFamily;
+  /// The background color for the button that re-takes a photo.
+  final Color? cameraButtonAlternateBackgroundColor;
 
-  /// Button font size (pt)
-  final double? buttonFontSize;
+  /// The text color for the button that re-takes a photo.
+  final Color? cameraButtonAlternateTextColor;
+
+  /// The text color for camera hint titles.
+  final Color? cameraHintTextColor;
+
+  /// The text color for camera guide hint titles.
+  final Color? cameraGuideHintTextColor;
+
+  /// The text color for the [ ] corners shown as a guide when the user is taking a photo.
+  final Color? cameraGuideCornersColor;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
@@ -200,7 +280,7 @@ class InquiryTheme {
       'checkboxForegroundColor': _toHex(checkboxForegroundColor),
       'cancelButtonTextColor': _toHex(cancelButtonTextColor),
       'cancelButtonShadowColor': _toHex(cancelButtonShadowColor),
-      'progressColor': _toHex(progressColor),
+      'separatorColor': _toHex(separatorColor),
       'buttonShadowColor': _toHex(buttonShadowColor),
       'buttonShadowAlpha': buttonShadowAlpha,
       'buttonShadowRadius': buttonShadowRadius,
@@ -213,6 +293,26 @@ class InquiryTheme {
       'bodyFontSize': bodyFontSize,
       'buttonFontFamily': buttonFontFamily,
       'buttonFontSize': buttonFontSize,
+      'showGovernmentIdIcons': showGovernmentIdIcons,
+      'errorFontSize': errorFontSize,
+      'errorFontFamily': errorFontFamily,
+      'navigationBarTextColor': _toHex(navigationBarTextColor),
+      'navigationBarTextFontSize': navigationBarTextFontSize,
+      'navigationBarTextFontFamily': navigationBarTextFontFamily,
+      'textFieldPlaceholderFontSize': textFieldPlaceholderFontSize,
+      'textFieldPlaceholderFontFamily': textFieldPlaceholderFontFamily,
+      'textFieldFontSize': textFieldFontSize,
+      'textFieldFontFamily': textFieldFontFamily,
+      'pickerFontSize': pickerFontSize,
+      'pickerFontFamily': pickerFontFamily,
+      'cameraHintTextColor': _toHex(cameraHintTextColor),
+      'cameraInstructionsTextColor': _toHex(cameraInstructionsTextColor),
+      'cameraGuideCornersColor': _toHex(cameraGuideCornersColor),
+      'cameraGuideHintTextColor': _toHex(cameraGuideHintTextColor),
+      'cameraButtonTextColor': _toHex(cameraButtonTextColor),
+      'cameraButtonBackgroundColor': _toHex(cameraButtonBackgroundColor),
+      'cameraButtonAlternateTextColor': _toHex(cameraButtonAlternateTextColor),
+      'cameraButtonAlternateBackgroundColor': _toHex(cameraButtonAlternateBackgroundColor),
     };
   }
 

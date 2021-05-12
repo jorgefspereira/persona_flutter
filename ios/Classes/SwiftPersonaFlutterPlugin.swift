@@ -101,6 +101,11 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 
                 theme = InquiryTheme();
                 
+                // Booleans
+                if let showGovernmentIdIcons = themeDict["showGovernmentIdIcons"] as? Bool {
+                    theme?.showGovernmentIdIcons = showGovernmentIdIcons;
+                }
+                
                 // Colors
                 if let backgroundColor = themeDict["backgroundColor"] as? String {
                     theme?.backgroundColor = UIColor.init(hex: backgroundColor);
@@ -180,10 +185,38 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 if let cancelButtonShadowColor = themeDict["cancelButtonShadowColor"] as? String {
                     theme?.cancelButtonShadowColor = UIColor.init(hex: cancelButtonShadowColor);
                 }
-                if let progressColor = themeDict["progressColor"] as? String {
-                    theme?.progressColor = UIColor.init(hex: progressColor);
+                if let separatorColor = themeDict["separatorColor"] as? String {
+                    theme?.separatorColor = UIColor.init(hex: separatorColor);
                 }
-
+                if let navigationBarTextColor = themeDict["navigationBarTextColor"] as? String {
+                    theme?.navigationBarTextColor = UIColor.init(hex: navigationBarTextColor);
+                }
+                if let cameraInstructionsTextColor = themeDict["cameraInstructionsTextColor"] as? String {
+                    theme?.cameraInstructionsTextColor = UIColor.init(hex: cameraInstructionsTextColor);
+                }
+                if let cameraButtonBackgroundColor = themeDict["cameraButtonBackgroundColor"] as? String {
+                    theme?.cameraButtonBackgroundColor = UIColor.init(hex: cameraButtonBackgroundColor);
+                }
+                if let cameraButtonTextColor = themeDict["cameraButtonTextColor"] as? String {
+                    theme?.cameraButtonTextColor = UIColor.init(hex: cameraButtonTextColor);
+                }
+                if let cameraButtonAlternateBackgroundColor = themeDict["cameraButtonAlternateBackgroundColor"] as? String {
+                    theme?.cameraButtonAlternateBackgroundColor = UIColor.init(hex: cameraButtonAlternateBackgroundColor);
+                }
+                if let cameraButtonAlternateTextColor = themeDict["cameraButtonAlternateTextColor"] as? String {
+                    theme?.cameraButtonAlternateTextColor = UIColor.init(hex: cameraButtonAlternateTextColor);
+                }
+                if let cameraHintTextColor = themeDict["cameraHintTextColor"] as? String {
+                    theme?.cameraHintTextColor = UIColor.init(hex: cameraHintTextColor);
+                }
+                if let cameraGuideHintTextColor = themeDict["cameraGuideHintTextColor"] as? String {
+                    theme?.cameraGuideHintTextColor = UIColor.init(hex: cameraGuideHintTextColor);
+                }
+                if let cameraGuideCornersColor = themeDict["cameraGuideCornersColor"] as? String {
+                    theme?.cameraGuideCornersColor = UIColor.init(hex: cameraGuideCornersColor);
+                }
+                
+                // Shadows
                 if let buttonShadowColor = themeDict["buttonShadowColor"] as? String {
                     let buttonShadowAlpha = themeDict["buttonShadowAlpha"] as? CGFloat;
                     theme?.buttonShadowColor = UIColor.init(hex: buttonShadowColor).withAlphaComponent(buttonShadowAlpha ?? 0.5); 
@@ -194,7 +227,6 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
 
                 theme?.buttonShadowOffset = CGSize(width:buttonShadowWidth ?? 0, height:buttonShadowHeight ?? 0);
                 
-                // Shadow Radius
                 if let buttonShadowRadius = themeDict["buttonShadowRadius"] as? CGFloat {
                     theme?.buttonShadowRadius = buttonShadowRadius;
                 }
@@ -211,6 +243,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                     theme?.textFieldCornerRadius = textFieldCornerRadius;
                 }
 
+                // Fonts
                 if let titleFontFamily = themeDict["titleFontFamily"] as? String {
                     if let titleFont = UIFont(name: titleFontFamily, size: themeDict["titleFontSize"] as? CGFloat ?? 24) {
                         theme?.titleTextFont = titleFont;
@@ -223,10 +256,40 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                     } 
                 }
 
-                if let buttonFontFamily = themeDict["buttonFontFamily"] as? String {
-                    if let buttonFont = UIFont(name: buttonFontFamily, size: themeDict["buttonFontSize"] as? CGFloat ?? 18) {
-                        theme?.buttonFont = buttonFont;
+                if let errorFontFamily = themeDict["errorFontFamily"] as? String {
+                    if let errorFont = UIFont(name: errorFontFamily, size: themeDict["errorFontSize"] as? CGFloat ?? 18) {
+                        theme?.errorTextFont = errorFont;
                     } 
+                }
+                
+                if let navigationBarTextFontFamily = themeDict["navigationBarTextFontFamily"] as? String {
+                    if let navigationBarTextFont = UIFont(name: navigationBarTextFontFamily, size: themeDict["navigationBarTextFontSize"] as? CGFloat ?? 18) {
+                        theme?.navigationBarTextFont = navigationBarTextFont;
+                    }
+                }
+                
+                if let textFieldFontFamily = themeDict["textFieldFontFamily"] as? String {
+                    if let textFieldFont = UIFont(name: textFieldFontFamily, size: themeDict["textFieldFontSize"] as? CGFloat ?? 18) {
+                        theme?.textFieldFont = textFieldFont;
+                    }
+                }
+                
+                if let textFieldPlaceholderFontFamily = themeDict["textFieldPlaceholderFontFamily"] as? String {
+                    if let textFieldPlaceholderFont = UIFont(name: textFieldPlaceholderFontFamily, size: themeDict["textFieldPlaceholderFontSize"] as? CGFloat ?? 18) {
+                        theme?.textFieldPlaceholderFont = textFieldPlaceholderFont;
+                    }
+                }
+                
+                if let textFieldPlaceholderFontFamily = themeDict["textFieldPlaceholderFontFamily"] as? String {
+                    if let textFieldPlaceholderFont = UIFont(name: textFieldPlaceholderFontFamily, size: themeDict["textFieldPlaceholderFontSize"] as? CGFloat ?? 18) {
+                        theme?.textFieldPlaceholderFont = textFieldPlaceholderFont;
+                    }
+                }
+                
+                if let pickerFontFamily = themeDict["pickerFontFamily"] as? String {
+                    if let pickerFont = UIFont(name: pickerFontFamily, size: themeDict["pickerFontSize"] as? CGFloat ?? 18) {
+                        theme?.pickerTextFont = pickerFont;
+                    }
                 }
                 
             }
