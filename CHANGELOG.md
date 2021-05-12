@@ -1,3 +1,9 @@
+## 2.0.3
+
+* Added new theme properties.
+* Upgraded iOS SDK to 1.1.7.
+* Upgraded Android SDK to 1.1.3.
+
 ## 2.0.2
 
 * Improved iOS theming. Thank you @tomaash.
