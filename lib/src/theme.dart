@@ -312,7 +312,8 @@ class InquiryTheme {
       'cameraButtonTextColor': _toHex(cameraButtonTextColor),
       'cameraButtonBackgroundColor': _toHex(cameraButtonBackgroundColor),
       'cameraButtonAlternateTextColor': _toHex(cameraButtonAlternateTextColor),
-      'cameraButtonAlternateBackgroundColor': _toHex(cameraButtonAlternateBackgroundColor),
+      'cameraButtonAlternateBackgroundColor':
+          _toHex(cameraButtonAlternateBackgroundColor),
     };
   }
 
