@@ -1,3 +1,9 @@
+## 2.0.4
+
+* Added new theme properties: cancelButtonAlternateTextColor, cancelButtonAlternateBackgroundColor
+* Upgraded iOS SDK to 1.1.11.
+* Upgraded Android SDK to 1.1.4.
+
 ## 2.0.3
 
 * Added new theme properties.
