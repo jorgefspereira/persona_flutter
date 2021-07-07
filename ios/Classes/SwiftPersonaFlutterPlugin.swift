@@ -182,6 +182,15 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 if let cancelButtonTextColor = themeDict["cancelButtonTextColor"] as? String {
                     theme?.cancelButtonTextColor = UIColor.init(hex: cancelButtonTextColor);
                 }
+                if let cancelButtonAlternateBackgroundColor = themeDict["cancelButtonAlternateBackgroundColor"] as? String {
+                    theme?.cancelButtonAlternateBackgroundColor = UIColor.init(hex: cancelButtonAlternateBackgroundColor);
+                }
+                if let cancelButtonAlternateTextColor = themeDict["cancelButtonAlternateTextColor"] as? String {
+                    theme?.cancelButtonAlternateTextColor = UIColor.init(hex: cancelButtonAlternateTextColor);
+                }
+                if let cancelButtonTextColor = themeDict["cancelButtonTextColor"] as? String {
+                    theme?.cancelButtonTextColor = UIColor.init(hex: cancelButtonTextColor);
+                }
                 if let cancelButtonShadowColor = themeDict["cancelButtonShadowColor"] as? String {
                     theme?.cancelButtonShadowColor = UIColor.init(hex: cancelButtonShadowColor);
                 }

@@ -17,6 +17,8 @@ class InquiryTheme {
     this.checkboxBackgroundColor,
     this.checkboxForegroundColor,
     this.cancelButtonTextColor,
+    this.cancelButtonAlternateBackgroundColor,
+    this.cancelButtonAlternateTextColor,
     this.cancelButtonShadowColor,
     this.separatorColor,
     this.backgroundColor,
@@ -214,6 +216,12 @@ class InquiryTheme {
   /// The text color for buttons when cancelling a verification.
   final Color? cancelButtonTextColor;
 
+  /// The background color for the “Yes, cancel” button when cancelling a verification.
+  final Color? cancelButtonAlternateBackgroundColor;
+
+  /// The text color for the “Yes, cancel” button when cancelling a verification.
+  final Color? cancelButtonAlternateTextColor;
+
   /// The shadow color for buttons (this should include the desired opacity)
   final Color? cancelButtonShadowColor;
 
@@ -314,6 +322,9 @@ class InquiryTheme {
       'cameraButtonAlternateTextColor': _toHex(cameraButtonAlternateTextColor),
       'cameraButtonAlternateBackgroundColor':
           _toHex(cameraButtonAlternateBackgroundColor),
+      'cancelButtonAlternateTextColor': _toHex(cancelButtonAlternateTextColor),
+      'cancelButtonAlternateBackgroundColor':
+          _toHex(cancelButtonAlternateBackgroundColor),
     };
   }
 
