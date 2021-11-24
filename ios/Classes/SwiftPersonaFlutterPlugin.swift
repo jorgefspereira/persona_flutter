@@ -17,330 +17,78 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "start":
-            let controller = UIApplication.shared.keyWindow!.rootViewController!
-            let arguments = call.arguments as! NSDictionary
-            
-            // input values
-            let templateIdInput = arguments.value(forKey: "templateId") as? String
-            let inquiryIdInput = arguments.value(forKey: "inquiryId") as? String
-            let accessTokenInput = arguments.value(forKey: "accessToken") as? String
-            let referenceIdInput = arguments.value(forKey: "referenceId") as? String
-            let accountIdInput = arguments.value(forKey: "accountId") as? String
-            let noteInput = arguments.value(forKey: "note") as? String
-            
-            var config: InquiryConfiguration?
-            var environment: Environment?
-            var fields: Fields?
-            var theme: InquiryTheme?
-            
-            // Environment raw value parse
-            if let env = arguments.value(forKey: "environment") as? String {
-                environment = Environment.init(rawValue: env)
-            }
-            
-            // Build Fields
-            if let fieldsDict = arguments.value(forKey: "fields") as? Dictionary<String, Any> {
+            case "start":
+                let arguments = call.arguments as! [String: Any]
                 
-                var name: Name?
-                var address: Address?
-                var birthdate: Date?
-                var additionalFields: [String : InquiryField]?
-                let phoneNumber = fieldsDict["phoneNumber"] as? String;
-                let emailAddress = fieldsDict["emailAddress"] as? String;
-                
-                if let birthdateString = fieldsDict["birthdate"] as? String {
-                    birthdate = dateFormatter().date(from: birthdateString);
+                // Environment
+                var environment: Environment?
+            
+                if let env = arguments["environment"] as? String {
+                    environment = Environment.init(rawValue: env)
                 }
                 
-                if let nameDict = fieldsDict["name"] as? Dictionary<String, String> {
-                    name = Name.init(first: nameDict["first"],
-                                     middle: nameDict["middle"],
-                                     last: nameDict["last"]);
+                // Theme
+                var theme: InquiryTheme?
+                
+                if let value = arguments["theme"] as? [String: Any] {
+                    theme = themeFromMap(value);
                 }
                 
-                if let addressDict = fieldsDict["address"] as? Dictionary<String, String> {
-                    address = Address.init(street1: addressDict["street1"],
-                                           street2: addressDict["street2"],
-                                           city: addressDict["city"],
-                                           subdivision: addressDict["subdivision"],
-                                           subdivisionAbbr: addressDict["subdivisionAbbr"],
-                                           postalCode: addressDict["postalCode"],
-                                           countryCode: addressDict["countryCode"]);
-                }
-                
-                if let additionalFieldsDict = fieldsDict["additionalFields"] as? Dictionary<String, Any> {
-                    var auxFields = [String : InquiryField]();
+                // Configuration
+                var config: InquiryConfiguration?
+            
+                if let value = arguments["inquiryId"] as? String {
+                    // Access Token
+                    let accessToken = arguments["accessToken"] as? String
                     
-                    for (key, value) in additionalFieldsDict{
-                        switch value {
-                            case is Int:
-                                auxFields[key] = InquiryField.int(value as! Int);
-                            case is String:
-                                auxFields[key] = InquiryField.string(value as! String);
-                            case is Bool:
-                                auxFields[key] = InquiryField.bool(value as! Bool);
-                            default:
-                                break;
-                        }
+                    config = InquiryConfiguration(inquiryId: value,
+                                                  accessToken: accessToken,
+                                                  theme: theme);
+                }
+                else if let templateId = arguments["templateId"] as? String {
+                    // Note
+                    let note = arguments["note"] as? String
+                    
+                    // Fields
+                    var fields: Fields?
+                    
+                    if let value = arguments["fields"] as? [String: Any] {
+                        fields = fieldsFromMap(value)
                     }
                     
-                    additionalFields = auxFields;
+                    if let accountId = arguments["accountId"] as? String {
+                        config = InquiryConfiguration(templateId: templateId,
+                                                      accountId: accountId,
+                                                      environment: environment,
+                                                      note: note,
+                                                      fields: fields,
+                                                      theme: theme);
+                    }
+                    else if let referenceId = arguments["referenceId"] as? String {
+                        config = InquiryConfiguration(templateId: templateId,
+                                                      referenceId: referenceId,
+                                                      environment: environment,
+                                                      note: note,
+                                                      fields: fields,
+                                                      theme: theme);
+                    }
+                    else {
+                        config = InquiryConfiguration(templateId: templateId,
+                                                      environment: environment,
+                                                      note: note,
+                                                      fields: fields,
+                                                      theme: theme);
+                    }
                 }
                 
-                fields = Fields.init(name: name,
-                                     address: address,
-                                     birthdate: birthdate,
-                                     phoneNumber: phoneNumber,
-                                     emailAddress: emailAddress,
-                                     additionalFields: additionalFields);
-            }
-            
-            // Build Theme
-            if let themeDict = arguments.value(forKey: "theme") as? Dictionary<String, Any> {
-                
-                theme = InquiryTheme();
-                
-                // Booleans
-                if let showGovernmentIdIcons = themeDict["showGovernmentIdIcons"] as? Bool {
-                    theme?.showGovernmentIdIcons = showGovernmentIdIcons;
-                }
-                
-                // Colors
-                if let backgroundColor = themeDict["backgroundColor"] as? String {
-                    theme?.backgroundColor = UIColor.init(hex: backgroundColor);
-                }
-                if let textFieldBorderColor = themeDict["textFieldBorderColor"] as? String {
-                    theme?.textFieldBorderColor = UIColor.init(hex: textFieldBorderColor);
-                }
-                if let buttonBackgroundColor = themeDict["buttonBackgroundColor"] as? String {
-                    theme?.buttonBackgroundColor = UIColor.init(hex: buttonBackgroundColor);
-                }
-                if let buttonTouchedBackgroundColor = themeDict["buttonTouchedBackgroundColor"] as? String {
-                    theme?.buttonTouchedBackgroundColor = UIColor.init(hex: buttonTouchedBackgroundColor);
-                }
-                if let buttonDisabledBackgroundColor = themeDict["buttonDisabledBackgroundColor"] as? String {
-                    theme?.buttonDisabledBackgroundColor = UIColor.init(hex: buttonDisabledBackgroundColor);
-                }
-                if let closeButtonTintColor = themeDict["closeButtonTintColor"] as? String {
-                    theme?.closeButtonTintColor = UIColor.init(hex: closeButtonTintColor);
-                }
-                if let cancelButtonBackgroundColor = themeDict["cancelButtonBackgroundColor"] as? String {
-                    theme?.cancelButtonBackgroundColor = UIColor.init(hex: cancelButtonBackgroundColor);
-                }
-                if let selectedCellBackgroundColor = themeDict["selectedCellBackgroundColor"] as? String {
-                    theme?.selectedCellBackgroundColor = UIColor.init(hex: selectedCellBackgroundColor);
-                }
-                if let accentColor = themeDict["accentColor"] as? String {
-                    theme?.accentColor = UIColor.init(hex: accentColor);
-                }
-                if let darkPrimaryColor = themeDict["darkPrimaryColor"] as? String {
-                    theme?.darkPrimaryColor = UIColor.init(hex: darkPrimaryColor);
-                }
-                if let primaryColor = themeDict["primaryColor"] as? String {
-                    theme?.primaryColor = UIColor.init(hex: primaryColor);
-                }
-                if let titleTextColor = themeDict["titleTextColor"] as? String {
-                    theme?.titleTextColor = UIColor.init(hex: titleTextColor);
-                }
-                if let bodyTextColor = themeDict["bodyTextColor"] as? String {
-                    theme?.bodyTextColor = UIColor.init(hex: bodyTextColor);
-                }
-                if let formLabelTextColor = themeDict["formLabelTextColor"] as? String {
-                    theme?.formLabelTextColor = UIColor.init(hex: formLabelTextColor);
-                }
-                if let buttonTextColor = themeDict["buttonTextColor"] as? String {
-                    theme?.buttonTextColor = UIColor.init(hex: buttonTextColor);
-                }
-                if let pickerTextColor = themeDict["pickerTextColor"] as? String {
-                    theme?.pickerTextColor = UIColor.init(hex: pickerTextColor);
-                }
-                if let textFieldTextColor = themeDict["textFieldTextColor"] as? String {
-                    theme?.textFieldTextColor = UIColor.init(hex: textFieldTextColor);
-                }
-                if let footnoteTextColor = themeDict["footnoteTextColor"] as? String {
-                    theme?.footnoteTextColor = UIColor.init(hex: footnoteTextColor);
-                }
-                if let errorColor = themeDict["errorColor"] as? String {
-                    theme?.errorColor = UIColor.init(hex: errorColor);
-                }
-                if let overlayBackgroundColor = themeDict["overlayBackgroundColor"] as? String {
-                    theme?.overlayBackgroundColor = UIColor.init(hex: overlayBackgroundColor);
-                }
-                if let textFieldBackgroundColor = themeDict["textFieldBackgroundColor"] as? String {
-                    theme?.textFieldBackgroundColor = UIColor.init(hex: textFieldBackgroundColor);
-                }
-                if let buttonDisabledTextColor = themeDict["buttonDisabledTextColor"] as? String {
-                    theme?.buttonDisabledTextColor = UIColor.init(hex: buttonDisabledTextColor);
-                }
-                if let checkboxBackgroundColor = themeDict["checkboxBackgroundColor"] as? String {
-                    theme?.checkboxBackgroundColor = UIColor.init(hex: checkboxBackgroundColor);
-                }
-                if let checkboxForegroundColor = themeDict["checkboxForegroundColor"] as? String {
-                    theme?.checkboxForegroundColor = UIColor.init(hex: checkboxForegroundColor);
-                }
-                if let cancelButtonTextColor = themeDict["cancelButtonTextColor"] as? String {
-                    theme?.cancelButtonTextColor = UIColor.init(hex: cancelButtonTextColor);
-                }
-                if let cancelButtonAlternateBackgroundColor = themeDict["cancelButtonAlternateBackgroundColor"] as? String {
-                    theme?.cancelButtonAlternateBackgroundColor = UIColor.init(hex: cancelButtonAlternateBackgroundColor);
-                }
-                if let cancelButtonAlternateTextColor = themeDict["cancelButtonAlternateTextColor"] as? String {
-                    theme?.cancelButtonAlternateTextColor = UIColor.init(hex: cancelButtonAlternateTextColor);
-                }
-                if let cancelButtonTextColor = themeDict["cancelButtonTextColor"] as? String {
-                    theme?.cancelButtonTextColor = UIColor.init(hex: cancelButtonTextColor);
-                }
-                if let cancelButtonShadowColor = themeDict["cancelButtonShadowColor"] as? String {
-                    theme?.cancelButtonShadowColor = UIColor.init(hex: cancelButtonShadowColor);
-                }
-                if let separatorColor = themeDict["separatorColor"] as? String {
-                    theme?.separatorColor = UIColor.init(hex: separatorColor);
-                }
-                if let navigationBarTextColor = themeDict["navigationBarTextColor"] as? String {
-                    theme?.navigationBarTextColor = UIColor.init(hex: navigationBarTextColor);
-                }
-                if let cameraInstructionsTextColor = themeDict["cameraInstructionsTextColor"] as? String {
-                    theme?.cameraInstructionsTextColor = UIColor.init(hex: cameraInstructionsTextColor);
-                }
-                if let cameraButtonBackgroundColor = themeDict["cameraButtonBackgroundColor"] as? String {
-                    theme?.cameraButtonBackgroundColor = UIColor.init(hex: cameraButtonBackgroundColor);
-                }
-                if let cameraButtonTextColor = themeDict["cameraButtonTextColor"] as? String {
-                    theme?.cameraButtonTextColor = UIColor.init(hex: cameraButtonTextColor);
-                }
-                if let cameraButtonAlternateBackgroundColor = themeDict["cameraButtonAlternateBackgroundColor"] as? String {
-                    theme?.cameraButtonAlternateBackgroundColor = UIColor.init(hex: cameraButtonAlternateBackgroundColor);
-                }
-                if let cameraButtonAlternateTextColor = themeDict["cameraButtonAlternateTextColor"] as? String {
-                    theme?.cameraButtonAlternateTextColor = UIColor.init(hex: cameraButtonAlternateTextColor);
-                }
-                if let cameraHintTextColor = themeDict["cameraHintTextColor"] as? String {
-                    theme?.cameraHintTextColor = UIColor.init(hex: cameraHintTextColor);
-                }
-                if let cameraGuideHintTextColor = themeDict["cameraGuideHintTextColor"] as? String {
-                    theme?.cameraGuideHintTextColor = UIColor.init(hex: cameraGuideHintTextColor);
-                }
-                if let cameraGuideCornersColor = themeDict["cameraGuideCornersColor"] as? String {
-                    theme?.cameraGuideCornersColor = UIColor.init(hex: cameraGuideCornersColor);
-                }
-                
-                // Shadows
-                if let buttonShadowColor = themeDict["buttonShadowColor"] as? String {
-                    let buttonShadowAlpha = themeDict["buttonShadowAlpha"] as? CGFloat;
-                    theme?.buttonShadowColor = UIColor.init(hex: buttonShadowColor).withAlphaComponent(buttonShadowAlpha ?? 0.5); 
-                }
-
-                let buttonShadowWidth = themeDict["buttonShadowWidth"] as? CGFloat;
-                let buttonShadowHeight = themeDict["buttonShadowHeight"] as? CGFloat;
-
-                theme?.buttonShadowOffset = CGSize(width:buttonShadowWidth ?? 0, height:buttonShadowHeight ?? 0);
-                
-                if let buttonShadowRadius = themeDict["buttonShadowRadius"] as? CGFloat {
-                    theme?.buttonShadowRadius = buttonShadowRadius;
-                }
-                if let cancelButtonShadowRadius = themeDict["cancelButtonShadowRadius"] as? CGFloat {
-                    theme?.cancelButtonShadowRadius = cancelButtonShadowRadius;
+                // Launch Inquiry
+                if let configuration = config {
+                    let controller = UIApplication.shared.keyWindow!.rootViewController!
+                    Inquiry.init(config: configuration, delegate: self).start(from: controller)
                 }
             
-                // Corner Radius
-                if let buttonCornerRadius = themeDict["buttonCornerRadius"] as? CGFloat {
-                    theme?.buttonCornerRadius = buttonCornerRadius;
-                }
-                
-                if let textFieldCornerRadius = themeDict["textFieldCornerRadius"] as? CGFloat {
-                    theme?.textFieldCornerRadius = textFieldCornerRadius;
-                }
-
-                // Fonts
-                if let titleFontFamily = themeDict["titleFontFamily"] as? String {
-                    if let titleFont = UIFont(name: titleFontFamily, size: themeDict["titleFontSize"] as? CGFloat ?? 24) {
-                        theme?.titleTextFont = titleFont;
-                    } 
-                }
-
-                if let bodyFontFamily = themeDict["bodyFontFamily"] as? String {
-                    if let bodyFont = UIFont(name: bodyFontFamily, size: themeDict["bodyFontSize"] as? CGFloat ?? 14) {
-                        theme?.bodyTextFont = bodyFont;
-                    } 
-                }
-
-                if let errorFontFamily = themeDict["errorFontFamily"] as? String {
-                    if let errorFont = UIFont(name: errorFontFamily, size: themeDict["errorFontSize"] as? CGFloat ?? 18) {
-                        theme?.errorTextFont = errorFont;
-                    } 
-                }
-                
-                if let navigationBarTextFontFamily = themeDict["navigationBarTextFontFamily"] as? String {
-                    if let navigationBarTextFont = UIFont(name: navigationBarTextFontFamily, size: themeDict["navigationBarTextFontSize"] as? CGFloat ?? 18) {
-                        theme?.navigationBarTextFont = navigationBarTextFont;
-                    }
-                }
-                
-                if let textFieldFontFamily = themeDict["textFieldFontFamily"] as? String {
-                    if let textFieldFont = UIFont(name: textFieldFontFamily, size: themeDict["textFieldFontSize"] as? CGFloat ?? 18) {
-                        theme?.textFieldFont = textFieldFont;
-                    }
-                }
-                
-                if let textFieldPlaceholderFontFamily = themeDict["textFieldPlaceholderFontFamily"] as? String {
-                    if let textFieldPlaceholderFont = UIFont(name: textFieldPlaceholderFontFamily, size: themeDict["textFieldPlaceholderFontSize"] as? CGFloat ?? 18) {
-                        theme?.textFieldPlaceholderFont = textFieldPlaceholderFont;
-                    }
-                }
-                
-                if let textFieldPlaceholderFontFamily = themeDict["textFieldPlaceholderFontFamily"] as? String {
-                    if let textFieldPlaceholderFont = UIFont(name: textFieldPlaceholderFontFamily, size: themeDict["textFieldPlaceholderFontSize"] as? CGFloat ?? 18) {
-                        theme?.textFieldPlaceholderFont = textFieldPlaceholderFont;
-                    }
-                }
-                
-                if let pickerFontFamily = themeDict["pickerFontFamily"] as? String {
-                    if let pickerFont = UIFont(name: pickerFontFamily, size: themeDict["pickerFontSize"] as? CGFloat ?? 18) {
-                        theme?.pickerTextFont = pickerFont;
-                    }
-                }
-                
-            }
-            
-            // Configuration
-            if let inquiryId = inquiryIdInput {
-                config = InquiryConfiguration(inquiryId: inquiryId,
-                                              accessToken: accessTokenInput,
-                                              theme: theme);
-            }
-            else if let templateId = templateIdInput {
-                if let accountId = accountIdInput {
-                    config = InquiryConfiguration(templateId: templateId,
-                                                  accountId: accountId,
-                                                  environment: environment,
-                                                  note: noteInput,
-                                                  fields: fields,
-                                                  theme: theme);
-                }
-                else if let referenceId = referenceIdInput {
-                    config = InquiryConfiguration(templateId: templateId,
-                                                  referenceId: referenceId,
-                                                  environment: environment,
-                                                  note: noteInput,
-                                                  fields: fields,
-                                                  theme: theme);
-                }
-                else {
-                    config = InquiryConfiguration(templateId: templateId,
-                                                  environment: environment,
-                                                  note: noteInput,
-                                                  fields: fields,
-                                                  theme: theme);
-                }
-            }
-            
-            // Launch Inquiry
-            if let configuration = config {
-                Inquiry.init(config: configuration, delegate: self).start(from: controller)
-            }
-        default:
-            result(FlutterMethodNotImplemented)
+            default:
+                result(FlutterMethodNotImplemented)
         }
     }
     
@@ -350,9 +98,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         let attributesMap = attributesToMap(attributes: attributes);
         let relationshipsArray = relationshipsToArrayMap(relationships: relationships);
         
-        self.channel.invokeMethod("onSuccess", arguments: ["inquiryId": inquiryId,
-                                                           "attributes" : attributesMap,
-                                                           "relationships": relationshipsArray])
+        self.channel.invokeMethod("onSuccess", arguments: ["inquiryId": inquiryId, "attributes" : attributesMap, "relationships": relationshipsArray])
     }
     
     public func inquiryCancelled() {
@@ -363,9 +109,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         let attributesMap = attributesToMap(attributes: attributes);
         let relationshipsArray = relationshipsToArrayMap(relationships: relationships);
         
-        self.channel.invokeMethod("onFailed", arguments: ["inquiryId": inquiryId,
-                                                          "attributes" : attributesMap,
-                                                          "relationships": relationshipsArray])
+        self.channel.invokeMethod("onFailed", arguments: ["inquiryId": inquiryId, "attributes" : attributesMap, "relationships": relationshipsArray])
     }
     
     public func inquiryError(_ error: Error) {
@@ -373,6 +117,310 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
     }
     
     //MARK:- Convert Functions
+    
+    func fieldsFromMap(_ map: [String: Any]) -> Fields {
+        var name: Name?
+        var address: Address?
+        var birthdate: Date?
+        var additionalFields: [String : InquiryField]?
+        let phoneNumber = map["phoneNumber"] as? String;
+        let emailAddress = map["emailAddress"] as? String;
+        
+        if let birthdateString = map["birthdate"] as? String {
+            birthdate = dateFormatter().date(from: birthdateString);
+        }
+        
+        if let values = map["name"] as? [String: Any] {
+            name = Name.init(first: values["first"] as? String,
+                             middle: values["middle"] as? String,
+                             last: values["last"] as? String);
+        }
+        
+        if let values = map["address"] as? [String: Any] {
+            address = Address.init(street1: values["street1"] as? String,
+                                   street2: values["street2"] as? String,
+                                   city: values["city"] as? String,
+                                   subdivision: values["subdivision"] as? String,
+                                   subdivisionAbbr: values["subdivisionAbbr"] as? String,
+                                   postalCode: values["postalCode"] as? String,
+                                   countryCode: values["countryCode"] as? String);
+        }
+        
+        if let values = map["additionalFields"] as? [String: Any] {
+            var auxFields = [String : InquiryField]();
+            
+            for (key, value) in values {
+                switch value {
+                    case is Int:
+                        auxFields[key] = InquiryField.int(value as! Int);
+                    case is String:
+                        auxFields[key] = InquiryField.string(value as! String);
+                    case is Bool:
+                        auxFields[key] = InquiryField.bool(value as! Bool);
+                    default:
+                        break;
+                }
+            }
+            
+            additionalFields = auxFields;
+        }
+        
+        return Fields.init(name: name,
+                           address: address,
+                           birthdate: birthdate,
+                           phoneNumber: phoneNumber,
+                           emailAddress: emailAddress,
+                           additionalFields: additionalFields);
+    }
+    
+    func themeFromMap(_ map: [String : Any]) -> InquiryTheme {
+        var theme = InquiryTheme();
+        ///////////////////////////////////////////////////////////////////////////
+        /// General Colors
+        ///////////////////////////////////////////////////////////////////////////
+        if let backgroundColor = map["backgroundColor"] as? String {
+            theme.backgroundColor = UIColor.init(hex: backgroundColor);
+        }
+        if let primaryColor = map["primaryColor"] as? String {
+            theme.primaryColor = UIColor.init(hex: primaryColor);
+        }
+        if let darkPrimaryColor = map["darkPrimaryColor"] as? String {
+            theme.darkPrimaryColor = UIColor.init(hex: darkPrimaryColor);
+        }
+        if let accentColor = map["accentColor"] as? String {
+            theme.accentColor = UIColor.init(hex: accentColor);
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Errors
+        ///////////////////////////////////////////////////////////////////////////
+        if let errorColor = map["errorColor"] as? String {
+            theme.errorColor = UIColor.init(hex: errorColor);
+        }
+        if let errorFontFamily = map["errorTextFontFamily"] as? String {
+            if let errorFont = UIFont(name: errorFontFamily, size: map["errorTextFontSize"] as? CGFloat ?? 18) {
+                theme.errorTextFont = errorFont;
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Overlay
+        ///////////////////////////////////////////////////////////////////////////
+        if let overlayBackgroundColor = map["overlayBackgroundColor"] as? String {
+            theme.overlayBackgroundColor = UIColor.init(hex: overlayBackgroundColor);
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Navigation Bar
+        ///////////////////////////////////////////////////////////////////////////
+        if let navigationBarTextColor = map["navigationBarTextColor"] as? String {
+            theme.navigationBarTextColor = UIColor.init(hex: navigationBarTextColor);
+        }
+        if let navigationBarTextFontFamily = map["navigationBarTextFontFamily"] as? String {
+            if let navigationBarTextFont = UIFont(name: navigationBarTextFontFamily, size: map["navigationBarTextFontSize"] as? CGFloat ?? 18) {
+                theme.navigationBarTextFont = navigationBarTextFont;
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Title text
+        ///////////////////////////////////////////////////////////////////////////
+        if let titleTextColor = map["titleTextColor"] as? String {
+            theme.titleTextColor = UIColor.init(hex: titleTextColor);
+        }
+        if let titleTextFontFamily = map["titleTextFontFamily"] as? String {
+            if let titleFont = UIFont(name: titleTextFontFamily, size: map["titleTextFontSize"] as? CGFloat ?? 24) {
+                theme.titleTextFont = titleFont;
+            }
+        }
+        
+        // Body text
+        if let bodyTextColor = map["bodyTextColor"] as? String {
+            theme.bodyTextColor = UIColor.init(hex: bodyTextColor);
+        }
+        if let bodyFontFamily = map["bodyTextFontFamily"] as? String {
+            if let bodyFont = UIFont(name: bodyFontFamily, size: map["bodyTextFontSize"] as? CGFloat ?? 14) {
+                theme.bodyTextFont = bodyFont;
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Footnote
+        ///////////////////////////////////////////////////////////////////////////
+        if let footnoteTextColor = map["footnoteTextColor"] as? String {
+            theme.footnoteTextColor = UIColor.init(hex: footnoteTextColor);
+        }
+        if let footnoteTextFontFamily = map["footnoteTextFontFamily"] as? String {
+            if let footnoteTextFont = UIFont(name: footnoteTextFontFamily, size: map["footnoteTextFontSize"] as? CGFloat ?? 14) {
+                theme.footnoteTextFont = footnoteTextFont;
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Form label
+        ///////////////////////////////////////////////////////////////////////////
+        if let formLabelTextColor = map["formLabelTextColor"] as? String {
+            theme.formLabelTextColor = UIColor.init(hex: formLabelTextColor);
+        }
+        if let formLabelTextFontFamily = map["formLabelTextFontFamily"] as? String {
+            if let formLabelTextFont = UIFont(name: formLabelTextFontFamily, size: map["formLabelTextFontSize"] as? CGFloat ?? 14) {
+                theme.formLabelTextFont = formLabelTextFont;
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Text field
+        ///////////////////////////////////////////////////////////////////////////
+        if let textFieldBorderColor = map["textFieldBorderColor"] as? String {
+            theme.textFieldBorderColor = UIColor.init(hex: textFieldBorderColor);
+        }
+        if let textFieldTextColor = map["textFieldTextColor"] as? String {
+            theme.textFieldTextColor = UIColor.init(hex: textFieldTextColor);
+        }
+        if let textFieldBackgroundColor = map["textFieldBackgroundColor"] as? String {
+            theme.textFieldBackgroundColor = UIColor.init(hex: textFieldBackgroundColor);
+        }
+        if let textFieldCornerRadius = map["textFieldCornerRadius"] as? CGFloat {
+            theme.textFieldCornerRadius = textFieldCornerRadius;
+        }
+        if let textFieldFontFamily = map["textFieldFontFamily"] as? String {
+            if let textFieldFont = UIFont(name: textFieldFontFamily, size: map["textFieldFontSize"] as? CGFloat ?? 18) {
+                theme.textFieldFont = textFieldFont;
+            }
+        }
+        if let textFieldPlaceholderFontFamily = map["textFieldPlaceholderFontFamily"] as? String {
+            if let textFieldPlaceholderFont = UIFont(name: textFieldPlaceholderFontFamily, size: map["textFieldPlaceholderFontSize"] as? CGFloat ?? 18) {
+                theme.textFieldPlaceholderFont = textFieldPlaceholderFont;
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Picker
+        ///////////////////////////////////////////////////////////////////////////
+        if let pickerTextColor = map["pickerTextColor"] as? String {
+            theme.pickerTextColor = UIColor.init(hex: pickerTextColor);
+        }
+        if let pickerFontFamily = map["pickerTextFontFamily"] as? String {
+            if let pickerFont = UIFont(name: pickerFontFamily, size: map["pickerTextFontSize"] as? CGFloat ?? 18) {
+                theme.pickerTextFont = pickerFont;
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Primary Button Properties
+        ///////////////////////////////////////////////////////////////////////////
+        if let buttonBackgroundColor = map["buttonBackgroundColor"] as? String {
+            theme.buttonBackgroundColor = UIColor.init(hex: buttonBackgroundColor);
+        }
+        if let buttonTouchedBackgroundColor = map["buttonTouchedBackgroundColor"] as? String {
+            theme.buttonTouchedBackgroundColor = UIColor.init(hex: buttonTouchedBackgroundColor);
+        }
+        if let buttonDisabledBackgroundColor = map["buttonDisabledBackgroundColor"] as? String {
+            theme.buttonDisabledBackgroundColor = UIColor.init(hex: buttonDisabledBackgroundColor);
+        }
+        if let buttonTextColor = map["buttonTextColor"] as? String {
+            theme.buttonTextColor = UIColor.init(hex: buttonTextColor);
+        }
+        if let buttonDisabledTextColor = map["buttonDisabledTextColor"] as? String {
+            theme.buttonDisabledTextColor = UIColor.init(hex: buttonDisabledTextColor);
+        }
+        if let buttonShadowColor = map["buttonShadowColor"] as? String {
+            let buttonShadowAlpha = map["buttonShadowAlpha"] as? CGFloat;
+            theme.buttonShadowColor = UIColor.init(hex: buttonShadowColor).withAlphaComponent(buttonShadowAlpha ?? 0.5);
+        }
+
+        let buttonShadowWidth = map["buttonShadowWidth"] as? CGFloat;
+        let buttonShadowHeight = map["buttonShadowHeight"] as? CGFloat;
+
+        theme.buttonShadowOffset = CGSize(width:buttonShadowWidth ?? 0, height:buttonShadowHeight ?? 0);
+        
+        if let buttonShadowRadius = map["buttonShadowRadius"] as? CGFloat {
+            theme.buttonShadowRadius = buttonShadowRadius;
+        }
+        if let buttonCornerRadius = map["buttonCornerRadius"] as? CGFloat {
+            theme.buttonCornerRadius = buttonCornerRadius;
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Secondary Button Properties
+        ///////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////
+        /// Checkbox
+        ///////////////////////////////////////////////////////////////////////////
+        if let checkboxBackgroundColor = map["checkboxBackgroundColor"] as? String {
+            theme.checkboxBackgroundColor = UIColor.init(hex: checkboxBackgroundColor);
+        }
+        if let checkboxForegroundColor = map["checkboxForegroundColor"] as? String {
+            theme.checkboxForegroundColor = UIColor.init(hex: checkboxForegroundColor);
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Table view cell
+        ///////////////////////////////////////////////////////////////////////////
+        if let selectedCellBackgroundColor = map["selectedCellBackgroundColor"] as? String {
+            theme.selectedCellBackgroundColor = UIColor.init(hex: selectedCellBackgroundColor);
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Close button
+        ///////////////////////////////////////////////////////////////////////////
+        if let closeButtonTintColor = map["closeButtonTintColor"] as? String {
+            theme.closeButtonTintColor = UIColor.init(hex: closeButtonTintColor);
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Cancel Button
+        ///////////////////////////////////////////////////////////////////////////
+        if let cancelButtonBackgroundColor = map["cancelButtonBackgroundColor"] as? String {
+            theme.cancelButtonBackgroundColor = UIColor.init(hex: cancelButtonBackgroundColor);
+        }
+        if let cancelButtonTextColor = map["cancelButtonTextColor"] as? String {
+            theme.cancelButtonTextColor = UIColor.init(hex: cancelButtonTextColor);
+        }
+        if let cancelButtonAlternateBackgroundColor = map["cancelButtonAlternateBackgroundColor"] as? String {
+            theme.cancelButtonAlternateBackgroundColor = UIColor.init(hex: cancelButtonAlternateBackgroundColor);
+        }
+        if let cancelButtonAlternateTextColor = map["cancelButtonAlternateTextColor"] as? String {
+            theme.cancelButtonAlternateTextColor = UIColor.init(hex: cancelButtonAlternateTextColor);
+        }
+        if let cancelButtonTextColor = map["cancelButtonTextColor"] as? String {
+            theme.cancelButtonTextColor = UIColor.init(hex: cancelButtonTextColor);
+        }
+        if let cancelButtonShadowColor = map["cancelButtonShadowColor"] as? String {
+            theme.cancelButtonShadowColor = UIColor.init(hex: cancelButtonShadowColor);
+        }
+        if let cancelButtonShadowRadius = map["cancelButtonShadowRadius"] as? CGFloat {
+            theme.cancelButtonShadowRadius = cancelButtonShadowRadius;
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Separator
+        ///////////////////////////////////////////////////////////////////////////
+        if let separatorColor = map["separatorColor"] as? String {
+            theme.separatorColor = UIColor.init(hex: separatorColor);
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Miscellaneous
+        ///////////////////////////////////////////////////////////////////////////
+        if let showGovernmentIdIcons = map["showGovernmentIdIcons"] as? Bool {
+            theme.showGovernmentIdIcons = showGovernmentIdIcons;
+        }
+        ///////////////////////////////////////////////////////////////////////////
+        /// Camera
+        ///////////////////////////////////////////////////////////////////////////
+        if let cameraInstructionsTextColor = map["cameraInstructionsTextColor"] as? String {
+            theme.cameraInstructionsTextColor = UIColor.init(hex: cameraInstructionsTextColor);
+        }
+        if let cameraButtonBackgroundColor = map["cameraButtonBackgroundColor"] as? String {
+            theme.cameraButtonBackgroundColor = UIColor.init(hex: cameraButtonBackgroundColor);
+        }
+        if let cameraButtonTextColor = map["cameraButtonTextColor"] as? String {
+            theme.cameraButtonTextColor = UIColor.init(hex: cameraButtonTextColor);
+        }
+        if let cameraButtonAlternateBackgroundColor = map["cameraButtonAlternateBackgroundColor"] as? String {
+            theme.cameraButtonAlternateBackgroundColor = UIColor.init(hex: cameraButtonAlternateBackgroundColor);
+        }
+        if let cameraButtonAlternateTextColor = map["cameraButtonAlternateTextColor"] as? String {
+            theme.cameraButtonAlternateTextColor = UIColor.init(hex: cameraButtonAlternateTextColor);
+        }
+        if let cameraHintTextColor = map["cameraHintTextColor"] as? String {
+            theme.cameraHintTextColor = UIColor.init(hex: cameraHintTextColor);
+        }
+        if let cameraGuideHintTextColor = map["cameraGuideHintTextColor"] as? String {
+            theme.cameraGuideHintTextColor = UIColor.init(hex: cameraGuideHintTextColor);
+        }
+        if let cameraGuideCornersColor = map["cameraGuideCornersColor"] as? String {
+            theme.cameraGuideCornersColor = UIColor.init(hex: cameraGuideCornersColor);
+        }
+        
+        return theme;
+    }
     
     func attributesToMap(attributes: Attributes) -> [String: Any] {
         let name = attributes.name;

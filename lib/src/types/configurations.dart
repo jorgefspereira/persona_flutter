@@ -1,4 +1,4 @@
-import 'types.dart';
+import 'enums.dart';
 import 'fields.dart';
 import 'theme.dart';
 
