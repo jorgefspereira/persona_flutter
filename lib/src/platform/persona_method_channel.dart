@@ -9,36 +9,36 @@ class PersonaMethodChannel extends PersonaPlatformInterface {
   MethodChannel get channel => _channel;
 
   PersonaMethodChannel() {
-    _channel.setMethodCallHandler(_onMethodCall);
+    _channel.setMethodCallHandler(_handleMethodCall);
   }
 
   @override
-  Future<void> start({required InquiryConfiguration configuration}) async {
-    return _channel.invokeMethod('start', configuration.toJson());
+  Future<void> init({required InquiryConfiguration configuration}) async {
+    return _channel.invokeMethod('init', configuration.toJson());
   }
 
-  Future<dynamic> _onMethodCall(MethodCall call) async {
+  @override
+  Future<void> start() async {
+    return _channel.invokeMethod('start');
+  }
+
+  Future<void> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
-      case 'onSuccess':
-        final attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
-        final relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
-        onSuccess?.call(call.arguments['inquiryId'] as String, attributes, relationships);
+      case "onComplete":
+        String inquiryId = call.arguments['inquiryId'] as String;
+        String status = call.arguments['status'] as String;
+        Map<String, dynamic> fields = call.arguments['fields'] as Map<String, dynamic>;
+        onComplete?.call(inquiryId, status, fields);
         break;
-
-      case 'onFailed':
-        final attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
-        final relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
-        onFailed?.call(call.arguments['inquiryId'] as String, attributes, relationships);
+      case "onCanceled":
+        String? inquiryId = call.arguments['inquiryId'] as String?;
+        String? sessionToken = call.arguments['sessionToken'] as String?;
+        onCanceled?.call(inquiryId, sessionToken);
         break;
-
-      case 'onCancelled':
-        onCancelled?.call();
+      case "onError":
+        String? error = call.arguments['error'] as String?;
+        onError?.call(error);
         break;
-
-      case 'onError':
-        onError?.call(call.arguments['error'] as String);
-        break;
-
       default:
         throw MissingPluginException('${call.method} was invoked but has no handler');
     }

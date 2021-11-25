@@ -1,5 +1,5 @@
 import 'package:persona_flutter/persona_flutter.dart';
-import 'package:persona_flutter/src/types/typedefs.dart';
+import 'package:persona_flutter/src/types/enums.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'persona_method_channel.dart';
@@ -22,19 +22,20 @@ abstract class PersonaPlatformInterface extends PlatformInterface {
     _instance = instance;
   }
 
-  /// Called on a successful inquiry. 
-  InquirySuccessCallback? onSuccess;
+  /// The inquiry completed
+  InquiryCompleteCallback? onComplete;
 
-  /// Called when the invidual fails the inquiry.
-  InquiryFailedCallback? onFailed;
-
-  /// Called when the individual cancels the inquiry.
-  InquiryCancelledCallback? onCancelled;
+  /// The inquiry was cancelled by the user
+  InquiryCanceledCallback? onCanceled;
 
   /// The inquiry errored
   InquiryErrorCallback? onError;
 
-    Future<void> start({required InquiryConfiguration configuration}) async {
+  Future<void> init({required InquiryConfiguration configuration}) async {
+    throw UnimplementedError('init() has not been implemented.');
+  }
+
+  Future<void> start() async {
     throw UnimplementedError('start() has not been implemented.');
   }
 }

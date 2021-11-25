@@ -20,10 +20,6 @@ class _MyAppState extends State<MyApp> {
     _configuration = TemplateIdConfiguration(
       templateId: "TEMPLATE_ID",
       environment: InquiryEnvironment.sandbox,
-      fields: InquiryFields(
-        name: InquiryName(first: "John", middle: "Apple", last: "Seed"),
-        additionalFields: {"test-1": "test-2", "test-3": 2, "test-4": true},
-      ),
       iOSTheme: InquiryTheme(
         accentColor: Color(0xff22CB8E),
         primaryColor: Color(0xff22CB8E),
@@ -34,56 +30,32 @@ class _MyAppState extends State<MyApp> {
       ),
     );
 
-    PersonaInquiry.onSuccess(onInquirySuccess);
-    PersonaInquiry.onFailed(onInquiryFailed);
-    PersonaInquiry.onCancelled(onInquiryCancelled);
+    PersonaInquiry.init(configuration: _configuration);
+    PersonaInquiry.onComplete(onInquiryComplete);
+    PersonaInquiry.onCanceled(onInquiryCanceled);
     PersonaInquiry.onError(onInquiryError);
   }
 
-  void onInquirySuccess(
-    String inquiryId,
-    InquiryAttributes attributes,
-    InquiryRelationships relationships,
-  ) {
-    print("onInquirySuccess");
+  void onInquiryComplete(String inquiryId, String status, Map<String, dynamic> fields) {
+    print("onInquiryComplete");
     print("- inquiryId: $inquiryId");
-    print("- attributes:");
-    print("-- name.first: ${attributes.name?.first}");
-    print("-- name.middle: ${attributes.name?.middle}");
-    print("-- name.last: ${attributes.name?.last}");
-    print("-- addr.street1: ${attributes.address?.street1}");
-    print("-- addr.street2: ${attributes.address?.street2}");
-    print("-- addr.city: ${attributes.address?.city}");
-    print("-- addr.postalCode: ${attributes.address?.postalCode}");
-    print("-- addr.countryCode: ${attributes.address?.countryCode}");
-    print("-- addr.subdivision: ${attributes.address?.subdivision}");
-    print("-- addr.subdivisionAbbr: ${attributes.address?.subdivisionAbbr}");
-    print("-- birthdate: ${attributes.birthdate?.toString()}");
-    print("- relationships:");
+    print("- status: $status");
 
-    for (var item in relationships.verifications) {
-      print("-- id: ${item.id}");
-      print("-- status: ${item.status}");
-      print("-- type: ${item.type}");
+    print("- fields:");
+    for (var key in fields.keys) {
+      print("-- key: $key, value: ${fields[key]}");
     }
   }
 
-  void onInquiryFailed(
-    String inquiryId,
-    InquiryAttributes attributes,
-    InquiryRelationships relationships,
-  ) {
-    print("onInquiryFailed");
+  void onInquiryCanceled(String? inquiryId, String? sessionToken) {
+    print("onInquiryCanceled");
     print("- inquiryId: $inquiryId");
+    print("- sessionToken: $sessionToken");
   }
 
-  void onInquiryCancelled() {
-    print("onCancelled");
-  }
-
-  void onInquiryError(String error) {
-    print("onError");
-    print("- $error");
+  void onInquiryError(String? error) {
+    print("onInquiryError");
+    print("- error: $error");
   }
 
   @override
@@ -95,7 +67,7 @@ class _MyAppState extends State<MyApp> {
           child: Center(
             child: ElevatedButton(
               onPressed: () {
-                PersonaInquiry.start(configuration: _configuration);
+                PersonaInquiry.start();
               },
               child: Text("Start Inquiry"),
             ),
