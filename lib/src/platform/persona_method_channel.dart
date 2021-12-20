@@ -20,15 +20,21 @@ class PersonaMethodChannel extends PersonaPlatformInterface {
   Future<dynamic> _onMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'onSuccess':
-        final attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
-        final relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
-        onSuccess?.call(call.arguments['inquiryId'] as String, attributes, relationships);
+        final attributes =
+            InquiryAttributes.fromJson(call.arguments['attributes']);
+        final relationships =
+            InquiryRelationships.fromJson(call.arguments['relationships']);
+        onSuccess?.call(
+            call.arguments['inquiryId'] as String, attributes, relationships);
         break;
 
       case 'onFailed':
-        final attributes = InquiryAttributes.fromJson(call.arguments['attributes']);
-        final relationships = InquiryRelationships.fromJson(call.arguments['relationships']);
-        onFailed?.call(call.arguments['inquiryId'] as String, attributes, relationships);
+        final attributes =
+            InquiryAttributes.fromJson(call.arguments['attributes']);
+        final relationships =
+            InquiryRelationships.fromJson(call.arguments['relationships']);
+        onFailed?.call(
+            call.arguments['inquiryId'] as String, attributes, relationships);
         break;
 
       case 'onCancelled':
@@ -40,7 +46,8 @@ class PersonaMethodChannel extends PersonaPlatformInterface {
         break;
 
       default:
-        throw MissingPluginException('${call.method} was invoked but has no handler');
+        throw MissingPluginException(
+            '${call.method} was invoked but has no handler');
     }
   }
 }

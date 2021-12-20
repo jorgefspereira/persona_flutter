@@ -1,6 +1,5 @@
 import 'dart:ui';
 
- 
 /// Elements used to theme the Persona screens with custom colors, fonts,
 /// text sizes, and corner radius.
 class InquiryTheme {
@@ -265,7 +264,7 @@ class InquiryTheme {
 
   /// Footnote font family
   final String? footnoteTextFontFamily;
-  
+
   /// Footnote font size
   final double? footnoteTextFontSize;
 

@@ -22,7 +22,7 @@ abstract class PersonaPlatformInterface extends PlatformInterface {
     _instance = instance;
   }
 
-  /// Called on a successful inquiry. 
+  /// Called on a successful inquiry.
   InquirySuccessCallback? onSuccess;
 
   /// Called when the invidual fails the inquiry.
@@ -34,7 +34,7 @@ abstract class PersonaPlatformInterface extends PlatformInterface {
   /// The inquiry errored
   InquiryErrorCallback? onError;
 
-    Future<void> start({required InquiryConfiguration configuration}) async {
+  Future<void> start({required InquiryConfiguration configuration}) async {
     throw UnimplementedError('start() has not been implemented.');
   }
 }
