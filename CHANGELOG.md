@@ -1,6 +1,16 @@
+## 2.1.0
+
+* BREAKING CHANGE: "Inquiry" class is now "PersonaInquiry" with only static methods (see example provided)
+* BREAKING CHANGE: Renamed all callbacks with "Inquiry" prefix (e.g. SuccessCallback -> InquirySuccessCallback)
+* BREAKING CHANGE: Renamed the following iOS theme properties: titleFont*, bodyFont*, errorFont*, pickerFont* -> titleTextFont*, bodyTextFont*, errorTextFont*, pickerTextFont*.
+* Added new iOS theme properties: footnoteTextFontFamily, footnoteTextFontSize, formLabelTextFontFamily, formLabelTextFontSize
+* Integrated plugin_platform_interface dependency.
+* Upgraded iOS SDK to 1.1.22.
+* Upgraded Android SDK to 1.1.15.
+
 ## 2.0.4
 
-* Added new theme properties: cancelButtonAlternateTextColor, cancelButtonAlternateBackgroundColor
+* Added new theme properties: cancelButtonAlternateTextColor, cancelButtonAlternateBackgroundColor, cancelButtonTextColor
 * Upgraded iOS SDK to 1.1.11.
 * Upgraded Android SDK to 1.1.4.
 
