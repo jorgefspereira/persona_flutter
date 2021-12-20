@@ -312,6 +312,11 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         if let buttonTextColor = map["buttonTextColor"] as? String {
             theme.buttonTextColor = UIColor.init(hex: buttonTextColor);
         }
+        if let buttonFontFamily = map["buttonFontFamily"] as? String {
+            if let buttonFont = UIFont(name: buttonFontFamily, size: map["buttonFontSize"] as? CGFloat ?? 18) {
+                theme.buttonFont = buttonFont;
+            }
+        }
         if let buttonDisabledTextColor = map["buttonDisabledTextColor"] as? String {
             theme.buttonDisabledTextColor = UIColor.init(hex: buttonDisabledTextColor);
         }

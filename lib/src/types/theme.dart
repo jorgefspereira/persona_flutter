@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+ 
 /// Elements used to theme the Persona screens with custom colors, fonts,
 /// text sizes, and corner radius.
 class InquiryTheme {
@@ -41,15 +42,15 @@ class InquiryTheme {
     this.footnoteTextColor,
     this.buttonCornerRadius,
     this.textFieldCornerRadius,
-    this.titleFontFamily,
-    this.titleFontSize,
-    this.bodyFontFamily,
-    this.bodyFontSize,
+    this.titleTextFontFamily,
+    this.titleTextFontSize,
+    this.bodyTextFontFamily,
+    this.bodyTextFontSize,
     this.buttonFontFamily,
     this.buttonFontSize,
     this.showGovernmentIdIcons,
-    this.errorFontFamily,
-    this.errorFontSize,
+    this.errorTextFontFamily,
+    this.errorTextFontSize,
     this.navigationBarTextColor,
     this.navigationBarTextFontFamily,
     this.navigationBarTextFontSize,
@@ -57,8 +58,8 @@ class InquiryTheme {
     this.textFieldFontSize,
     this.textFieldPlaceholderFontFamily,
     this.textFieldPlaceholderFontSize,
-    this.pickerFontFamily,
-    this.pickerFontSize,
+    this.pickerTextFontFamily,
+    this.pickerTextFontSize,
     this.cameraInstructionsTextColor,
     this.cameraButtonAlternateBackgroundColor,
     this.cameraButtonAlternateTextColor,
@@ -67,6 +68,10 @@ class InquiryTheme {
     this.cameraGuideCornersColor,
     this.cameraGuideHintTextColor,
     this.cameraHintTextColor,
+    this.footnoteTextFontFamily,
+    this.footnoteTextFontSize,
+    this.formLabelTextFontFamily,
+    this.formLabelTextFontSize,
   });
 
   /// The background color for all views.
@@ -85,10 +90,10 @@ class InquiryTheme {
   final Color? errorColor;
 
   /// Error font family
-  final String? errorFontFamily;
+  final String? errorTextFontFamily;
 
   /// Error font size (pt)
-  final double? errorFontSize;
+  final double? errorTextFontSize;
 
   /// The background color for overlay views.
   final Color? overlayBackgroundColor;
@@ -106,19 +111,19 @@ class InquiryTheme {
   final Color? titleTextColor;
 
   /// Title font family
-  final String? titleFontFamily;
+  final String? titleTextFontFamily;
 
   /// Title font size (pt)
-  final double? titleFontSize;
+  final double? titleTextFontSize;
 
   /// The text color for body labels.
   final Color? bodyTextColor;
 
   /// Body font family
-  final String? bodyFontFamily;
+  final String? bodyTextFontFamily;
 
   /// Body font size (pt)
-  final double? bodyFontSize;
+  final double? bodyTextFontSize;
 
   /// The text color for footnote labels.
   final Color? footnoteTextColor;
@@ -151,10 +156,10 @@ class InquiryTheme {
   final double? textFieldPlaceholderFontSize;
 
   /// Picker font family
-  final String? pickerFontFamily;
+  final String? pickerTextFontFamily;
 
   /// Picker font size
-  final double? pickerFontSize;
+  final double? pickerTextFontSize;
 
   /// The text color for picker items.
   final Color? pickerTextColor;
@@ -258,6 +263,18 @@ class InquiryTheme {
   /// The text color for the [ ] corners shown as a guide when the user is taking a photo.
   final Color? cameraGuideCornersColor;
 
+  /// Footnote font family
+  final String? footnoteTextFontFamily;
+  
+  /// Footnote font size
+  final double? footnoteTextFontSize;
+
+  /// Form label font size
+  final String? formLabelTextFontFamily;
+
+  /// Form label font size
+  final double? formLabelTextFontSize;
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'backgroundColor': _toHex(backgroundColor),
@@ -295,15 +312,15 @@ class InquiryTheme {
       'buttonShadowWidth': buttonShadowWidth,
       'buttonShadowHeight': buttonShadowHeight,
       'cancelButtonShadowRadius': cancelButtonShadowRadius,
-      'titleFontFamily': titleFontFamily,
-      'titleFontSize': titleFontSize,
-      'bodyFontFamily': bodyFontFamily,
-      'bodyFontSize': bodyFontSize,
+      'titleFontFamily': titleTextFontFamily,
+      'titleFontSize': titleTextFontSize,
+      'bodyFontFamily': bodyTextFontFamily,
+      'bodyFontSize': bodyTextFontSize,
       'buttonFontFamily': buttonFontFamily,
       'buttonFontSize': buttonFontSize,
       'showGovernmentIdIcons': showGovernmentIdIcons,
-      'errorFontSize': errorFontSize,
-      'errorFontFamily': errorFontFamily,
+      'errorFontSize': errorTextFontSize,
+      'errorFontFamily': errorTextFontFamily,
       'navigationBarTextColor': _toHex(navigationBarTextColor),
       'navigationBarTextFontSize': navigationBarTextFontSize,
       'navigationBarTextFontFamily': navigationBarTextFontFamily,
@@ -311,8 +328,8 @@ class InquiryTheme {
       'textFieldPlaceholderFontFamily': textFieldPlaceholderFontFamily,
       'textFieldFontSize': textFieldFontSize,
       'textFieldFontFamily': textFieldFontFamily,
-      'pickerFontSize': pickerFontSize,
-      'pickerFontFamily': pickerFontFamily,
+      'pickerFontSize': pickerTextFontSize,
+      'pickerFontFamily': pickerTextFontFamily,
       'cameraHintTextColor': _toHex(cameraHintTextColor),
       'cameraInstructionsTextColor': _toHex(cameraInstructionsTextColor),
       'cameraGuideCornersColor': _toHex(cameraGuideCornersColor),
@@ -325,6 +342,10 @@ class InquiryTheme {
       'cancelButtonAlternateTextColor': _toHex(cancelButtonAlternateTextColor),
       'cancelButtonAlternateBackgroundColor':
           _toHex(cancelButtonAlternateBackgroundColor),
+      'footnoteTextFontFamily': footnoteTextFontFamily,
+      'footnoteTextFontSize': footnoteTextFontSize,
+      'formLabelTextFontFamily': formLabelTextFontFamily,
+      'formLabelTextFontSize': formLabelTextFontSize,
     };
   }
 
