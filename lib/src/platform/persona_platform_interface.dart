@@ -1,7 +1,7 @@
-import 'package:persona_flutter/persona_flutter.dart';
-import 'package:persona_flutter/src/types/typedefs.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import '../types/configurations.dart';
+import '../types/typedefs.dart';
 import 'persona_method_channel.dart';
 
 abstract class PersonaPlatformInterface extends PlatformInterface {
