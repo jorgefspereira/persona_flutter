@@ -27,7 +27,8 @@ class PersonaMethodChannel extends PersonaPlatformInterface {
       case "onComplete":
         String inquiryId = call.arguments['inquiryId'] as String;
         String status = call.arguments['status'] as String;
-        Map<String, dynamic> fields = call.arguments['fields'] as Map<String, dynamic>;
+        Map<String, dynamic> fields = (call.arguments['fields'] as Map).map(
+            (key, value) => MapEntry<String, dynamic>(key.toString(), value));
         onComplete?.call(inquiryId, status, fields);
         break;
       case "onCanceled":
@@ -40,7 +41,8 @@ class PersonaMethodChannel extends PersonaPlatformInterface {
         onError?.call(error);
         break;
       default:
-        throw MissingPluginException('${call.method} was invoked but has no handler');
+        throw MissingPluginException(
+            '${call.method} was invoked but has no handler');
     }
   }
 }
