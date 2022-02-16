@@ -6,3 +6,4 @@ export 'src/types/relationships.dart';
 export 'src/types/fields.dart';
 export 'src/types/theme.dart';
 export 'src/types/configurations.dart';
+export 'src/types/typedefs.dart';
