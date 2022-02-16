@@ -19,7 +19,9 @@ class InquiryAttributes {
     return InquiryAttributes(
       name: InquiryName.fromJson(json["name"]),
       address: InquiryAddress.fromJson(json["address"]),
-      birthdate: DateTime.parse(json["birthdate"] as String),
+      birthdate: json['birthdate'] == null
+          ? null
+          : DateTime.parse(json['birthdate'] as String),
     );
   }
 }
