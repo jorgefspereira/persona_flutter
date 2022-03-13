@@ -35,7 +35,9 @@ class InquiryFields {
     return InquiryFields(
       name: InquiryName.fromJson(json["name"]),
       address: InquiryAddress.fromJson(json["address"]),
-      birthdate: DateTime.parse(json["birthdate"] as String),
+      birthdate: json['birthdate'] == null
+          ? null
+          : DateTime.parse(json['birthdate'] as String),
       phoneNumber: json["phoneNumber"] as String?,
       emailAddress: json["emailAddress"] as String?,
       additionalFields: json["additionalFields"] as Map<String, dynamic>,
