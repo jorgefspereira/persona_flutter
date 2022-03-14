@@ -1,7 +1,6 @@
 import 'package:persona_flutter/persona_flutter.dart';
 
 import '../platform/persona_platform_interface.dart';
-import 'enums.dart';
 
 class PersonaInquiry {
   static PersonaPlatformInterface get _platform => PersonaPlatformInterface.instance;

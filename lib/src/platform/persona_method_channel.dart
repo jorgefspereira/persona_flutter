@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:persona_flutter/persona_flutter.dart';
 
+import '../types/configurations.dart';
 import 'persona_platform_interface.dart';
 
 class PersonaMethodChannel extends PersonaPlatformInterface {
