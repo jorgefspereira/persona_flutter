@@ -121,7 +121,7 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
                   .note(note)
 
           if (environment != null) {
-            inquiry.environment(Environment.valueOf(environment.uppercase()));
+            inquiry.environment(Environment.valueOf(environment.toUpperCase()));
           }
 
           inquiry.build().start(activity, requestCode)
