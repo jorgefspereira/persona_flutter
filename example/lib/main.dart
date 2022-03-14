@@ -36,7 +36,8 @@ class _MyAppState extends State<MyApp> {
     PersonaInquiry.onError(onInquiryError);
   }
 
-  void onInquiryComplete(String inquiryId, String status, Map<String, dynamic> fields) {
+  void onInquiryComplete(
+      String inquiryId, String status, Map<String, dynamic> fields) {
     print("onInquiryComplete");
     print("- inquiryId: $inquiryId");
     print("- status: $status");
