@@ -1,6 +1,6 @@
 name: persona_flutter
-description: Persona Inquiry for Flutter. Integrates the native iOS and Android SDKs.
-version: 2.1.0
+description: Persona Inquiry for Flutter. Integrates the native v1 SDKs for iOS and Android .
+version: 2.1.1
 homepage: https://github.com/jorgefspereira/persona_flutter
 
 environment:
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.17.0
-  plugin_platform_interface: ^2.0.0
+  plugin_platform_interface: ^2.1.2
 
 dev_dependencies:
   flutter_test:

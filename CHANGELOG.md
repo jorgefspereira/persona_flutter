@@ -1,3 +1,10 @@
+## 2.1.1
+
+* Fix typedefs export.
+* Fix birthday serialization.
+* Upgraded iOS SDK to 1.1.25.
+* Upgraded Android SDK to 1.1.19.
+
 ## 2.1.0
 
 * BREAKING CHANGE: "Inquiry" class is now "PersonaInquiry" with only static methods (see example provided)
