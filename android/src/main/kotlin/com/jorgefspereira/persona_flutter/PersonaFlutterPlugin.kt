@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.AsyncTask
 import androidx.annotation.NonNull
-import com.withpersona.sdk.inquiry.*
+import com.withpersona.sdk2.inquiry.*
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
