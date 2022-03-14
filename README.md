@@ -13,6 +13,8 @@ This plugin integrates the native v1 SDKs:
 - [Persona iOS v1 SDK](https://sdk.withpersona.com/ios/v1/docs/index.html)
 - [Persona Android v1 SDK](https://sdk.withpersona.com/android/v1/docs/index.html)
 
+For v2 SDKs integration, check the [prerelease version](https://pub.dev/packages/persona_flutter/versions#prerelease)
+
 Feel free to leave any feedback [here](https://github.com/jorgefspereira/persona_flutter/issues).
 
 ## Installation
