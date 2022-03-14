@@ -2,7 +2,6 @@ package com.jorgefspereira.persona_flutter
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import androidx.annotation.NonNull
 import com.withpersona.sdk.inquiry.*
 
@@ -11,7 +10,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.PluginRegistry.Registrar
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -27,17 +25,6 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
   private var activity: Activity? = null
   private var binding: ActivityPluginBinding? = null
   private val requestCode = 57
-
-  companion object {
-    @JvmStatic
-    fun registerWith(registrar: Registrar) {
-      val channel = MethodChannel(registrar.messenger(), "persona_flutter")
-      val plugin = PersonaFlutterPlugin()
-      plugin.activity = registrar.activity()
-      registrar.addActivityResultListener(plugin);
-      channel.setMethodCallHandler(plugin)
-    }
-  }
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "persona_flutter")
@@ -79,7 +66,7 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
             val emailAddress = fieldsMap["emailAddress"] as? String
             val phoneNumber = fieldsMap["phoneNumber"] as? String
             val birthdate = fieldsMap["birthdate"] as? String
-            val additionalFields = fieldsMap["additionalFields"] as? Map<String, *>
+            val additionalFields = fieldsMap["additionalFields"] as? Map<*, *>
 
             if(nameMap != null) {
               val first = nameMap["first"] as String?
@@ -116,10 +103,12 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
 
             if(additionalFields != null) {
               for ((key, value) in additionalFields) {
-                when(value) {
-                  is Int -> fieldsBuilder.field(key, value)
-                  is String -> fieldsBuilder.field(key, value)
-                  is Boolean -> fieldsBuilder.field(key, value)
+                if (key is String) {
+                  when(value) {
+                    is Int -> fieldsBuilder.field(key, value)
+                    is String -> fieldsBuilder.field(key, value)
+                    is Boolean -> fieldsBuilder.field(key, value)
+                  }
                 }
               }
             }
@@ -132,7 +121,7 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
                   .note(note)
 
           if (environment != null) {
-            inquiry.environment(Environment.valueOf(environment.toUpperCase()));
+            inquiry.environment(Environment.valueOf(environment.uppercase()));
           }
 
           inquiry.build().start(activity, requestCode)
@@ -203,9 +192,11 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
     result["name"] = nameMap;
     result["address"] = addressMap;
 
-    if (attributes.birthdate is Date) {
+    val birthdate = attributes.birthdate
+
+    if (birthdate != null) {
       val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-      result["birthdate"] = formatter.format(attributes.birthdate);
+      result["birthdate"] = formatter.format(birthdate);
     }
 
     return result;
