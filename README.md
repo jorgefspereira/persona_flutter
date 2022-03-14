@@ -8,10 +8,10 @@
 
 Native implementation of the [Persona Inquiry flow](https://docs.withpersona.com/docs) for Flutter.
 
-This plugin integrates the native SDKs:
+This plugin integrates the native v1 SDKs:
 
-- [Persona iOS SDK](https://sdk.withpersona.com/ios/docs/index.html)
-- [Persona Android SDK](https://sdk.withpersona.com/android/docs/index.html)
+- [Persona iOS v1 SDK](https://sdk.withpersona.com/ios/v1/docs/index.html)
+- [Persona Android v1 SDK](https://sdk.withpersona.com/android/v1/docs/index.html)
 
 Feel free to leave any feedback [here](https://github.com/jorgefspereira/persona_flutter/issues).
 
