@@ -1,6 +1,6 @@
 import Flutter
 import UIKit
-import Persona
+import Persona2
 
 public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate {
     let channel: FlutterMethodChannel;
