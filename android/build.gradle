@@ -2,7 +2,7 @@ group 'com.jorgefspereira.persona_flutter'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.5.30'
     repositories {
         google()
         jcenter()
@@ -28,7 +28,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -38,7 +38,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     defaultConfig {
-        targetSdkVersion 31
+        targetSdkVersion 32
         minSdkVersion 21
     }
     lintOptions {
@@ -48,5 +48,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.withpersona.sdk2:inquiry:2.2.9"
+    implementation "com.withpersona.sdk2:inquiry:2.2.32"
 }
