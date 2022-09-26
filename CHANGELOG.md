@@ -1,3 +1,7 @@
+## 2.1.2
+
+* Upgraded iOS SDK to 1.1.27
+
 ## 2.1.1
 
 * Fix typedefs export.
