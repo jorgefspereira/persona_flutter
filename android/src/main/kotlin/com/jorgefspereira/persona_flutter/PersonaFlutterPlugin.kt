@@ -2,7 +2,6 @@ package com.jorgefspereira.persona_flutter
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import androidx.annotation.NonNull
 import com.withpersona.sdk2.inquiry.*
 
@@ -11,36 +10,23 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.PluginRegistry.Registrar
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.PluginRegistry
-import java.util.*
 import kotlin.collections.HashMap
 
 /** PersonaFlutterPlugin */
-public class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener {
+class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener {
     private lateinit var channel: MethodChannel
     private var activity: Activity? = null
     private var binding: ActivityPluginBinding? = null
     private val requestCode = 57
     private var inquiry: Inquiry? = null
 
-    companion object {
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "persona_flutter")
-            val plugin = PersonaFlutterPlugin()
-            plugin.activity = registrar.activity()
-            registrar.addActivityResultListener(plugin);
-            channel.setMethodCallHandler(plugin)
-        }
-    }
-
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "persona_flutter")
-        channel.setMethodCallHandler(this);
+        channel.setMethodCallHandler(this)
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -69,7 +55,7 @@ public class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
 
                     // Environment
                     (arguments["environment"] as? String)?.let {
-                        environment = Environment.valueOf(it.toUpperCase(Locale.getDefault()))
+                        environment = Environment.valueOf(it.uppercase())
                     }
 
                     var builder: InquiryTemplateBuilder? = null
@@ -119,13 +105,14 @@ public class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
                 result.success("Inquiry started with templateId")
             }
             else -> result.notImplemented()
+
+
         }
     }
 
     /// - ActivityResultListener interface
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
-        if (requestCode == requestCode) {
+    override fun onActivityResult(rcode: Int, resultCode: Int, data: Intent?): Boolean {
+        if (requestCode == rcode) {
             when (val result = Inquiry.onActivityResult(data)) {
                 is InquiryResponse.Complete -> {
                     val arguments = hashMapOf<String, Any?>()

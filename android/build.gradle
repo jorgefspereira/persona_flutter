@@ -2,14 +2,14 @@ group 'com.jorgefspereira.persona_flutter'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.5.30'
+    ext.kotlin_version = '1.6.21'
     repositories {
         google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'com.android.tools.build:gradle:7.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -33,14 +33,21 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     defaultConfig {
         targetSdkVersion 32
         minSdkVersion 21
     }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
     lintOptions {
         disable 'InvalidPackage'
     }
@@ -48,5 +55,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.withpersona.sdk2:inquiry:2.2.32"
+    implementation "com.withpersona.sdk2:inquiry:2.2.37"
 }
