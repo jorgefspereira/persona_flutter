@@ -1,9 +1,9 @@
 # Persona Inquiry for Flutter
 
 [![pub](https://img.shields.io/pub/v/persona_flutter.svg)](https://pub.dev/packages/persona_flutter)
-[![points](https://badges.bar/persona_flutter/pub%20points)](https://pub.dev/packages/persona_flutter)
-[![popularity](https://badges.bar/persona_flutter/popularity)](https://pub.dev/packages/persona_flutter)
-[![likes](https://badges.bar/persona_flutter/likes)](https://pub.dev/packages/persona_flutter)
+[![points](https://img.shields.io/pub/points/persona_flutter)](https://pub.dev/packages/persona_flutter)
+[![popularity](https://img.shields.io/pub/popularity/persona_flutter)](https://pub.dev/packages/persona_flutter)
+[![likes](https://img.shields.io/pub/likes/persona_flutter)](https://pub.dev/packages/persona_flutter)
 [![donate](https://img.shields.io/badge/Buy%20me%20a%20beer-orange.svg)](https://www.buymeacoffee.com/jpereira)
 
 Native implementation of the [Persona Inquiry flow](https://docs.withpersona.com/docs) for Flutter.
