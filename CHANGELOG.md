@@ -1,3 +1,8 @@
+## 2.1.3
+
+* Upgraded iOS SDK to 1.1.28
+* Upgraded Android SDK to 1.1.24
+
 ## 2.1.2
 
 * Upgraded iOS SDK to 1.1.27
