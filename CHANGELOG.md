@@ -1,3 +1,7 @@
+## 2.1.4
+
+* minor fix with intl dependency
+
 ## 2.1.3
 
 * Upgraded iOS SDK to 1.1.28
