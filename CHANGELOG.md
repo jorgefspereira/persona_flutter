@@ -1,3 +1,7 @@
+## 2.1.5
+
+* Updated jCenter to mavenCentral
+
 ## 2.1.4
 
 * minor fix with intl dependency
