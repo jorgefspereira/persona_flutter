@@ -1,4 +1,4 @@
-import '../types/enums.dart';
+import '../core/enums.dart';
 import 'theme.dart';
 
 /// Base classe to all inquiry configurations
