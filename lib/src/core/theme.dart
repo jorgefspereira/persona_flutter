@@ -1,9 +1,12 @@
 import 'dart:ui';
 
+import 'package:persona_flutter/persona_flutter.dart';
+
 /// Elements used to theme the Persona screens with custom colors, fonts,
 /// text sizes, and corner radius.
 class InquiryTheme {
   InquiryTheme({
+    required this.source,
     this.buttonShadowColor,
     this.buttonShadowRadius,
     this.buttonShadowAlpha,
@@ -75,6 +78,8 @@ class InquiryTheme {
     this.footerBorderColor,
     this.footerBorderWidth,
   });
+
+  final InquiryThemeSource source;
 
   /// The background color for all views.
   final Color? backgroundColor;
@@ -288,6 +293,7 @@ class InquiryTheme {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
+      'source': source.name,
       'backgroundColor': _toHex(backgroundColor),
       'textFieldBorderColor': _toHex(textFieldBorderColor),
       'buttonBackgroundColor': _toHex(buttonBackgroundColor),

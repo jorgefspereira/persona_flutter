@@ -32,10 +32,9 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 /// Theme
                 var theme: InquiryTheme?
                 
-                if let value = arguments["themeSource"] as? String {
-                    let themeSource = themeSourceFromString(value)
-                    
-                    if let map = arguments["theme"] as? [String: Any] {
+                if let map = arguments["theme"] as? [String: Any] {
+                    if let source = map["source"] as? String {
+                        let themeSource = themeSourceFromString(source)
                         theme = themeFromMap(map, source: themeSource)
                     }
                 }

@@ -4,11 +4,12 @@ import 'theme.dart';
 /// Base classe to all inquiry configurations
 abstract class InquiryConfiguration {
   InquiryConfiguration({
-    this.iOSTheme,
+    this.theme,
   });
 
-  /// Theme to use for iOS.
-  final InquiryTheme? iOSTheme;
+  /// Inquiry themes control the look and feel of a given flow.
+  /// Set theme source to [server] to be configurable in the Persona dashboard.
+  final InquiryTheme? theme;
 
   Map<String, dynamic> toJson();
 }
@@ -20,8 +21,8 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
     this.referenceId,
     required this.environment,
     required this.fields,
-    InquiryTheme? iOSTheme,
-  }) : super(iOSTheme: iOSTheme);
+    InquiryTheme? theme,
+  }) : super(theme: theme);
 
   /// The account to associate this inquiry with. The account can be used to monitor user progress in newly created inquiries.
   final String? accountId;
@@ -49,8 +50,8 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
     String? referenceId,
     InquiryEnvironment environment = InquiryEnvironment.sandbox,
     Map<String, dynamic> fields = const {},
-    InquiryTheme? iOSTheme,
-  }) : super(accountId: accountId, referenceId: referenceId, environment: environment, fields: fields, iOSTheme: iOSTheme);
+    InquiryTheme? theme,
+  }) : super(accountId: accountId, referenceId: referenceId, environment: environment, fields: fields, theme: theme);
 
   /// An existing template version that determines how the flow is customized.
   final String templateVersion;
@@ -62,7 +63,7 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
       'referenceId': referenceId,
       'environment': environment.toString().split('.').last,
       'fields': fields,
-      'theme': iOSTheme?.toJson(),
+      'theme': theme?.toJson(),
     };
   }
 }
@@ -75,8 +76,8 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
     String? referenceId,
     InquiryEnvironment environment = InquiryEnvironment.sandbox,
     Map<String, dynamic> fields = const {},
-    InquiryTheme? iOSTheme,
-  }) : super(accountId: accountId, referenceId: referenceId, environment: environment, fields: fields, iOSTheme: iOSTheme);
+    InquiryTheme? theme,
+  }) : super(accountId: accountId, referenceId: referenceId, environment: environment, fields: fields, theme: theme);
 
   /// An existing template id that determines how the flow is customized.
   final String templateId;
@@ -88,7 +89,7 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
       'referenceId': referenceId,
       'environment': environment.toString().split('.').last,
       'fields': fields,
-      'theme': iOSTheme?.toJson(),
+      'theme': theme?.toJson(),
     };
   }
 }
@@ -98,8 +99,8 @@ class InquiryIdConfiguration extends InquiryConfiguration {
   InquiryIdConfiguration({
     required this.inquiryId,
     this.sessionToken,
-    InquiryTheme? iOSTheme,
-  }) : super(iOSTheme: iOSTheme);
+    InquiryTheme? theme,
+  }) : super(theme: theme);
 
   /// An existing inquiry.
   final String inquiryId;
@@ -111,7 +112,7 @@ class InquiryIdConfiguration extends InquiryConfiguration {
     return <String, dynamic>{
       'inquiryId': inquiryId,
       'sessionToken': sessionToken,
-      'theme': iOSTheme?.toJson(),
+      'theme': theme?.toJson(),
     };
   }
 }
