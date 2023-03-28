@@ -2,38 +2,58 @@ package com.jorgefspereira.persona_flutter
 
 import android.app.Activity
 import android.content.Intent
-import androidx.annotation.NonNull
-import com.withpersona.sdk2.inquiry.*
 
+import com.withpersona.sdk2.inquiry.*
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.PluginRegistry
-import kotlin.collections.HashMap
 
 /** PersonaFlutterPlugin */
-class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener {
-    private lateinit var channel: MethodChannel
+class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, PluginRegistry.ActivityResultListener {
+    private lateinit var methodChannel: MethodChannel
+    private lateinit var eventChannel: EventChannel
+
     private var activity: Activity? = null
     private var binding: ActivityPluginBinding? = null
+    private var eventSink: EventSink? = null
     private val requestCode = 57
     private var inquiry: Inquiry? = null
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "persona_flutter")
-        channel.setMethodCallHandler(this)
+    /// - FlutterPlugin interface
+
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        methodChannel = MethodChannel(binding.binaryMessenger, "persona_flutter")
+        methodChannel.setMethodCallHandler(this)
+        eventChannel = EventChannel(binding.binaryMessenger, "persona_flutter/events")
+        eventChannel.setStreamHandler(this)
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        methodChannel.setMethodCallHandler(null)
+        eventChannel.setStreamHandler(null)
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    /// - StreamHandler interface
+
+    override fun onListen(arguments: Any?, events: EventSink?) {
+        eventSink = events
+    }
+
+    override fun onCancel(arguments: Any?) {
+        eventSink?.endOfStream()
+        eventSink = null
+    }
+
+    /// - MethodCallHandler interface
+
+    override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "init" -> {
                 val arguments = call.arguments as? Map<String, Any?> ?: return
@@ -56,6 +76,13 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Pl
                     // Environment
                     (arguments["environment"] as? String)?.let {
                         environment = Environment.valueOf(it.uppercase())
+                    }
+
+                    var theme: Map<String, Any?>? = null
+
+                    // Theme
+                    (arguments["theme"] as?  Map<String, Any?>)?.let {
+                        theme = it
                     }
 
                     var builder: InquiryTemplateBuilder? = null
@@ -90,8 +117,16 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Pl
                     environment?.let {
                         builder = builder?.environment(it)
                     }
+
                     fields?.let {
                         builder = builder?.fields(it)
+                    }
+
+                    theme?.let {
+                        when(it["source"]) {
+                            "server" -> builder = builder?.theme(ServerThemeSource(R.style.Persona_Inquiry_Theme))
+                            "client" -> builder = builder?.theme(ClientThemeSource(R.style.Persona_Inquiry_Theme))
+                        }
                     }
 
                     inquiry = builder?.build()
@@ -110,29 +145,56 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Pl
         }
     }
 
+    /// - ActivityAware interface
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        this.binding = binding
+        this.activity = binding.activity
+        binding.addActivityResultListener(this)
+    }
+
+    override fun onDetachedFromActivity() {
+        this.binding?.removeActivityResultListener(this)
+        this.activity = null
+        this.binding = null
+        this.inquiry = null
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        onAttachedToActivity(binding)
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        onDetachedFromActivity()
+    }
+
     /// - ActivityResultListener interface
+
     override fun onActivityResult(rcode: Int, resultCode: Int, data: Intent?): Boolean {
         if (requestCode == rcode) {
             when (val result = Inquiry.onActivityResult(data)) {
                 is InquiryResponse.Complete -> {
                     val arguments = hashMapOf<String, Any?>()
+                    arguments["type"] = "complete"
                     arguments["inquiryId"] = result.inquiryId
                     arguments["status"] = result.status
                     arguments["fields"] = fieldsToMap(result.fields)
-                    channel.invokeMethod("onComplete", arguments)
+                    eventSink?.success(arguments)
                     return true
                 }
                 is InquiryResponse.Cancel -> {
                     val arguments = hashMapOf<String, Any?>()
+                    arguments["type"] = "canceled"
                     arguments["inquiryId"] = result.inquiryId
                     arguments["sessionToken"] = result.sessionToken
-                    channel.invokeMethod("onCanceled", arguments)
+                    eventSink?.success(arguments)
                     return true
                 }
                 is InquiryResponse.Error -> {
                     val arguments = hashMapOf<String, Any?>()
+                    arguments["type"] = "error"
                     arguments["error"] = result.debugMessage
-                    channel.invokeMethod("onError", arguments)
+                    eventSink?.success(arguments)
                     return true
                 }
             }
@@ -182,28 +244,5 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Pl
             }
         }
         return result.build()
-    }
-
-    /// - ActivityAware interface
-
-    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        this.binding = binding
-        this.activity = binding.activity
-        binding.addActivityResultListener(this)
-    }
-
-    override fun onDetachedFromActivity() {
-        this.binding?.removeActivityResultListener(this)
-        this.activity = null
-        this.binding = null
-        this.inquiry = null
-    }
-
-    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        onAttachedToActivity(binding)
-    }
-
-    override fun onDetachedFromActivityForConfigChanges() {
-        onDetachedFromActivity()
     }
 }

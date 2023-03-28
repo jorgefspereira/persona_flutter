@@ -26,7 +26,8 @@ class _MyAppState extends State<MyApp> {
     _configuration = TemplateIdConfiguration(
       templateId: "TEMPLATE_ID",
       environment: InquiryEnvironment.sandbox,
-      iOSTheme: InquiryTheme(
+      theme: InquiryTheme(
+        source: InquiryThemeSource.client,
         accentColor: Color(0xff22CB8E),
         primaryColor: Color(0xff22CB8E),
         buttonBackgroundColor: Color(0xff22CB8E),
