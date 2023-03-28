@@ -44,7 +44,6 @@ The Persona SDK collects a user’s IDFV for fraud prevention purposes. In Ap
 - Are the device IDs collected from this app linked to the user’s identity? Yes
 - Do you or your third-party partners use device IDs for tracking purposes? No
 
-
 ## Android
 
 #### Requirements
@@ -54,7 +53,6 @@ The Persona SDK collects a user’s IDFV for fraud prevention purposes. In Ap
 #### Privacy 
 
 This SDK collects a user’s App-Set ID for Fraud Prevention purposes. When publishing to the Play Store, disclose the usage of Device Identifiers as follows:
-
 - Data Types: Device or other IDs
 - Collected: Yes
 - Shared: No
