@@ -72,8 +72,6 @@ class InquiryTheme {
     this.footnoteTextFontSize,
     this.formLabelTextFontFamily,
     this.formLabelTextFontSize,
-    this.pickerTextFontFamily,
-    this.pickerTextFontSize,
     this.footerBackgroundColor,
     this.footerBorderColor,
     this.footerBorderWidth,
@@ -276,12 +274,6 @@ class InquiryTheme {
   /// Form label font size
   final double? formLabelTextFontSize;
 
-  /// Picker font family
-  final String? pickerTextFontFamily;
-
-  /// Picker font size
-  final double? pickerTextFontSize;
-
   /// Footer background color
   final Color? footerBackgroundColor;
 
@@ -343,8 +335,8 @@ class InquiryTheme {
       'textFieldPlaceholderFontFamily': textFieldPlaceholderFontFamily,
       'textFieldFontSize': textFieldFontSize,
       'textFieldFontFamily': textFieldFontFamily,
-      'pickerFontSize': pickerTextFontSize,
-      'pickerFontFamily': pickerTextFontFamily,
+      'pickerTextFontSize': pickerTextFontSize,
+      'pickerTextFontFamily': pickerTextFontFamily,
       'cameraHintTextColor': _toHex(cameraHintTextColor),
       'cameraInstructionsTextColor': _toHex(cameraInstructionsTextColor),
       'cameraGuideCornersColor': _toHex(cameraGuideCornersColor),
@@ -359,8 +351,6 @@ class InquiryTheme {
       'footnoteTextFontSize': footnoteTextFontSize,
       'formLabelTextFontFamily': formLabelTextFontFamily,
       'formLabelTextFontSize': formLabelTextFontSize,
-      'pickerTextFontFamily': pickerTextFontFamily,
-      'pickerTextFontSize': pickerTextFontSize,
       'footerBackgroundColor': _toHex(footerBackgroundColor),
       'footerBorderColor': _toHex(footerBorderColor),
       'footerBorderWidth': footerBorderWidth,
