@@ -2,11 +2,6 @@ package com.jorgefspereira.persona_flutter
 
 import android.app.Activity
 import android.content.Intent
-<<<<<<< HEAD
-import androidx.annotation.NonNull
-import com.withpersona.sdk.inquiry.*
-=======
->>>>>>> v2
 
 import com.withpersona.sdk2.inquiry.*
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -18,12 +13,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-<<<<<<< HEAD
-
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-=======
->>>>>>> v2
 import io.flutter.plugin.common.PluginRegistry
 
 /** PersonaFlutterPlugin */
@@ -31,12 +20,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
     private lateinit var methodChannel: MethodChannel
     private lateinit var eventChannel: EventChannel
 
-<<<<<<< HEAD
-  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "persona_flutter")
-    channel.setMethodCallHandler(this);
-  }
-=======
     private var activity: Activity? = null
     private var binding: ActivityPluginBinding? = null
     private var eventSink: EventSink? = null
@@ -56,7 +39,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
         methodChannel.setMethodCallHandler(null)
         eventChannel.setStreamHandler(null)
     }
->>>>>>> v2
 
     /// - StreamHandler interface
 
@@ -79,57 +61,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                 // Fields
                 var fields: Fields? = null
 
-<<<<<<< HEAD
-          if (fieldsMap != null) {
-            val nameMap = fieldsMap["name"] as? Map<*, *>
-            val addressMap = fieldsMap["address"] as? Map<*, *>
-            val emailAddress = fieldsMap["emailAddress"] as? String
-            val phoneNumber = fieldsMap["phoneNumber"] as? String
-            val birthdate = fieldsMap["birthdate"] as? String
-            val additionalFields = fieldsMap["additionalFields"] as? Map<*, *>
-
-            if(nameMap != null) {
-              val first = nameMap["first"] as String?
-              val middle = nameMap["middle"] as String?
-              val last = nameMap["last"] as String?
-
-              fieldsBuilder.name(first, middle, last)
-            }
-
-            if(addressMap != null ) {
-              val street1 = addressMap["street1"] as? String
-              val street2 = addressMap["street2"] as? String
-              val city = addressMap["city"] as? String
-              val subdivision = addressMap["subdivision"] as? String
-              val postalCode = addressMap["postalCode"] as? String
-              val countryCode = addressMap["countryCode"] as? String
-
-              fieldsBuilder.address(street1, street2, city, subdivision, postalCode, countryCode)
-            }
-
-            if (emailAddress != null) {
-              fieldsBuilder.emailAddress(emailAddress)
-            }
-
-            if (phoneNumber != null) {
-              fieldsBuilder.phoneNumber(phoneNumber)
-            }
-
-            if(birthdate != null) {
-              val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-              formatter.format(birthdate);
-              fieldsBuilder.birthdate(formatter.calendar)
-            }
-
-            if(additionalFields != null) {
-              for ((key, value) in additionalFields) {
-                if (key is String) {
-                  when(value) {
-                    is Int -> fieldsBuilder.field(key, value)
-                    is String -> fieldsBuilder.field(key, value)
-                    is Boolean -> fieldsBuilder.field(key, value)
-                  }
-=======
                 (arguments["fields"] as?  Map<String, Any?>)?.let  {
                     fields = fieldsFromMap(it)
                 }
@@ -199,7 +130,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                     }
 
                     inquiry = builder?.build()
->>>>>>> v2
                 }
             }
             "start" -> {
@@ -217,40 +147,10 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
 
     /// - ActivityAware interface
 
-<<<<<<< HEAD
-  /// - Helpers
-
-  private fun attributesToMap(attributes: Attributes): HashMap<String, Any?> {
-    val result = hashMapOf<String, Any?>();
-    val nameMap = hashMapOf<String, Any?>();
-    val addressMap = hashMapOf<String, Any?>();
-
-    nameMap["first"] = attributes.name?.first;
-    nameMap["middle"] = attributes.name?.middle;
-    nameMap["last"] = attributes.name?.last;
-
-    addressMap["street1"] = attributes.address?.street1;
-    addressMap["street2"] = attributes.address?.street2;
-    addressMap["city"] = attributes.address?.city;
-    addressMap["subdivision"] = attributes.address?.subdivision;
-    addressMap["subdivisionAbbr"] = attributes.address?.subdivisionAbbr;
-    addressMap["postalCode"] = attributes.address?.postalCode;
-    addressMap["countryCode"] = attributes.address?.countryCode;
-
-    result["name"] = nameMap;
-    result["address"] = addressMap;
-
-    val birthdate = attributes.birthdate
-
-    if (birthdate != null) {
-      val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-      result["birthdate"] = formatter.format(birthdate);
-=======
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         this.binding = binding
         this.activity = binding.activity
         binding.addActivityResultListener(this)
->>>>>>> v2
     }
 
     override fun onDetachedFromActivity() {

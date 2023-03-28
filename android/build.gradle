@@ -28,11 +28,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-<<<<<<< HEAD
-    compileSdkVersion 31
-=======
     compileSdkVersion 33
->>>>>>> v2
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -59,9 +55,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-<<<<<<< HEAD
-    implementation "com.withpersona.sdk:inquiry:1.1.24"
-=======
     implementation "com.withpersona.sdk2:inquiry:2.4.0"
->>>>>>> v2
 }
