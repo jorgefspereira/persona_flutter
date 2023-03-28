@@ -51,7 +51,12 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
     InquiryEnvironment environment = InquiryEnvironment.sandbox,
     Map<String, dynamic> fields = const {},
     InquiryTheme? theme,
-  }) : super(accountId: accountId, referenceId: referenceId, environment: environment, fields: fields, theme: theme);
+  }) : super(
+            accountId: accountId,
+            referenceId: referenceId,
+            environment: environment,
+            fields: fields,
+            theme: theme);
 
   /// An existing template version that determines how the flow is customized.
   final String templateVersion;
@@ -77,7 +82,12 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
     InquiryEnvironment environment = InquiryEnvironment.sandbox,
     Map<String, dynamic> fields = const {},
     InquiryTheme? theme,
-  }) : super(accountId: accountId, referenceId: referenceId, environment: environment, fields: fields, theme: theme);
+  }) : super(
+            accountId: accountId,
+            referenceId: referenceId,
+            environment: environment,
+            fields: fields,
+            theme: theme);
 
   /// An existing template id that determines how the flow is customized.
   final String templateId;
