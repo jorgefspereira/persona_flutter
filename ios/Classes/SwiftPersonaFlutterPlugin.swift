@@ -2,19 +2,27 @@ import Flutter
 import UIKit
 import Persona2
 
-public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate {
-    let channel: FlutterMethodChannel;
+private let kTypeKey = "type";
+private let kInquiryIdKey = "inquiryId";
+private let kSessionTokenKey = "sessionToken";
+private let kStatusKey = "status";
+private let kFieldsKey = "fields";
+private let kErrorKey = "error";
+
+public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, FlutterStreamHandler {
+    var _eventSink: FlutterEventSink?
     var inquiry: Inquiry?;
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "persona_flutter", binaryMessenger: registrar.messenger())
-        let instance = SwiftPersonaFlutterPlugin(withChannel: channel)
-        registrar.addMethodCallDelegate(instance, channel: channel)
+        let methodChannel = FlutterMethodChannel(name: "persona_flutter", binaryMessenger: registrar.messenger())
+        let eventChannel = FlutterEventChannel(name: "persona_flutter/events", binaryMessenger: registrar.messenger())
+        
+        let instance = SwiftPersonaFlutterPlugin()
+        registrar.addMethodCallDelegate(instance, channel: methodChannel)
+        eventChannel.setStreamHandler(instance)
     }
     
-    init(withChannel channel: FlutterMethodChannel) {
-        self.channel = channel;
-    }
+    // MARK: Method Channel
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
@@ -23,11 +31,15 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 
                 /// Theme
                 var theme: InquiryTheme?
-            
-                if let value = arguments["theme"] as? [String: Any] {
-                    theme = themeFromMap(value)
+                
+                if let value = arguments["themeSource"] as? String {
+                    let themeSource = themeSourceFromString(value)
+                    
+                    if let map = arguments["theme"] as? [String: Any] {
+                        theme = themeFromMap(map, source: themeSource)
+                    }
                 }
-            
+
                 /// Fields
                 var fields: [String: InquiryField]?
             
@@ -106,31 +118,55 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 }
             
             case "start":
-                if let value = inquiry {
-                    let controller = UIApplication.shared.keyWindow!.rootViewController!
-                    value.start(from: controller)
+                if let value = inquiry,
+                   let controller = UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.rootViewController {
+                       value.start(from: controller)
                 }
             default:
                 result(FlutterMethodNotImplemented)
         }
     }
     
-    /// InquiryDelegate
+    // MARK: Stream Handler
+    
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        _eventSink = events;
+        return nil
+    }
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        _eventSink = nil;
+        return nil
+    }
+    
+    // MARK: Inquiry Delegate
     
     public func inquiryComplete(inquiryId: String, status: String, fields: [String : InquiryField]) {
+        guard let events = _eventSink else {
+            return
+        }
+        
         let fieldsArray = mapFromFields(fields)
-        self.channel.invokeMethod("onComplete", arguments: ["inquiryId": inquiryId, "status" : status, "fields": fieldsArray])
+        events([kTypeKey: "complete", kInquiryIdKey: inquiryId, kStatusKey: status, kFieldsKey: fieldsArray])
     }
-    
+
     public func inquiryCanceled(inquiryId: String?, sessionToken: String?) {
-        self.channel.invokeMethod("onCanceled", arguments: ["inquiryId" : inquiryId, "sessionToken": sessionToken])
+        guard let events = _eventSink else {
+            return
+        }
+        
+        events([kTypeKey: "canceled", kInquiryIdKey: inquiryId, kSessionTokenKey: sessionToken])
     }
-    
+
     public func inquiryError(_ error: Error) {
-        self.channel.invokeMethod("onError", arguments: ["error" : error.localizedDescription]);
+        guard let events = _eventSink else {
+            return
+        }
+        
+        events([kTypeKey: "error", kErrorKey: error.localizedDescription])
     }
-    
-    /// Convert Functions
+
+    // MARK: Convert Functions
     
     func mapFromFields(_ fields: [String: InquiryField]) -> [String: Any] {
         var result : [String : Any] = [:]
@@ -188,8 +224,20 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         return result
     }
     
-    func themeFromMap(_ map: [String: Any]) -> InquiryTheme {
-        var theme = InquiryTheme();
+    func themeSourceFromString(_ value: String) -> ThemeSource {
+        switch value {
+            case "client":
+                return ThemeSource.client
+            case "server":
+                return ThemeSource.server
+            default:
+                return ThemeSource.server
+        }
+    }
+    
+    func themeFromMap(_ map: [String: Any], source: ThemeSource) -> InquiryTheme {
+        var theme = InquiryTheme(themeSource: source);
+        
         ///////////////////////////////////////////////////////////////////////////
         /// General Colors
         ///////////////////////////////////////////////////////////////////////////
@@ -449,7 +497,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         return theme;
     }
     
-    /// Helpers
+    // MARK: Helpers
     
     func dateFormatter() -> DateFormatter {
         let formatter = DateFormatter()

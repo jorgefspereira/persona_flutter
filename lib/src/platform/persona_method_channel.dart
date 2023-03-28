@@ -1,48 +1,47 @@
 import 'package:flutter/services.dart';
 
-import '../types/configurations.dart';
+import '../core/configurations.dart';
+import '../core/events.dart';
 import 'persona_platform_interface.dart';
 
 class PersonaMethodChannel extends PersonaPlatformInterface {
+  /// The method channel used to interact with the native platform.
   final MethodChannel _channel = const MethodChannel('persona_flutter');
 
-  MethodChannel get channel => _channel;
+  /// The event channel used to receive changes from the native platform.
+  final EventChannel _eventChannel = const EventChannel('persona_flutter/events');
 
-  PersonaMethodChannel() {
-    _channel.setMethodCallHandler(_handleMethodCall);
-  }
+  /// A broadcast stream from the native platform
+  Stream<InquiryEvent>? _stream;
 
+  /// Creates and initializes a new Inquiry object
   @override
   Future<void> init({required InquiryConfiguration configuration}) async {
     return _channel.invokeMethod('init', configuration.toJson());
   }
 
+  /// Starts the verification flow.
   @override
   Future<void> start() async {
     return _channel.invokeMethod('start');
   }
 
-  Future<void> _handleMethodCall(MethodCall call) async {
-    switch (call.method) {
-      case "onComplete":
-        String inquiryId = call.arguments['inquiryId'] as String;
-        String status = call.arguments['status'] as String;
-        Map<String, dynamic> fields = (call.arguments['fields'] as Map).map(
-            (key, value) => MapEntry<String, dynamic>(key.toString(), value));
-        onComplete?.call(inquiryId, status, fields);
-        break;
-      case "onCanceled":
-        String? inquiryId = call.arguments['inquiryId'] as String?;
-        String? sessionToken = call.arguments['sessionToken'] as String?;
-        onCanceled?.call(inquiryId, sessionToken);
-        break;
-      case "onError":
-        String? error = call.arguments['error'] as String?;
-        onError?.call(error);
-        break;
-      default:
-        throw MissingPluginException(
-            '${call.method} was invoked but has no handler');
-    }
+  /// A broadcast stream from the native platform
+  @override
+  Stream<InquiryEvent> get onEvent {
+    _stream ??= _eventChannel.receiveBroadcastStream().map((dynamic event) {
+      switch (event['type']) {
+        case 'complete':
+          return InquiryComplete.fromJson(event);
+        case 'error':
+          return InquiryError.fromJson(event);
+        case 'canceled':
+          return InquiryCanceled.fromJson(event);
+        default:
+          throw MissingPluginException('Event was fired but has no handler');
+      }
+    });
+
+    return _stream!;
   }
 }
