@@ -1,9 +1,12 @@
 import 'dart:ui';
 
+import 'package:persona_flutter/persona_flutter.dart';
+
 /// Elements used to theme the Persona screens with custom colors, fonts,
 /// text sizes, and corner radius.
 class InquiryTheme {
   InquiryTheme({
+    required this.source,
     this.buttonShadowColor,
     this.buttonShadowRadius,
     this.buttonShadowAlpha,
@@ -45,8 +48,6 @@ class InquiryTheme {
     this.titleTextFontSize,
     this.bodyTextFontFamily,
     this.bodyTextFontSize,
-    this.buttonFontFamily,
-    this.buttonFontSize,
     this.showGovernmentIdIcons,
     this.errorTextFontFamily,
     this.errorTextFontSize,
@@ -71,7 +72,14 @@ class InquiryTheme {
     this.footnoteTextFontSize,
     this.formLabelTextFontFamily,
     this.formLabelTextFontSize,
+    this.pickerTextFontFamily,
+    this.pickerTextFontSize,
+    this.footerBackgroundColor,
+    this.footerBorderColor,
+    this.footerBorderWidth,
   });
+
+  final InquiryThemeSource source;
 
   /// The background color for all views.
   final Color? backgroundColor;
@@ -181,12 +189,6 @@ class InquiryTheme {
   /// The corner radius to apply to buttons.
   final double? buttonCornerRadius;
 
-  /// Button font family
-  final String? buttonFontFamily;
-
-  /// Button font size (pt)
-  final double? buttonFontSize;
-
   /// The shadow color for buttons (this should include the desired opacity)
   final Color? buttonShadowColor;
 
@@ -268,14 +270,30 @@ class InquiryTheme {
   /// Footnote font size
   final double? footnoteTextFontSize;
 
-  /// Form label font size
+  /// Form label font family
   final String? formLabelTextFontFamily;
 
   /// Form label font size
   final double? formLabelTextFontSize;
 
+  /// Picker font family
+  final String? pickerTextFontFamily;
+
+  /// Picker font size
+  final double? pickerTextFontSize;
+
+  /// Footer background color
+  final Color? footerBackgroundColor;
+
+  /// Footer border color
+  final Color? footerBorderColor;
+
+  /// Footer border width
+  final double? footerBorderWidth;
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
+      'source': source.name,
       'backgroundColor': _toHex(backgroundColor),
       'textFieldBorderColor': _toHex(textFieldBorderColor),
       'buttonBackgroundColor': _toHex(buttonBackgroundColor),
@@ -311,15 +329,13 @@ class InquiryTheme {
       'buttonShadowWidth': buttonShadowWidth,
       'buttonShadowHeight': buttonShadowHeight,
       'cancelButtonShadowRadius': cancelButtonShadowRadius,
-      'titleFontFamily': titleTextFontFamily,
-      'titleFontSize': titleTextFontSize,
-      'bodyFontFamily': bodyTextFontFamily,
-      'bodyFontSize': bodyTextFontSize,
-      'buttonFontFamily': buttonFontFamily,
-      'buttonFontSize': buttonFontSize,
+      'titleTextFontFamily': titleTextFontFamily,
+      'titleTextFontSize': titleTextFontSize,
+      'bodyTextFontFamily': bodyTextFontFamily,
+      'bodyTextFontSize': bodyTextFontSize,
       'showGovernmentIdIcons': showGovernmentIdIcons,
-      'errorFontSize': errorTextFontSize,
-      'errorFontFamily': errorTextFontFamily,
+      'errorTextFontSize': errorTextFontSize,
+      'errorTextFontFamily': errorTextFontFamily,
       'navigationBarTextColor': _toHex(navigationBarTextColor),
       'navigationBarTextFontSize': navigationBarTextFontSize,
       'navigationBarTextFontFamily': navigationBarTextFontFamily,
@@ -336,15 +352,18 @@ class InquiryTheme {
       'cameraButtonTextColor': _toHex(cameraButtonTextColor),
       'cameraButtonBackgroundColor': _toHex(cameraButtonBackgroundColor),
       'cameraButtonAlternateTextColor': _toHex(cameraButtonAlternateTextColor),
-      'cameraButtonAlternateBackgroundColor':
-          _toHex(cameraButtonAlternateBackgroundColor),
+      'cameraButtonAlternateBackgroundColor': _toHex(cameraButtonAlternateBackgroundColor),
       'cancelButtonAlternateTextColor': _toHex(cancelButtonAlternateTextColor),
-      'cancelButtonAlternateBackgroundColor':
-          _toHex(cancelButtonAlternateBackgroundColor),
+      'cancelButtonAlternateBackgroundColor': _toHex(cancelButtonAlternateBackgroundColor),
       'footnoteTextFontFamily': footnoteTextFontFamily,
       'footnoteTextFontSize': footnoteTextFontSize,
       'formLabelTextFontFamily': formLabelTextFontFamily,
       'formLabelTextFontSize': formLabelTextFontSize,
+      'pickerTextFontFamily': pickerTextFontFamily,
+      'pickerTextFontSize': pickerTextFontSize,
+      'footerBackgroundColor': _toHex(footerBackgroundColor),
+      'footerBorderColor': _toHex(footerBorderColor),
+      'footerBorderWidth': footerBorderWidth,
     };
   }
 

@@ -1,7 +1,7 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../types/configurations.dart';
-import '../types/typedefs.dart';
+import '../core/configurations.dart';
+import '../core/events.dart';
 import 'persona_method_channel.dart';
 
 abstract class PersonaPlatformInterface extends PlatformInterface {
@@ -22,19 +22,18 @@ abstract class PersonaPlatformInterface extends PlatformInterface {
     _instance = instance;
   }
 
-  /// Called on a successful inquiry.
-  InquirySuccessCallback? onSuccess;
+  /// A broadcast stream from the native platform
+  Stream<InquiryEvent> get onEvent {
+    throw UnimplementedError('onEvent has not been implemented.');
+  }
 
-  /// Called when the invidual fails the inquiry.
-  InquiryFailedCallback? onFailed;
+  /// Creates and initializes a new Inquiry object
+  Future<void> init({required InquiryConfiguration configuration}) async {
+    throw UnimplementedError('init() has not been implemented.');
+  }
 
-  /// Called when the individual cancels the inquiry.
-  InquiryCancelledCallback? onCancelled;
-
-  /// The inquiry errored
-  InquiryErrorCallback? onError;
-
-  Future<void> start({required InquiryConfiguration configuration}) async {
+  /// Starts the verification flow.
+  Future<void> start() async {
     throw UnimplementedError('start() has not been implemented.');
   }
 }

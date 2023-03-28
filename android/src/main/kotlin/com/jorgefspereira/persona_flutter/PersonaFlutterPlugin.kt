@@ -2,64 +2,84 @@ package com.jorgefspereira.persona_flutter
 
 import android.app.Activity
 import android.content.Intent
+<<<<<<< HEAD
 import androidx.annotation.NonNull
 import com.withpersona.sdk.inquiry.*
+=======
+>>>>>>> v2
 
+import com.withpersona.sdk2.inquiry.*
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+<<<<<<< HEAD
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+=======
+>>>>>>> v2
 import io.flutter.plugin.common.PluginRegistry
-import java.text.SimpleDateFormat
-import java.util.Date
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /** PersonaFlutterPlugin */
-public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener {
-  private lateinit var channel : MethodChannel
-  private var activity: Activity? = null
-  private var binding: ActivityPluginBinding? = null
-  private val requestCode = 57
+class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, PluginRegistry.ActivityResultListener {
+    private lateinit var methodChannel: MethodChannel
+    private lateinit var eventChannel: EventChannel
 
+<<<<<<< HEAD
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "persona_flutter")
     channel.setMethodCallHandler(this);
   }
+=======
+    private var activity: Activity? = null
+    private var binding: ActivityPluginBinding? = null
+    private var eventSink: EventSink? = null
+    private val requestCode = 57
+    private var inquiry: Inquiry? = null
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
-  }
+    /// - FlutterPlugin interface
 
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    when (call.method) {
-      "start" -> {
-        val activity = this.activity ?: return
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        methodChannel = MethodChannel(binding.binaryMessenger, "persona_flutter")
+        methodChannel.setMethodCallHandler(this)
+        eventChannel = EventChannel(binding.binaryMessenger, "persona_flutter/events")
+        eventChannel.setStreamHandler(this)
+    }
 
-        val inquiryId = call.argument<String>("inquiryId")
-        val accessToken = call.argument<String>("accessToken")
-        val templateId = call.argument<String>("templateId")
-        val referenceId = call.argument<String>("referenceId")
-        val accountId = call.argument<String>("accountId")
-        val environment = call.argument<String>("environment")
-        val fieldsMap = call.argument<Map<String, Any>>("fields")
-        val note = call.argument<String>("note")
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        methodChannel.setMethodCallHandler(null)
+        eventChannel.setStreamHandler(null)
+    }
+>>>>>>> v2
 
-        if (inquiryId != null) {
-          Inquiry.fromInquiry(inquiryId)
-                  .accessToken(accessToken)
-                  .build().start(activity, requestCode);
+    /// - StreamHandler interface
 
-          result.success("Inquiry started with inquiryId")
-        }
-        else if(templateId != null) {
+    override fun onListen(arguments: Any?, events: EventSink?) {
+        eventSink = events
+    }
 
-          val fieldsBuilder = Fields.Builder()
+    override fun onCancel(arguments: Any?) {
+        eventSink?.endOfStream()
+        eventSink = null
+    }
 
+    /// - MethodCallHandler interface
+
+    override fun onMethodCall(call: MethodCall, result: Result) {
+        when (call.method) {
+            "init" -> {
+                val arguments = call.arguments as? Map<String, Any?> ?: return
+
+                // Fields
+                var fields: Fields? = null
+
+<<<<<<< HEAD
           if (fieldsMap != null) {
             val nameMap = fieldsMap["name"] as? Map<*, *>
             val addressMap = fieldsMap["address"] as? Map<*, *>
@@ -109,67 +129,95 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
                     is String -> fieldsBuilder.field(key, value)
                     is Boolean -> fieldsBuilder.field(key, value)
                   }
+=======
+                (arguments["fields"] as?  Map<String, Any?>)?.let  {
+                    fields = fieldsFromMap(it)
                 }
-              }
+
+                // Configuration
+                (arguments["inquiryId"] as? String)?.let {
+                    inquiry = Inquiry
+                            .fromInquiry(it)
+                            .sessionToken(arguments["sessionToken"] as? String).build()
+                } ?: run {
+                    var environment: Environment? = null
+
+                    // Environment
+                    (arguments["environment"] as? String)?.let {
+                        environment = Environment.valueOf(it.uppercase())
+                    }
+
+                    var theme: Map<String, Any?>? = null
+
+                    // Theme
+                    (arguments["theme"] as?  Map<String, Any?>)?.let {
+                        theme = it
+                    }
+
+                    var builder: InquiryTemplateBuilder? = null
+
+                    // Fields
+                    (arguments["templateVersion"] as? String)?.let { templateVersion ->
+                        (arguments["accountId"] as? String)?.let { accountId ->
+                            builder = Inquiry
+                                    .fromTemplateVersion(templateVersion)
+                                    .accountId(accountId)
+                        } ?: (arguments["referenceId"] as? String)?.let { referenceId ->
+                            builder = Inquiry
+                                    .fromTemplateVersion(templateVersion)
+                                    .referenceId(referenceId)
+                        } ?: run {
+                            builder = Inquiry.fromTemplateVersion(templateVersion)
+                        }
+                    } ?: (arguments["templateId"] as? String)?.let { templateId ->
+                        (arguments["accountId"] as? String)?.let { accountId ->
+                            builder = Inquiry
+                                    .fromTemplate(templateId)
+                                    .accountId(accountId)
+                        } ?: (arguments["referenceId"] as? String)?.let { referenceId ->
+                            builder = Inquiry
+                                    .fromTemplate(templateId)
+                                    .referenceId(referenceId)
+                        } ?: run {
+                            builder = Inquiry.fromTemplate(templateId)
+                        }
+                    }
+
+                    environment?.let {
+                        builder = builder?.environment(it)
+                    }
+
+                    fields?.let {
+                        builder = builder?.fields(it)
+                    }
+
+                    theme?.let {
+                        when(it["source"]) {
+                            "server" -> builder = builder?.theme(ServerThemeSource(R.style.Persona_Inquiry_Theme))
+                            "client" -> builder = builder?.theme(ClientThemeSource(R.style.Persona_Inquiry_Theme))
+                        }
+                    }
+
+                    inquiry = builder?.build()
+>>>>>>> v2
+                }
             }
-          }
+            "start" -> {
+                val activity = this.activity ?: return
+                val inquiry = this.inquiry ?: return
 
-          val inquiry = Inquiry.fromTemplate(templateId)
-                  .accountId(accountId)
-                  .referenceId(referenceId)
-                  .fields(fieldsBuilder.build())
-                  .note(note)
+                inquiry.start(activity, requestCode)
+                result.success("Inquiry started with templateId")
+            }
+            else -> result.notImplemented()
 
-          if (environment != null) {
-            inquiry.environment(Environment.valueOf(environment.toUpperCase()));
-          }
 
-          inquiry.build().start(activity, requestCode)
-          result.success("Inquiry started with templateId")
         }
-      }
-      else -> result.notImplemented()
-    }
-  }
-
-  /// - ActivityResultListener interface
-
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
-    if (requestCode == requestCode) {
-      when(val result = Inquiry.onActivityResult(data)) {
-        is Inquiry.Response.Success -> {
-          val arguments = hashMapOf<String, Any?>();
-          arguments["inquiryId"] = result.inquiryId;
-          arguments["attributes"] = attributesToMap(result.attributes);
-          arguments["relationships"] = relationshipsToArrayMap(result.relationships);
-
-          channel.invokeMethod("onSuccess", arguments);
-          return true;
-        }
-        is Inquiry.Response.Failure -> {
-          val arguments = hashMapOf<String, Any?>();
-          arguments["inquiryId"] = result.inquiryId;
-          arguments["attributes"] = attributesToMap(result.attributes);
-          arguments["relationships"] = relationshipsToArrayMap(result.relationships);
-          channel.invokeMethod("onFailed", arguments);
-          return true;
-        }
-        Inquiry.Response.Cancel -> {
-          channel.invokeMethod("onCancelled", null);
-          return true;
-        }
-        is Inquiry.Response.Error -> {
-          val arguments = hashMapOf<String, Any?>();
-          arguments["error"] = result.debugMessage;
-          channel.invokeMethod("onError", arguments);
-          return true;
-        }
-      }
     }
 
-    return false;
-  }
+    /// - ActivityAware interface
 
+<<<<<<< HEAD
   /// - Helpers
 
   private fun attributesToMap(attributes: Attributes): HashMap<String, Any?> {
@@ -197,57 +245,104 @@ public class PersonaFlutterPlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
     if (birthdate != null) {
       val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
       result["birthdate"] = formatter.format(birthdate);
+=======
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        this.binding = binding
+        this.activity = binding.activity
+        binding.addActivityResultListener(this)
+>>>>>>> v2
     }
 
-    return result;
-  }
-
-  private fun relationshipsToArrayMap(relationships: Relationships): ArrayList<HashMap<String, Any?>> {
-    val list = arrayListOf<HashMap<String,Any?>>();
-
-    for (verification in relationships.verifications) {
-      val item = hashMapOf<String, Any?>();
-      item["id"] = verification.id;
-
-      when (verification.status) {
-        Verification.Status.PASSED -> item["status"] = "passed"
-        Verification.Status.FAILED -> item["status"] = "failed"
-        Verification.Status.REQUIRES_RETRY -> item["status"] = "requiresRetry"
-      }
-
-      when (verification) {
-        is Verification.GovernmentId -> item["type"] = "governmentId"
-        is Verification.Database -> item["type"] = "database"
-        is Verification.PhoneNumber -> item["type"] = "phoneNumber"
-        is Verification.Document -> item["type"] = "document"
-        is Verification.Selfie -> item["type"] = "selfie"
-      }
-
-      list.add(item);
+    override fun onDetachedFromActivity() {
+        this.binding?.removeActivityResultListener(this)
+        this.activity = null
+        this.binding = null
+        this.inquiry = null
     }
 
-    return list;
-  }
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        onAttachedToActivity(binding)
+    }
 
-  /// - ActivityAware interface
+    override fun onDetachedFromActivityForConfigChanges() {
+        onDetachedFromActivity()
+    }
 
-  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    this.binding = binding;
-    this.activity = binding.activity;
-    binding.addActivityResultListener(this);
-  }
+    /// - ActivityResultListener interface
 
-  override fun onDetachedFromActivity() {
-    this.binding?.removeActivityResultListener(this);
-    this.activity = null;
-    this.binding = null;
-  }
+    override fun onActivityResult(rcode: Int, resultCode: Int, data: Intent?): Boolean {
+        if (requestCode == rcode) {
+            when (val result = Inquiry.onActivityResult(data)) {
+                is InquiryResponse.Complete -> {
+                    val arguments = hashMapOf<String, Any?>()
+                    arguments["type"] = "complete"
+                    arguments["inquiryId"] = result.inquiryId
+                    arguments["status"] = result.status
+                    arguments["fields"] = fieldsToMap(result.fields)
+                    eventSink?.success(arguments)
+                    return true
+                }
+                is InquiryResponse.Cancel -> {
+                    val arguments = hashMapOf<String, Any?>()
+                    arguments["type"] = "canceled"
+                    arguments["inquiryId"] = result.inquiryId
+                    arguments["sessionToken"] = result.sessionToken
+                    eventSink?.success(arguments)
+                    return true
+                }
+                is InquiryResponse.Error -> {
+                    val arguments = hashMapOf<String, Any?>()
+                    arguments["type"] = "error"
+                    arguments["error"] = result.debugMessage
+                    eventSink?.success(arguments)
+                    return true
+                }
+            }
+        }
 
-  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-    onAttachedToActivity(binding);
-  }
+        return false
+    }
 
-  override fun onDetachedFromActivityForConfigChanges() {
-    onDetachedFromActivity();
-  }
+    /// - Helpers
+
+    private fun fieldsToMap(fields: Map<String, InquiryField>): HashMap<String, Any?> {
+        val result = hashMapOf<String, Any?>()
+
+        for ((key, value) in fields) {
+            when (value) {
+                is InquiryField.StringField -> {
+                    result[key] = value.value
+                }
+                is InquiryField.BooleanField -> {
+                    result[key] = value.value
+                }
+                is InquiryField.IntegerField -> {
+                    result[key] = value.value
+                }
+                else -> {
+
+                }
+            }
+        }
+
+        return result
+    }
+
+    private fun fieldsFromMap(map: Map<String, Any?>): Fields {
+        val result = Fields.Builder()
+        for ((key, value) in map) {
+            when (value) {
+                is String -> {
+                    result.field(key, value)
+                }
+                is Boolean -> {
+                    result.field(key, value)
+                }
+                is Int -> {
+                    result.field(key, value)
+                }
+            }
+        }
+        return result.build()
+    }
 }

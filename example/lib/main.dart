@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:persona_flutter/persona_flutter.dart';
 
@@ -13,6 +15,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late InquiryConfiguration _configuration;
 
+  StreamSubscription<InquiryCanceled>? _streamCanceled;
+  StreamSubscription<InquiryError>? _streamError;
+  StreamSubscription<InquiryComplete>? _streamComplete;
+
   @override
   void initState() {
     super.initState();
@@ -20,11 +26,8 @@ class _MyAppState extends State<MyApp> {
     _configuration = TemplateIdConfiguration(
       templateId: "TEMPLATE_ID",
       environment: InquiryEnvironment.sandbox,
-      fields: InquiryFields(
-        name: InquiryName(first: "John", middle: "Apple", last: "Seed"),
-        additionalFields: {"test-1": "test-2", "test-3": 2, "test-4": true},
-      ),
-      iOSTheme: InquiryTheme(
+      theme: InquiryTheme(
+        source: InquiryThemeSource.client,
         accentColor: Color(0xff22CB8E),
         primaryColor: Color(0xff22CB8E),
         buttonBackgroundColor: Color(0xff22CB8E),
@@ -34,56 +37,40 @@ class _MyAppState extends State<MyApp> {
       ),
     );
 
-    PersonaInquiry.onSuccess(onInquirySuccess);
-    PersonaInquiry.onFailed(onInquiryFailed);
-    PersonaInquiry.onCancelled(onInquiryCancelled);
-    PersonaInquiry.onError(onInquiryError);
+    PersonaInquiry.init(configuration: _configuration);
+    PersonaInquiry.onCanceled.listen(_onCanceled);
+    PersonaInquiry.onError.listen(_onError);
+    PersonaInquiry.onComplete.listen(_onComplete);
   }
 
-  void onInquirySuccess(
-    String inquiryId,
-    InquiryAttributes attributes,
-    InquiryRelationships relationships,
-  ) {
-    print("onInquirySuccess");
-    print("- inquiryId: $inquiryId");
-    print("- attributes:");
-    print("-- name.first: ${attributes.name?.first}");
-    print("-- name.middle: ${attributes.name?.middle}");
-    print("-- name.last: ${attributes.name?.last}");
-    print("-- addr.street1: ${attributes.address?.street1}");
-    print("-- addr.street2: ${attributes.address?.street2}");
-    print("-- addr.city: ${attributes.address?.city}");
-    print("-- addr.postalCode: ${attributes.address?.postalCode}");
-    print("-- addr.countryCode: ${attributes.address?.countryCode}");
-    print("-- addr.subdivision: ${attributes.address?.subdivision}");
-    print("-- addr.subdivisionAbbr: ${attributes.address?.subdivisionAbbr}");
-    print("-- birthdate: ${attributes.birthdate?.toString()}");
-    print("- relationships:");
+  @override
+  void dispose() {
+    _streamCanceled?.cancel();
+    _streamError?.cancel();
+    _streamComplete?.cancel();
+    super.dispose();
+  }
 
-    for (var item in relationships.verifications) {
-      print("-- id: ${item.id}");
-      print("-- status: ${item.status}");
-      print("-- type: ${item.type}");
+  void _onCanceled(InquiryCanceled event) {
+    print("InquiryCanceled");
+    print("- inquiryId: ${event.inquiryId}");
+    print("- sessionToken: ${event.sessionToken}");
+  }
+
+  void _onError(InquiryError event) {
+    print("InquiryError");
+    print("- error: ${event.error}");
+  }
+
+  void _onComplete(InquiryComplete event) {
+    print("InquiryComplete");
+    print("- inquiryId: ${event.inquiryId}");
+    print("- status: ${event.status}");
+
+    print("- fields:");
+    for (var key in event.fields.keys) {
+      print("-- key: $key, value: ${event.fields[key]}");
     }
-  }
-
-  void onInquiryFailed(
-    String inquiryId,
-    InquiryAttributes attributes,
-    InquiryRelationships relationships,
-  ) {
-    print("onInquiryFailed");
-    print("- inquiryId: $inquiryId");
-  }
-
-  void onInquiryCancelled() {
-    print("onCancelled");
-  }
-
-  void onInquiryError(String error) {
-    print("onError");
-    print("- $error");
   }
 
   @override
@@ -95,7 +82,7 @@ class _MyAppState extends State<MyApp> {
           child: Center(
             child: ElevatedButton(
               onPressed: () {
-                PersonaInquiry.start(configuration: _configuration);
+                PersonaInquiry.start();
               },
               child: Text("Start Inquiry"),
             ),
