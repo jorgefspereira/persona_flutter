@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:persona_flutter/persona_flutter.dart';
 
@@ -12,6 +14,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late InquiryConfiguration _configuration;
+
+  StreamSubscription<InquiryCanceled>? _streamCanceled;
+  StreamSubscription<InquiryError>? _streamError;
+  StreamSubscription<InquiryComplete>? _streamComplete;
 
   @override
   void initState() {
@@ -31,32 +37,39 @@ class _MyAppState extends State<MyApp> {
     );
 
     PersonaInquiry.init(configuration: _configuration);
-    PersonaInquiry.onComplete(onInquiryComplete);
-    PersonaInquiry.onCanceled(onInquiryCanceled);
-    PersonaInquiry.onError(onInquiryError);
+    PersonaInquiry.onCanceled.listen(_onCanceled);
+    PersonaInquiry.onError.listen(_onError);
+    PersonaInquiry.onComplete.listen(_onComplete);
   }
 
-  void onInquiryComplete(
-      String inquiryId, String status, Map<String, dynamic> fields) {
-    print("onInquiryComplete");
-    print("- inquiryId: $inquiryId");
-    print("- status: $status");
+  @override
+  void dispose() {
+    _streamCanceled?.cancel();
+    _streamError?.cancel();
+    _streamComplete?.cancel();
+    super.dispose();
+  }
+
+  void _onCanceled(InquiryCanceled event) {
+    print("InquiryCanceled");
+    print("- inquiryId: ${event.inquiryId}");
+    print("- sessionToken: ${event.sessionToken}");
+  }
+
+  void _onError(InquiryError event) {
+    print("InquiryError");
+    print("- error: ${event.error}");
+  }
+
+  void _onComplete(InquiryComplete event) {
+    print("InquiryComplete");
+    print("- inquiryId: ${event.inquiryId}");
+    print("- status: ${event.status}");
 
     print("- fields:");
-    for (var key in fields.keys) {
-      print("-- key: $key, value: ${fields[key]}");
+    for (var key in event.fields.keys) {
+      print("-- key: $key, value: ${event.fields[key]}");
     }
-  }
-
-  void onInquiryCanceled(String? inquiryId, String? sessionToken) {
-    print("onInquiryCanceled");
-    print("- inquiryId: $inquiryId");
-    print("- sessionToken: $sessionToken");
-  }
-
-  void onInquiryError(String? error) {
-    print("onInquiryError");
-    print("- error: $error");
   }
 
   @override
