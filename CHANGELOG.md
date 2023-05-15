@@ -1,3 +1,6 @@
+## 3.1.1
+* Updated intl to 0.18.0
+
 ## 3.1.0
 
 * Updated Android SDK to 2.4.0
