@@ -1,5 +1,10 @@
 ## 3.1.1
-* Updated intl to 0.18.0
+
+* Flutter 3.10 support
+* Dart 3 support
+* Changed intl version 0.17.0 to 0.18.0
+* Updated iOS SDK to 2.8.0
+* Updated Android SDK to 2.6.0
 
 ## 3.1.0
 

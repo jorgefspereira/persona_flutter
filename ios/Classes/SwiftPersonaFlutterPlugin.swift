@@ -146,7 +146,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         }
         
         let fieldsArray = mapFromFields(fields)
-        events([kTypeKey: "complete", kInquiryIdKey: inquiryId, kStatusKey: status, kFieldsKey: fieldsArray])
+        events([kTypeKey: "complete", kInquiryIdKey: inquiryId, kStatusKey: status, kFieldsKey: fieldsArray] as [String : Any])
     }
 
     public func inquiryCanceled(inquiryId: String?, sessionToken: String?) {
