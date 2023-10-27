@@ -1,9 +1,9 @@
 ## 3.1.2
 
-- Updated Android SDK to 2.10.6
-- Updated Gradle version to 7.4.2 
-- Updated iOS SDK to 2.12.6
-- Closed issue #31
+* Updated Android SDK to 2.10.6
+* Updated Gradle version to 7.4.2 
+* Updated iOS SDK to 2.12.6
+* Closed issue #31
 
 ## 3.1.1
 
