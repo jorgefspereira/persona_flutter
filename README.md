@@ -49,17 +49,24 @@ The Persona SDK collects a user’s IDFV for fraud prevention purposes. In Ap
 #### Requirements
 
 - Change the `minSdkVersion` to 21 (or higher) in your `android/app/build.gradle` file.
+      
+- Declare the following permissions:
+  
+    ```xml
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    ```
 
 #### Privacy 
 
-This SDK collects a user’s App-Set ID for Fraud Prevention purposes. When publishing to the Play Store, disclose the usage of Device Identifiers as follows:
+This SDK collects a user’s [App-Set ID](https://developer.android.com/training/articles/app-set-id) for Fraud Prevention purposes. When publishing to the Play Store, disclose the usage of Device Identifiers as follows:
 - Data Types: Device or other IDs
 - Collected: Yes
 - Shared: No
 - Processed Ephemerally: No
 - Required or Optional: Required
 - Purposes: Fraud Prevention
-
 
 #### Theming
 
