@@ -21,8 +21,8 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
     this.referenceId,
     required this.environment,
     required this.fields,
-    InquiryTheme? theme,
-  }) : super(theme: theme);
+    super.theme,
+  });
 
   /// The account to associate this inquiry with. The account can be used to monitor user progress in newly created inquiries.
   final String? accountId;
@@ -46,21 +46,17 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
 class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
   TemplateVersionConfiguration({
     required this.templateVersion,
-    String? accountId,
-    String? referenceId,
-    InquiryEnvironment environment = InquiryEnvironment.sandbox,
-    Map<String, dynamic> fields = const {},
-    InquiryTheme? theme,
-  }) : super(
-            accountId: accountId,
-            referenceId: referenceId,
-            environment: environment,
-            fields: fields,
-            theme: theme);
+    super.accountId,
+    super.referenceId,
+    super.environment = InquiryEnvironment.sandbox,
+    super.fields = const {},
+    super.theme,
+  });
 
   /// An existing template version that determines how the flow is customized.
   final String templateVersion;
 
+  @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'templateVersion': templateVersion,
@@ -77,21 +73,17 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
 class TemplateIdConfiguration extends _BaseTemplateConfiguration {
   TemplateIdConfiguration({
     required this.templateId,
-    String? accountId,
-    String? referenceId,
-    InquiryEnvironment environment = InquiryEnvironment.sandbox,
-    Map<String, dynamic> fields = const {},
-    InquiryTheme? theme,
-  }) : super(
-            accountId: accountId,
-            referenceId: referenceId,
-            environment: environment,
-            fields: fields,
-            theme: theme);
+    super.accountId,
+    super.referenceId,
+    super.environment = InquiryEnvironment.sandbox,
+    super.fields = const {},
+    super.theme,
+  });
 
   /// An existing template id that determines how the flow is customized.
   final String templateId;
 
+  @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'templateId': templateId,
@@ -109,8 +101,8 @@ class InquiryIdConfiguration extends InquiryConfiguration {
   InquiryIdConfiguration({
     required this.inquiryId,
     this.sessionToken,
-    InquiryTheme? theme,
-  }) : super(theme: theme);
+    super.theme,
+  });
 
   /// An existing inquiry.
   final String inquiryId;
@@ -118,6 +110,7 @@ class InquiryIdConfiguration extends InquiryConfiguration {
   /// Session token for resuming an Inquiry. The token must be generated on the server.
   final String? sessionToken;
 
+  @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'inquiryId': inquiryId,
