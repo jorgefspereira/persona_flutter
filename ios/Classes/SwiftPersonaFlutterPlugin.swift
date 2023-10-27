@@ -11,7 +11,7 @@ private let kErrorKey = "error";
 
 public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, FlutterStreamHandler {
     var _eventSink: FlutterEventSink?
-    var inquiry: Inquiry?;
+    var _inquiryConfiguration: InquiryConfiguration?;
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let methodChannel = FlutterMethodChannel(name: "persona_flutter", binaryMessenger: registrar.messenger())
@@ -111,16 +111,16 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                     
                 }
             
-                // Inquiry
-                if let value = config {
-                    inquiry = Inquiry.init(config: value, delegate: self)
-                }
+                // Inquiry configuration
+                _inquiryConfiguration = config
             
             case "start":
-                if let value = inquiry,
-                   let controller = UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.rootViewController {
-                       value.start(from: controller)
+                if let config = _inquiryConfiguration,
+                   let controller =  UIApplication.shared.delegate?.window??.rootViewController {
+                    let inquiry = Inquiry.init(config: config, delegate: self)
+                    inquiry.start(from: controller)
                 }
+            
             default:
                 result(FlutterMethodNotImplemented)
         }
