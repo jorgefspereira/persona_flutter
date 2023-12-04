@@ -72,10 +72,16 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                             .sessionToken(arguments["sessionToken"] as? String).build()
                 } ?: run {
                     var environment: Environment? = null
+                    var environmentId: String? = null
+
 
                     // Environment
                     (arguments["environment"] as? String)?.let {
                         environment = Environment.valueOf(it.uppercase())
+                    }
+                    // Environment Id
+                    (arguments["environmentId"] as? String)?.let {
+                        environmentId = it
                     }
 
                     var theme: Map<String, Any?>? = null
@@ -116,6 +122,10 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
 
                     environment?.let {
                         builder = builder?.environment(it)
+                    }
+
+                    environmentId?.let {
+                        builder = builder?.environmentId(it)
                     }
 
                     fields?.let {

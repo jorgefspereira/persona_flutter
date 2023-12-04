@@ -19,6 +19,7 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
   _BaseTemplateConfiguration({
     this.accountId,
     this.referenceId,
+    this.environmentId,
     required this.environment,
     required this.fields,
     super.theme,
@@ -29,6 +30,7 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
 
   /// The identifier can be used to monitor user progress in newly created inquiries.
   final String? referenceId;
+  final String? environmentId;
 
   /// The environment on which to create inquiries.
   final InquiryEnvironment environment;
@@ -62,7 +64,10 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
       'templateVersion': templateVersion,
       'accountId': accountId,
       'referenceId': referenceId,
-      'environment': environment.toString().split('.').last,
+      'environment': environment
+          .toString()
+          .split('.')
+          .last,
       'fields': fields,
       'theme': theme?.toJson(),
     };
@@ -76,12 +81,14 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
     super.accountId,
     super.referenceId,
     super.environment = InquiryEnvironment.sandbox,
+     this.environmentId,
     super.fields = const {},
     super.theme,
   });
 
   /// An existing template id that determines how the flow is customized.
   final String templateId;
+  final String? environmentId;
 
   @override
   Map<String, dynamic> toJson() {
@@ -89,7 +96,11 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
       'templateId': templateId,
       'accountId': accountId,
       'referenceId': referenceId,
-      'environment': environment.toString().split('.').last,
+      'environmentId': environmentId,
+       'environment': environment
+          .toString()
+          .split('.')
+          .last,
       'fields': fields,
       'theme': theme?.toJson(),
     };
