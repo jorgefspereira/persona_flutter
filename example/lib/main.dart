@@ -25,6 +25,7 @@ class _MyAppState extends State<MyApp> {
 
     _configuration = TemplateIdConfiguration(
       templateId: "TEMPLATE_ID",
+      environmentId: "ENVIRONMENT_ID", // optional
       environment: InquiryEnvironment.sandbox,
       theme: InquiryTheme(
         source: InquiryThemeSource.client,
