@@ -112,19 +112,6 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
             result(FlutterMethodNotImplemented)
         }
     }
-    func topMostController() -> UIViewController? {
-        guard let window = UIApplication.shared.keyWindow, let rootViewController = window.rootViewController else {
-            return nil
-        }
-        
-        var topController = rootViewController
-        
-        while let newTopController = topController.presentedViewController {
-            topController = newTopController
-        }
-        
-        return topController
-    }
     
     // MARK: Stream Handler
     
