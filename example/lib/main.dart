@@ -22,9 +22,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-
-    print("_________________");
     _configuration = TemplateIdConfiguration(
       environmentId: "env_YWAFSMCNEoGUB2MYXCh5SAz8",
       templateId: "itmpl_amzaNEALpuAj83AeFp8kwgJV",
@@ -91,6 +88,7 @@ class _MyAppState extends State<MyApp> {
             child: ElevatedButton(
               onPressed: () {
                 PersonaInquiry.init(configuration: _configuration);
+
                 PersonaInquiry.start();
               },
               child: Text("Start Inquiry"),
