@@ -81,14 +81,14 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
     super.accountId,
     super.referenceId,
     super.environment = InquiryEnvironment.sandbox,
-    required this.environmentId,
+     this.environmentId,
     super.fields = const {},
     super.theme,
   });
 
   /// An existing template id that determines how the flow is customized.
   final String templateId;
-  final String environmentId;
+  final String? environmentId;
 
   @override
   Map<String, dynamic> toJson() {
