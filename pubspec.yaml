@@ -1,0 +1,33 @@
+name: persona_flutter
+description: Persona Inquiry for Flutter. Integrates the native v2 SDKs for iOS and Android.
+version: 3.1.2
+homepage: https://github.com/jorgefspereira/persona_flutter
+repository: https://github.com/jorgefspereira/persona_flutter
+issue_tracker: https://github.com/jorgefspereira/persona_flutter/issues
+screenshots:
+  - description: The persona logo.
+    path: screenshots/logo.png
+
+environment:
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.18.0
+  plugin_platform_interface: ^2.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.jorgefspereira.persona_flutter
+        pluginClass: PersonaFlutterPlugin
+      ios:
+        pluginClass: PersonaFlutterPlugin
