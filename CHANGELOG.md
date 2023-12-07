@@ -1,3 +1,10 @@
+## 3.2.0
+
+* Updated Android SDK to 2.10.9
+* Updated iOS SDK to 2.13.0
+* Changed to Inquiry Builders
+* Added EnvironmentId and RoutingCountry parameters
+
 ## 3.1.2
 
 * Updated Android SDK to 2.10.6

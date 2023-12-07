@@ -199,12 +199,12 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
     
     func themeSourceFromString(_ value: String) -> ThemeSource {
         switch value {
-        case "client":
-            return ThemeSource.client
-        case "server":
-            return ThemeSource.server
-        default:
-            return ThemeSource.server
+            case "client":
+                return ThemeSource.client
+            case "server":
+                return ThemeSource.server
+            default:
+                return ThemeSource.server
         }
     }
     
