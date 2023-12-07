@@ -58,67 +58,74 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
             "init" -> {
                 val arguments = call.arguments as? Map<String, Any?> ?: return
 
-                // Fields
                 var fields: Fields? = null
+                var environment: Environment? = null
+                var environmentId: String? = null
+                var theme: Map<String, Any?>? = null
+                var routingCountry: String? = null
+                var sessionToken: String? = null
+                var referenceId: String? = null
 
+                // Environment
+                (arguments["environment"] as? String)?.let {
+                    environment = Environment.valueOf(it.uppercase())
+                }
+                // Environment Id
+                (arguments["environmentId"] as? String)?.let {
+                    environmentId = it
+                }
+                // Theme
+                (arguments["theme"] as?  Map<String, Any?>)?.let {
+                    theme = it
+                }
+                // Fields
                 (arguments["fields"] as?  Map<String, Any?>)?.let  {
                     fields = fieldsFromMap(it)
+                }
+                // Routing Country
+                (arguments["routingCountry"] as? String)?.let {
+                    routingCountry = it
+                }
+                // Session Token
+                (arguments["sessionToken"] as?  String)?.let  {
+                    sessionToken = it
+                }
+                // Reference Id
+                (arguments["referenceId"] as? String)?.let {
+                    referenceId = it
                 }
 
                 // Configuration
                 (arguments["inquiryId"] as? String)?.let {
-                    inquiry = Inquiry
-                            .fromInquiry(it)
-                            .sessionToken(arguments["sessionToken"] as? String).build()
+
+                    var builder: InquiryBuilder? = Inquiry.fromInquiry(it)
+
+                    builder = builder?.sessionToken(sessionToken)
+                    builder = builder?.routingCountry(routingCountry)
+
+                    theme?.let {
+                        when(it["source"]) {
+                            "server" -> builder = builder?.theme(ServerThemeSource(R.style.Persona_Inquiry_Theme))
+                            "client" -> builder = builder?.theme(ClientThemeSource(R.style.Persona_Inquiry_Theme))
+                        }
+                    }
+
+                    inquiry = builder?.build()
+
                 } ?: run {
-                    var environment: Environment? = null
-                    var environmentId: String? = null
-
-
-                    // Environment
-                    (arguments["environment"] as? String)?.let {
-                        environment = Environment.valueOf(it.uppercase())
-                    }
-                    // Environment Id
-                    (arguments["environmentId"] as? String)?.let {
-                        environmentId = it
-                    }
-
-                    var theme: Map<String, Any?>? = null
-
-                    // Theme
-                    (arguments["theme"] as?  Map<String, Any?>)?.let {
-                        theme = it
-                    }
-
                     var builder: InquiryTemplateBuilder? = null
 
                     // Fields
                     (arguments["templateVersion"] as? String)?.let { templateVersion ->
-                        (arguments["accountId"] as? String)?.let { accountId ->
-                            builder = Inquiry
-                                    .fromTemplateVersion(templateVersion)
-                                    .accountId(accountId)
-                        } ?: (arguments["referenceId"] as? String)?.let { referenceId ->
-                            builder = Inquiry
-                                    .fromTemplateVersion(templateVersion)
-                                    .referenceId(referenceId)
-                        } ?: run {
-                            builder = Inquiry.fromTemplateVersion(templateVersion)
-                        }
+                        builder = Inquiry.fromTemplateVersion(templateVersion)
+
                     } ?: (arguments["templateId"] as? String)?.let { templateId ->
-                        (arguments["accountId"] as? String)?.let { accountId ->
-                            builder = Inquiry
-                                    .fromTemplate(templateId)
-                                    .accountId(accountId)
-                        } ?: (arguments["referenceId"] as? String)?.let { referenceId ->
-                            builder = Inquiry
-                                    .fromTemplate(templateId)
-                                    .referenceId(referenceId)
-                        } ?: run {
-                            builder = Inquiry.fromTemplate(templateId)
-                        }
+                        builder = Inquiry.fromTemplate(templateId)
                     }
+
+                    builder = builder?.routingCountry(routingCountry)
+                    builder = builder?.fields(fields)
+                    builder = builder?.referenceId(referenceId)
 
                     environment?.let {
                         builder = builder?.environment(it)
@@ -126,10 +133,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
 
                     environmentId?.let {
                         builder = builder?.environmentId(it)
-                    }
-
-                    fields?.let {
-                        builder = builder?.fields(it)
                     }
 
                     theme?.let {
@@ -150,7 +153,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                 result.success("Inquiry started with templateId")
             }
             else -> result.notImplemented()
-
 
         }
     }
