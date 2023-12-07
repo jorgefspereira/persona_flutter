@@ -11,7 +11,6 @@ private let kErrorKey = "error";
 
 public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, FlutterStreamHandler {
     var _eventSink: FlutterEventSink?
-    var globalArguments: [String: Any]?
     var _inquiry: Inquiry?
     
     
@@ -35,9 +34,15 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         case "init":
             let arguments = call.arguments as! [String: Any]
             
-            /// Theme
             var theme: InquiryTheme?
+            var fields: [String: InquiryField]?
+            var referenceId: String? = arguments["referenceId"] as? String
+            var routingCountry: String? = arguments["routingCountry"] as? String
+            var environmentId: String? = arguments["environmentId"] as? String
+            var environment = arguments["environment"] as? String
+            var sessionToken = arguments["sessionToken"] as? String
             
+            /// Theme
             if let map = arguments["theme"] as? [String: Any] {
                 if let source = map["source"] as? String {
                     let themeSource = themeSourceFromString(source)
@@ -46,61 +51,43 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
             }
             
             /// Fields
-            var fields: [String: InquiryField]?
-            
             if let value = arguments["fields"] as? [String: Any] {
                 fields = fieldsFromMap(value)
             }
             
-            /// Configuration
-            var config: InquiryConfiguration?
-            
             if let inquiryId = arguments["inquiryId"] as? String {
-                let sessionToken = arguments["sessionToken"] as? String
-                config = InquiryConfiguration(inquiryId: inquiryId, sessionToken: sessionToken, theme: theme)
+                
+                var builder = Inquiry.from(inquiryId: inquiryId, delegate: self)
+                
+                builder.sessionToken(sessionToken)
+                builder.routingCountry(routingCountry)
+                builder.theme(theme)
+                
+                _inquiry = builder.build()
+                
             } else {
-                var environment: Environment?
-                var environmentId: String?
                 
-                // Environment
-                if let env = arguments["environment"] as? String {
-                    environment = Environment(rawValue: env)
-                }
+                var builder: InquiryTemplateBuilder?
                 
-                if let envId = arguments["environmentId"] as? String {
-                    environmentId = envId
-                }
-                
-                // Fields
                 if let templateVersion = arguments["templateVersion"] as? String {
-                    if let accountId = arguments["accountId"] as? String {
-                        _inquiry = Inquiry.from(templateId: templateVersion, delegate: self)
-                            .environment(Environment.from(rawValue: environment?.rawValue)).environmentId(environmentId)
-                            .build()
-                    } else if let referenceId = arguments["referenceId"] as? String {
-                        _inquiry = Inquiry.from(templateId: templateVersion, delegate: self)
-                            .environment(Environment.from(rawValue: environment?.rawValue)).environmentId(environmentId)
-                            .build()
-                    } else {
-                        _inquiry = Inquiry.from(templateId: templateVersion, delegate: self)
-                            .environment(Environment.from(rawValue: environment?.rawValue)).environmentId(environmentId)
-                            .build()
-                    }
+                    builder = Inquiry.from(templateVersion: templateVersion, delegate: self)
+                    
                 } else if let templateId = arguments["templateId"] as? String {
-                    if let accountId = arguments["accountId"] as? String {
-                        _inquiry = Inquiry.from(templateId: templateId, delegate: self)
-                            .environment(Environment.from(rawValue: environment?.rawValue)).environmentId(environmentId)
-                            .build()
-                    } else if let referenceId = arguments["referenceId"] as? String {
-                        _inquiry = Inquiry.from(templateId: templateId, delegate: self)
-                            .environment(Environment.from(rawValue: environment?.rawValue)).environmentId(environmentId)
-                            .build()
-                    } else {
-                        _inquiry = Inquiry.from(templateId: templateId, delegate: self)
-                            .environment(Environment.from(rawValue: environment?.rawValue)).environmentId(environmentId)
-                            .build()
-                    }
+                    builder = Inquiry.from(templateId: templateId, delegate: self)
                 }
+                
+                builder?.referenceId(referenceId)
+                builder?.routingCountry(routingCountry)
+                builder?.environmentId(environmentId)
+                builder?.fields(fields)
+                builder?.theme(theme)
+                
+                if let envString = environment,
+                   let env = Environment(rawValue: envString) {
+                    builder?.environment(env)
+                }
+                
+                _inquiry = builder?.build()
             }
             
         case "start":
