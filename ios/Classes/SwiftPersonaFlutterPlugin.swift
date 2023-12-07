@@ -59,9 +59,9 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 
                 var builder = Inquiry.from(inquiryId: inquiryId, delegate: self)
                 
-                builder.sessionToken(sessionToken)
-                builder.routingCountry(routingCountry)
-                builder.theme(theme)
+                builder = builder.sessionToken(sessionToken)
+                builder = builder.routingCountry(routingCountry)
+                builder = builder.theme(theme)
                 
                 _inquiry = builder.build()
                 
@@ -76,15 +76,15 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                     builder = Inquiry.from(templateId: templateId, delegate: self)
                 }
                 
-                builder?.referenceId(referenceId)
-                builder?.routingCountry(routingCountry)
-                builder?.environmentId(environmentId)
-                builder?.fields(fields)
-                builder?.theme(theme)
+                builder = builder?.referenceId(referenceId)
+                builder = builder?.routingCountry(routingCountry)
+                builder = builder?.environmentId(environmentId)
+                builder = builder?.fields(fields)
+                builder = builder?.theme(theme)
                 
                 if let envString = environment,
                    let env = Environment(rawValue: envString) {
-                    builder?.environment(env)
+                    builder = builder?.environment(env)
                 }
                 
                 _inquiry = builder?.build()
