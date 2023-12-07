@@ -17,26 +17,28 @@ abstract class InquiryConfiguration {
 /// Base classe to template configuration objects
 class _BaseTemplateConfiguration extends InquiryConfiguration {
   _BaseTemplateConfiguration({
-    this.accountId,
     this.referenceId,
     this.environmentId,
-    required this.environment,
-    required this.fields,
+    this.environment,
+    this.routingCountry,
+    this.fields = const {},
     super.theme,
   });
 
-  /// The account to associate this inquiry with. The account can be used to monitor user progress in newly created inquiries.
-  final String? accountId;
-
   /// The identifier can be used to monitor user progress in newly created inquiries.
   final String? referenceId;
+
+  /// The environment id on which to create inquiries.
   final String? environmentId;
 
   /// The environment on which to create inquiries.
-  final InquiryEnvironment environment;
+  final InquiryEnvironment? environment;
 
   /// Any existing user data you want to attach to the inquiry.
   final Map<String, dynamic> fields;
+
+  /// Set the country to route requests to directly. Only set this if you have been instructed to do so by the Persona team.
+  final String? routingCountry;
 
   @override
   Map<String, dynamic> toJson() {
@@ -48,11 +50,12 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
 class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
   TemplateVersionConfiguration({
     required this.templateVersion,
-    super.accountId,
     super.referenceId,
-    super.environment = InquiryEnvironment.sandbox,
-    super.fields = const {},
+    super.environment,
+    super.environmentId,
+    super.fields,
     super.theme,
+    super.routingCountry,
   });
 
   /// An existing template version that determines how the flow is customized.
@@ -62,14 +65,12 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'templateVersion': templateVersion,
-      'accountId': accountId,
       'referenceId': referenceId,
-      'environment': environment
-          .toString()
-          .split('.')
-          .last,
+      'environmentId': environmentId,
+      'environment': environment?.toString().split('.').last,
       'fields': fields,
       'theme': theme?.toJson(),
+      'routingCountry': routingCountry,
     };
   }
 }
@@ -78,31 +79,27 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
 class TemplateIdConfiguration extends _BaseTemplateConfiguration {
   TemplateIdConfiguration({
     required this.templateId,
-    super.accountId,
     super.referenceId,
-    super.environment = InquiryEnvironment.sandbox,
-     this.environmentId,
-    super.fields = const {},
+    super.environment,
+    super.environmentId,
+    super.fields,
     super.theme,
+    super.routingCountry,
   });
 
   /// An existing template id that determines how the flow is customized.
   final String templateId;
-  final String? environmentId;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'templateId': templateId,
-      'accountId': accountId,
       'referenceId': referenceId,
       'environmentId': environmentId,
-       'environment': environment
-          .toString()
-          .split('.')
-          .last,
+      'environment': environment?.toString().split('.').last,
       'fields': fields,
       'theme': theme?.toJson(),
+      'routingCountry': routingCountry,
     };
   }
 }
