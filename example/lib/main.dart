@@ -15,17 +15,18 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late InquiryConfiguration _configuration;
 
-  StreamSubscription<InquiryCanceled>? _streamCanceled;
-  StreamSubscription<InquiryError>? _streamError;
-  StreamSubscription<InquiryComplete>? _streamComplete;
+  late StreamSubscription<InquiryCanceled> _streamCanceled;
+  late StreamSubscription<InquiryError> _streamError;
+  late StreamSubscription<InquiryComplete> _streamComplete;
 
   @override
   void initState() {
     super.initState();
 
     _configuration = TemplateIdConfiguration(
-      templateId: "TEMPLATE_ID",
+      templateId: "itmpl_Q6ymLRwKfY8PGEjqsCjhUUfu",
       environment: InquiryEnvironment.sandbox,
+      // Client theming is deprecated and will be removed in the future.
       theme: InquiryTheme(
         source: InquiryThemeSource.client,
         accentColor: Color(0xff22CB8E),
@@ -37,17 +38,16 @@ class _MyAppState extends State<MyApp> {
       ),
     );
 
-    PersonaInquiry.init(configuration: _configuration);
-    PersonaInquiry.onCanceled.listen(_onCanceled);
-    PersonaInquiry.onError.listen(_onError);
-    PersonaInquiry.onComplete.listen(_onComplete);
+    _streamCanceled = PersonaInquiry.onCanceled.listen(_onCanceled);
+    _streamError = PersonaInquiry.onError.listen(_onError);
+    _streamComplete = PersonaInquiry.onComplete.listen(_onComplete);
   }
 
   @override
   void dispose() {
-    _streamCanceled?.cancel();
-    _streamError?.cancel();
-    _streamComplete?.cancel();
+    _streamCanceled.cancel();
+    _streamError.cancel();
+    _streamComplete.cancel();
     super.dispose();
   }
 
@@ -82,6 +82,7 @@ class _MyAppState extends State<MyApp> {
           child: Center(
             child: ElevatedButton(
               onPressed: () {
+                PersonaInquiry.init(configuration: _configuration);
                 PersonaInquiry.start();
               },
               child: Text("Start Inquiry"),
