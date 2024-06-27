@@ -182,33 +182,40 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
 
     /// - ActivityResultListener interface
 
+    private boolean isResultSubmitted = false;
     override fun onActivityResult(rcode: Int, resultCode: Int, data: Intent?): Boolean {
         if (requestCode == rcode) {
-            when (val result = Inquiry.onActivityResult(data)) {
-                is InquiryResponse.Complete -> {
-                    val arguments = hashMapOf<String, Any?>()
-                    arguments["type"] = "complete"
-                    arguments["inquiryId"] = result.inquiryId
-                    arguments["status"] = result.status
-                    arguments["fields"] = fieldsToMap(result.fields)
-                    eventSink?.success(arguments)
-                    return true
+            if (!isResultSubmitted) {
+                isResultSubmitted = true;
+                when (val result = Inquiry.onActivityResult(data)) {    
+                    is InquiryResponse.Complete -> {
+                        val arguments = hashMapOf<String, Any?>()
+                        arguments["type"] = "complete"
+                        arguments["inquiryId"] = result.inquiryId
+                        arguments["status"] = result.status
+                        arguments["fields"] = fieldsToMap(result.fields)
+                        eventSink?.success(arguments)
+                        return true
+                    }
+                    is InquiryResponse.Cancel -> {
+                        val arguments = hashMapOf<String, Any?>()
+                        arguments["type"] = "canceled"
+                        arguments["inquiryId"] = result.inquiryId
+                        arguments["sessionToken"] = result.sessionToken
+                        eventSink?.success(arguments)
+                        return true
+                    }
+                    is InquiryResponse.Error -> {
+                        val arguments = hashMapOf<String, Any?>()
+                        arguments["type"] = "error"
+                        arguments["error"] = result.debugMessage
+                        eventSink?.success(arguments)
+                        return true
+                    }
                 }
-                is InquiryResponse.Cancel -> {
-                    val arguments = hashMapOf<String, Any?>()
-                    arguments["type"] = "canceled"
-                    arguments["inquiryId"] = result.inquiryId
-                    arguments["sessionToken"] = result.sessionToken
-                    eventSink?.success(arguments)
-                    return true
-                }
-                is InquiryResponse.Error -> {
-                    val arguments = hashMapOf<String, Any?>()
-                    arguments["type"] = "error"
-                    arguments["error"] = result.debugMessage
-                    eventSink?.success(arguments)
-                    return true
-                }
+            } else {
+                // Log or handle the case where the result is attempted to be submitted again
+                Log.w("YourPlugin", "Result already submitted, ignoring duplicate result.");
             }
         }
 
