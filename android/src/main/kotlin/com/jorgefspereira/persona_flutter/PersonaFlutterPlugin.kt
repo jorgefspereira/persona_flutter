@@ -25,7 +25,7 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
     private var eventSink: EventSink? = null
     private val requestCode = 57
     private var inquiry: Inquiry? = null
-
+    private var isResultSubmitted = false;
     /// - FlutterPlugin interface
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -182,7 +182,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
 
     /// - ActivityResultListener interface
 
-    private boolean isResultSubmitted = false;
     override fun onActivityResult(rcode: Int, resultCode: Int, data: Intent?): Boolean {
         if (requestCode == rcode) {
             if (!isResultSubmitted) {
@@ -213,9 +212,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                         return true
                     }
                 }
-            } else {
-                // Log or handle the case where the result is attempted to be submitted again
-                Log.w("YourPlugin", "Result already submitted, ignoring duplicate result.");
             }
         }
 
