@@ -35,6 +35,15 @@ Add `persona_flutter` as a [dependency in your pubspec.yaml file](https://flutte
     <string>This app requires access to the photo library.</string>
     ```
     
+- *Optionally* if you need support for video and NFC verifications, add to your `ios/Runner/Info.plist`:
+
+    ```xml
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app requires access to the microphone.</string>
+    <key>NFCReaderUsageDescription</key>
+    <string>This app requires access to the NFC.</string>
+    ```
+
 Note: Cocoapods 1.9.3 has a bug that prevents builds from selecting the correct architecture. See more details [here.](https://github.com/CocoaPods/CocoaPods/pull/9790) Please downgrade to 1.8.x or upgrade to 1.10.x
 
 #### Privacy
@@ -43,6 +52,8 @@ The Persona SDK collects a user’s IDFV for fraud prevention purposes. In Ap
 - Usage: App Functionality (covers fraud prevention)
 - Are the device IDs collected from this app linked to the user’s identity? Yes
 - Do you or your third-party partners use device IDs for tracking purposes? No
+
+Be sure to also update your privacy manifest according to the features you are making use of from the SDK. See our iOS [Privacy Manifest instructions](https://docs.withpersona.com/docs/ios-privacy-manifest) for more information.
 
 ## Android
 
