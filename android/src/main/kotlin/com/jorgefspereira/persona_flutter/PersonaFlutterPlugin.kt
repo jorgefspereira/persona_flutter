@@ -25,7 +25,7 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
     private var eventSink: EventSink? = null
     private val requestCode = 57
     private var inquiry: Inquiry? = null
-
+    private var isResultSubmitted = false;
     /// - FlutterPlugin interface
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -184,30 +184,33 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
 
     override fun onActivityResult(rcode: Int, resultCode: Int, data: Intent?): Boolean {
         if (requestCode == rcode) {
-            when (val result = Inquiry.onActivityResult(data)) {
-                is InquiryResponse.Complete -> {
-                    val arguments = hashMapOf<String, Any?>()
-                    arguments["type"] = "complete"
-                    arguments["inquiryId"] = result.inquiryId
-                    arguments["status"] = result.status
-                    arguments["fields"] = fieldsToMap(result.fields)
-                    eventSink?.success(arguments)
-                    return true
-                }
-                is InquiryResponse.Cancel -> {
-                    val arguments = hashMapOf<String, Any?>()
-                    arguments["type"] = "canceled"
-                    arguments["inquiryId"] = result.inquiryId
-                    arguments["sessionToken"] = result.sessionToken
-                    eventSink?.success(arguments)
-                    return true
-                }
-                is InquiryResponse.Error -> {
-                    val arguments = hashMapOf<String, Any?>()
-                    arguments["type"] = "error"
-                    arguments["error"] = result.debugMessage
-                    eventSink?.success(arguments)
-                    return true
+            if (!isResultSubmitted) {
+                isResultSubmitted = true;
+                when (val result = Inquiry.onActivityResult(data)) {    
+                    is InquiryResponse.Complete -> {
+                        val arguments = hashMapOf<String, Any?>()
+                        arguments["type"] = "complete"
+                        arguments["inquiryId"] = result.inquiryId
+                        arguments["status"] = result.status
+                        arguments["fields"] = fieldsToMap(result.fields)
+                        eventSink?.success(arguments)
+                        return true
+                    }
+                    is InquiryResponse.Cancel -> {
+                        val arguments = hashMapOf<String, Any?>()
+                        arguments["type"] = "canceled"
+                        arguments["inquiryId"] = result.inquiryId
+                        arguments["sessionToken"] = result.sessionToken
+                        eventSink?.success(arguments)
+                        return true
+                    }
+                    is InquiryResponse.Error -> {
+                        val arguments = hashMapOf<String, Any?>()
+                        arguments["type"] = "error"
+                        arguments["error"] = result.debugMessage
+                        eventSink?.success(arguments)
+                        return true
+                    }
                 }
             }
         }
