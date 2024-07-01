@@ -1,3 +1,9 @@
+## 3.2.2
+
+* Updated Android SDK to 2.11.6
+* Updated iOS SDK to 2.20.3
+* Fixed issue with reply already submitted. (winmalveda)
+
 ## 3.2.1
 
 * Updated Android SDK to 2.10.12
