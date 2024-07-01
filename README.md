@@ -35,7 +35,7 @@ Add `persona_flutter` as a [dependency in your pubspec.yaml file](https://flutte
     <string>This app requires access to the photo library.</string>
     ```
     
-- *Optionally* if you need support for video and NFC verifications, add to your `ios/Runner/Info.plist`:
+- **Optionally** if you need support for video and NFC verifications, add to your `ios/Runner/Info.plist`:
 
     ```xml
     <key>NSMicrophoneUsageDescription</key>
