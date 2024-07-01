@@ -87,3 +87,5 @@ and in your `InquiryConfiguration` set the theme:
 theme: InquiryTheme(source: InquiryThemeSource.client)
 ...
 ```
+
+*__Important:__ Client side theming is __deprecated__. Themes can be managed in the Dashboard with Persona's visual editor. See the detailed [tutorial](https://help.withpersona.com/articles/6SIHupp847yaEuVMucKAff/tutorial-configure-a-theme-with-flow-editor/) for more information.*
