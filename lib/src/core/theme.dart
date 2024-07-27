@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:persona_flutter/persona_flutter.dart';
+import 'enums.dart';
 
 /// Elements used to theme the Persona screens with custom colors, fonts,
 /// text sizes, and corner radius.
@@ -344,11 +344,9 @@ class InquiryTheme {
       'cameraButtonTextColor': _toHex(cameraButtonTextColor),
       'cameraButtonBackgroundColor': _toHex(cameraButtonBackgroundColor),
       'cameraButtonAlternateTextColor': _toHex(cameraButtonAlternateTextColor),
-      'cameraButtonAlternateBackgroundColor':
-          _toHex(cameraButtonAlternateBackgroundColor),
+      'cameraButtonAlternateBackgroundColor': _toHex(cameraButtonAlternateBackgroundColor),
       'cancelButtonAlternateTextColor': _toHex(cancelButtonAlternateTextColor),
-      'cancelButtonAlternateBackgroundColor':
-          _toHex(cancelButtonAlternateBackgroundColor),
+      'cancelButtonAlternateBackgroundColor': _toHex(cancelButtonAlternateBackgroundColor),
       'footnoteTextFontFamily': footnoteTextFontFamily,
       'footnoteTextFontSize': footnoteTextFontSize,
       'formLabelTextFontFamily': formLabelTextFontFamily,
