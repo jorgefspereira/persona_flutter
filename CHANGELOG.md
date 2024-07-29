@@ -1,3 +1,10 @@
+## 3.2.3
+
+* Updated Android SDK to 2.12.2
+* Updated iOS SDK to 2.21.2.
+* Removed old intl dependency.
+* Removed imperative apply of Flutter's Gradle plugins
+
 ## 3.2.2
 
 * Updated Android SDK to 2.11.6

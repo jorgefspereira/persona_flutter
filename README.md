@@ -35,13 +35,15 @@ Add `persona_flutter` as a [dependency in your pubspec.yaml file](https://flutte
     <string>This app requires access to the photo library.</string>
     ```
     
-- **Optionally** if you need support for video and NFC verifications, add to your `ios/Runner/Info.plist`:
+- **Optionally** if you need support for video, NFC verifications or GPS collections, add to your `ios/Runner/Info.plist`:
 
     ```xml
     <key>NSMicrophoneUsageDescription</key>
     <string>This app requires access to the microphone.</string>
     <key>NFCReaderUsageDescription</key>
     <string>This app requires access to the NFC.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app requires access to the Location when in use.</string>
     ```
 
 Note: Cocoapods 1.9.3 has a bug that prevents builds from selecting the correct architecture. See more details [here.](https://github.com/CocoaPods/CocoaPods/pull/9790) Please downgrade to 1.8.x or upgrade to 1.10.x
