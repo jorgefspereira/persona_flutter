@@ -1,3 +1,7 @@
+## 3.2.4
+
+* Added locale to support override of the device locale with desired language.
+
 ## 3.2.3
 
 * Updated Android SDK to 2.12.2
