@@ -5,11 +5,19 @@ import 'theme.dart';
 abstract class InquiryConfiguration {
   InquiryConfiguration({
     this.theme,
+    this.locale,
+    this.routingCountry,
   });
 
   /// Inquiry themes control the look and feel of a given flow.
   /// Set theme source to [server] to be configurable in the Persona dashboard.
   final InquiryTheme? theme;
+
+  /// Override the device locale with desired language.
+  final String? locale;
+
+  /// Set the country to route requests to directly. Only set this if you have been instructed to do so by the Persona team.
+  final String? routingCountry;
 
   Map<String, dynamic> toJson();
 }
@@ -20,9 +28,10 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
     this.referenceId,
     this.environmentId,
     this.environment,
-    this.routingCountry,
     this.fields = const {},
     super.theme,
+    super.locale,
+    super.routingCountry,
   });
 
   /// The identifier can be used to monitor user progress in newly created inquiries.
@@ -36,9 +45,6 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
 
   /// Any existing user data you want to attach to the inquiry.
   final Map<String, dynamic> fields;
-
-  /// Set the country to route requests to directly. Only set this if you have been instructed to do so by the Persona team.
-  final String? routingCountry;
 
   @override
   Map<String, dynamic> toJson() {
@@ -56,6 +62,7 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
     super.fields,
     super.theme,
     super.routingCountry,
+    super.locale,
   });
 
   /// An existing template version that determines how the flow is customized.
@@ -71,6 +78,7 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
       'fields': fields,
       'theme': theme?.toJson(),
       'routingCountry': routingCountry,
+      'locale': locale,
     };
   }
 }
@@ -85,6 +93,7 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
     super.fields,
     super.theme,
     super.routingCountry,
+    super.locale,
   });
 
   /// An existing template id that determines how the flow is customized.
@@ -100,6 +109,7 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
       'fields': fields,
       'theme': theme?.toJson(),
       'routingCountry': routingCountry,
+      'locale': locale,
     };
   }
 }
@@ -110,6 +120,7 @@ class InquiryIdConfiguration extends InquiryConfiguration {
     required this.inquiryId,
     this.sessionToken,
     super.theme,
+    super.locale,
   });
 
   /// An existing inquiry.
@@ -124,6 +135,7 @@ class InquiryIdConfiguration extends InquiryConfiguration {
       'inquiryId': inquiryId,
       'sessionToken': sessionToken,
       'theme': theme?.toJson(),
+      'locale': locale,
     };
   }
 }

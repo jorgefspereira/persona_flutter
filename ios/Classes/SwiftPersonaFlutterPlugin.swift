@@ -41,6 +41,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
             var environmentId: String? = arguments["environmentId"] as? String
             var environment = arguments["environment"] as? String
             var sessionToken = arguments["sessionToken"] as? String
+            var locale = arguments["locale"] as? String
             
             /// Theme
             if let map = arguments["theme"] as? [String: Any] {
@@ -62,6 +63,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 builder = builder.sessionToken(sessionToken)
                 builder = builder.routingCountry(routingCountry)
                 builder = builder.theme(theme)
+                builder = builder.locale(locale)
                 
                 _inquiry = builder.build()
                 
@@ -81,6 +83,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 builder = builder?.environmentId(environmentId)
                 builder = builder?.fields(fields)
                 builder = builder?.theme(theme)
+                builder = builder?.locale(locale)
                 
                 if let envString = environment,
                    let env = Environment(rawValue: envString) {

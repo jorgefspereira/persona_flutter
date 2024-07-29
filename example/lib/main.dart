@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
     _configuration = TemplateIdConfiguration(
       templateId: "itmpl_Q6ymLRwKfY8PGEjqsCjhUUfu",
       environment: InquiryEnvironment.sandbox,
+      // locale: "pt-BR",
       // Client theming is deprecated and will be removed in the future.
       theme: InquiryTheme(
         source: InquiryThemeSource.client,

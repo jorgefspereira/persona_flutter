@@ -65,6 +65,7 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                 var routingCountry: String? = null
                 var sessionToken: String? = null
                 var referenceId: String? = null
+                var locale: String? = null
 
                 // Environment
                 (arguments["environment"] as? String)?.let {
@@ -94,6 +95,10 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                 (arguments["referenceId"] as? String)?.let {
                     referenceId = it
                 }
+                // Locale
+                (arguments["locale"] as? String)?.let {
+                    locale = it
+                }
 
                 // Configuration
                 (arguments["inquiryId"] as? String)?.let {
@@ -102,6 +107,7 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
 
                     builder = builder?.sessionToken(sessionToken)
                     builder = builder?.routingCountry(routingCountry)
+                    builder = builder?.locale(locale)
 
                     theme?.let {
                         when(it["source"]) {
@@ -126,6 +132,7 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                     builder = builder?.routingCountry(routingCountry)
                     builder = builder?.fields(fields)
                     builder = builder?.referenceId(referenceId)
+                    builder = builder?.locale(locale)
 
                     environment?.let {
                         builder = builder?.environment(it)
