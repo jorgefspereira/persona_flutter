@@ -1,3 +1,8 @@
+## 3.2.5
+
+* Downgraded required dart sdk version
+* Gradle compatibility issues
+
 ## 3.2.4
 
 * Added locale to support override of the device locale with desired language.
