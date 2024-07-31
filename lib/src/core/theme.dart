@@ -344,9 +344,11 @@ class InquiryTheme {
       'cameraButtonTextColor': _toHex(cameraButtonTextColor),
       'cameraButtonBackgroundColor': _toHex(cameraButtonBackgroundColor),
       'cameraButtonAlternateTextColor': _toHex(cameraButtonAlternateTextColor),
-      'cameraButtonAlternateBackgroundColor': _toHex(cameraButtonAlternateBackgroundColor),
+      'cameraButtonAlternateBackgroundColor':
+          _toHex(cameraButtonAlternateBackgroundColor),
       'cancelButtonAlternateTextColor': _toHex(cancelButtonAlternateTextColor),
-      'cancelButtonAlternateBackgroundColor': _toHex(cancelButtonAlternateBackgroundColor),
+      'cancelButtonAlternateBackgroundColor':
+          _toHex(cancelButtonAlternateBackgroundColor),
       'footnoteTextFontFamily': footnoteTextFontFamily,
       'footnoteTextFontSize': footnoteTextFontSize,
       'formLabelTextFontFamily': formLabelTextFontFamily,
