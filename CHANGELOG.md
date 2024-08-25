@@ -1,3 +1,9 @@
+## 3.2.6
+
+* Updated Android SDK to 2.12.4
+* Updated iOS SDK to 2.22.3
+* Fixed issue with isResultSubmitted not allowing automated testing.
+
 ## 3.2.5
 
 * Downgraded required dart sdk version
