@@ -156,6 +156,8 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                 val activity = this.activity ?: return
                 val inquiry = this.inquiry ?: return
 
+                isResultSubmitted = false
+
                 inquiry.start(activity, requestCode)
                 result.success("Inquiry started with templateId")
             }
