@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Persona.Inquiry.Theme" parent="@style/Base.Persona.Inquiry.Theme"></style>
+</resources>
