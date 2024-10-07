@@ -1,3 +1,9 @@
+## 3.2.7
+
+* Added stub Persona.Inquiry.Theme to fix missing R.style issues.
+* Updated Android SDK to 2.12.10
+* Updated iOS SDK to 2.22.5
+
 ## 3.2.6
 
 * Updated Android SDK to 2.12.4
