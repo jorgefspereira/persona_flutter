@@ -1,3 +1,7 @@
+## 3.2.8
+
+* Fixed iOS SDK version
+
 ## 3.2.7
 
 * Added stub Persona.Inquiry.Theme to fix missing R.style issues.
