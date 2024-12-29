@@ -17,24 +17,28 @@ abstract class InquiryConfiguration {
 /// Base classe to template configuration objects
 class _BaseTemplateConfiguration extends InquiryConfiguration {
   _BaseTemplateConfiguration({
-    this.accountId,
     this.referenceId,
-    required this.environment,
-    required this.fields,
-    InquiryTheme? theme,
-  }) : super(theme: theme);
-
-  /// The account to associate this inquiry with. The account can be used to monitor user progress in newly created inquiries.
-  final String? accountId;
+    this.environmentId,
+    this.environment,
+    this.routingCountry,
+    this.fields = const {},
+    super.theme,
+  });
 
   /// The identifier can be used to monitor user progress in newly created inquiries.
   final String? referenceId;
 
+  /// The environment id on which to create inquiries.
+  final String? environmentId;
+
   /// The environment on which to create inquiries.
-  final InquiryEnvironment environment;
+  final InquiryEnvironment? environment;
 
   /// Any existing user data you want to attach to the inquiry.
   final Map<String, dynamic> fields;
+
+  /// Set the country to route requests to directly. Only set this if you have been instructed to do so by the Persona team.
+  final String? routingCountry;
 
   @override
   Map<String, dynamic> toJson() {
@@ -46,24 +50,27 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
 class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
   TemplateVersionConfiguration({
     required this.templateVersion,
-    String? accountId,
-    String? referenceId,
-    InquiryEnvironment environment = InquiryEnvironment.sandbox,
-    Map<String, dynamic> fields = const {},
-    InquiryTheme? theme,
-  }) : super(accountId: accountId, referenceId: referenceId, environment: environment, fields: fields, theme: theme);
+    super.referenceId,
+    super.environment,
+    super.environmentId,
+    super.fields,
+    super.theme,
+    super.routingCountry,
+  });
 
   /// An existing template version that determines how the flow is customized.
   final String templateVersion;
 
+  @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'templateVersion': templateVersion,
-      'accountId': accountId,
       'referenceId': referenceId,
-      'environment': environment.toString().split('.').last,
+      'environmentId': environmentId,
+      'environment': environment?.toString().split('.').last,
       'fields': fields,
       'theme': theme?.toJson(),
+      'routingCountry': routingCountry,
     };
   }
 }
@@ -72,24 +79,27 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
 class TemplateIdConfiguration extends _BaseTemplateConfiguration {
   TemplateIdConfiguration({
     required this.templateId,
-    String? accountId,
-    String? referenceId,
-    InquiryEnvironment environment = InquiryEnvironment.sandbox,
-    Map<String, dynamic> fields = const {},
-    InquiryTheme? theme,
-  }) : super(accountId: accountId, referenceId: referenceId, environment: environment, fields: fields, theme: theme);
+    super.referenceId,
+    super.environment,
+    super.environmentId,
+    super.fields,
+    super.theme,
+    super.routingCountry,
+  });
 
   /// An existing template id that determines how the flow is customized.
   final String templateId;
 
+  @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'templateId': templateId,
-      'accountId': accountId,
       'referenceId': referenceId,
-      'environment': environment.toString().split('.').last,
+      'environmentId': environmentId,
+      'environment': environment?.toString().split('.').last,
       'fields': fields,
       'theme': theme?.toJson(),
+      'routingCountry': routingCountry,
     };
   }
 }
@@ -99,8 +109,8 @@ class InquiryIdConfiguration extends InquiryConfiguration {
   InquiryIdConfiguration({
     required this.inquiryId,
     this.sessionToken,
-    InquiryTheme? theme,
-  }) : super(theme: theme);
+    super.theme,
+  });
 
   /// An existing inquiry.
   final String inquiryId;
@@ -108,6 +118,7 @@ class InquiryIdConfiguration extends InquiryConfiguration {
   /// Session token for resuming an Inquiry. The token must be generated on the server.
   final String? sessionToken;
 
+  @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'inquiryId': inquiryId,

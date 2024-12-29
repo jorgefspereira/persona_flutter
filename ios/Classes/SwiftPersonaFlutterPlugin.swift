@@ -11,7 +11,8 @@ private let kErrorKey = "error";
 
 public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, FlutterStreamHandler {
     var _eventSink: FlutterEventSink?
-    var inquiry: Inquiry?;
+    var _inquiry: Inquiry?
+    
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let methodChannel = FlutterMethodChannel(name: "persona_flutter", binaryMessenger: registrar.messenger())
@@ -24,105 +25,78 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
     
     // MARK: Method Channel
     
+    /// Description
+    /// - Parameters:
+    ///   - call: <#call description#>
+    ///   - result: <#result description#>
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-            case "init":
-                let arguments = call.arguments as! [String: Any]
+        case "init":
+            let arguments = call.arguments as! [String: Any]
+            
+            var theme: InquiryTheme?
+            var fields: [String: InquiryField]?
+            var referenceId: String? = arguments["referenceId"] as? String
+            var routingCountry: String? = arguments["routingCountry"] as? String
+            var environmentId: String? = arguments["environmentId"] as? String
+            var environment = arguments["environment"] as? String
+            var sessionToken = arguments["sessionToken"] as? String
+            
+            /// Theme
+            if let map = arguments["theme"] as? [String: Any] {
+                if let source = map["source"] as? String {
+                    let themeSource = themeSourceFromString(source)
+                    theme = themeFromMap(map, source: themeSource)
+                }
+            }
+            
+            /// Fields
+            if let value = arguments["fields"] as? [String: Any] {
+                fields = fieldsFromMap(value)
+            }
+            
+            if let inquiryId = arguments["inquiryId"] as? String {
                 
-                /// Theme
-                var theme: InquiryTheme?
+                var builder = Inquiry.from(inquiryId: inquiryId, delegate: self)
                 
-                if let map = arguments["theme"] as? [String: Any] {
-                    if let source = map["source"] as? String {
-                        let themeSource = themeSourceFromString(source)
-                        theme = themeFromMap(map, source: themeSource)
-                    }
-                }
-
-                /// Fields
-                var fields: [String: InquiryField]?
-            
-                if let value = arguments["fields"] as? [String: Any] {
-                    fields = fieldsFromMap(value)
-                }
-                    
-                /// Configuration
-                var config: InquiryConfiguration?
-            
-                if let inquiryId = arguments["inquiryId"] as? String {
-                    let sessionToken = arguments["sessionToken"] as? String
-                    config = InquiryConfiguration(inquiryId: inquiryId, sessionToken: sessionToken, theme: theme);
-                }
-                else {
+                builder = builder.sessionToken(sessionToken)
+                builder = builder.routingCountry(routingCountry)
+                builder = builder.theme(theme)
                 
-                    var environment: Environment?
+                _inquiry = builder.build()
+                
+            } else {
+                
+                var builder: InquiryTemplateBuilder?
+                
+                if let templateVersion = arguments["templateVersion"] as? String {
+                    builder = Inquiry.from(templateVersion: templateVersion, delegate: self)
                     
-                    // Environment
-                    if let env = arguments["environment"] as? String {
-                        environment = Environment.init(rawValue: env)
-                    }
-                    
-                    // Fields
-                    
-                    if let templateVersion = arguments["templateVersion"] as? String {
-                        if let accountId = arguments["accountId"] as? String {
-                            config = InquiryConfiguration(templateVersion: templateVersion,
-                                                          accountId: accountId,
-                                                          environment: environment,
-                                                          fields: fields,
-                                                          theme: theme)
-                        }
-                        else if let referenceId = arguments["referenceId"] as? String {
-                            config = InquiryConfiguration(templateVersion: templateVersion,
-                                                          referenceId: referenceId,
-                                                          environment: environment,
-                                                          fields: fields,
-                                                          theme: theme)
-                        }
-                        else {
-                            config = InquiryConfiguration(templateVersion: templateVersion,
-                                                          environment: environment,
-                                                          fields: fields,
-                                                          theme: theme)
-                        }
-                    }
-                    else if let templateId = arguments["templateId"] as? String {
-                        if let accountId = arguments["accountId"] as? String {
-                            config = InquiryConfiguration(templateId: templateId,
-                                                          accountId: accountId,
-                                                          environment: environment,
-                                                          fields: fields,
-                                                          theme: theme)
-                        }
-                        else if let referenceId = arguments["referenceId"] as? String {
-                            config = InquiryConfiguration(templateId: templateId,
-                                                          referenceId: referenceId,
-                                                          environment: environment,
-                                                          fields: fields,
-                                                          theme: theme)
-                        }
-                        else {
-                            config = InquiryConfiguration(templateId: templateId,
-                                                          environment: environment,
-                                                          fields: fields,
-                                                          theme: theme)
-                        }
-                    }
-                    
+                } else if let templateId = arguments["templateId"] as? String {
+                    builder = Inquiry.from(templateId: templateId, delegate: self)
                 }
+                
+                builder = builder?.referenceId(referenceId)
+                builder = builder?.routingCountry(routingCountry)
+                builder = builder?.environmentId(environmentId)
+                builder = builder?.fields(fields)
+                builder = builder?.theme(theme)
+                
+                if let envString = environment,
+                   let env = Environment(rawValue: envString) {
+                    builder = builder?.environment(env)
+                }
+                
+                _inquiry = builder?.build()
+            }
             
-                // Inquiry
-                if let value = config {
-                    inquiry = Inquiry.init(config: value, delegate: self)
-                }
+        case "start":
+            if let inquiry = _inquiry, let controller = UIApplication.shared.delegate?.window??.rootViewController {
+                inquiry.start(from: controller)
+            }
             
-            case "start":
-                if let value = inquiry,
-                   let controller = UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.rootViewController {
-                       value.start(from: controller)
-                }
-            default:
-                result(FlutterMethodNotImplemented)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     
@@ -146,9 +120,9 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         }
         
         let fieldsArray = mapFromFields(fields)
-        events([kTypeKey: "complete", kInquiryIdKey: inquiryId, kStatusKey: status, kFieldsKey: fieldsArray])
+        events([kTypeKey: "complete", kInquiryIdKey: inquiryId, kStatusKey: status, kFieldsKey: fieldsArray] as [String : Any])
     }
-
+    
     public func inquiryCanceled(inquiryId: String?, sessionToken: String?) {
         guard let events = _eventSink else {
             return
@@ -156,7 +130,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         
         events([kTypeKey: "canceled", kInquiryIdKey: inquiryId, kSessionTokenKey: sessionToken])
     }
-
+    
     public func inquiryError(_ error: Error) {
         guard let events = _eventSink else {
             return
@@ -164,33 +138,33 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         
         events([kTypeKey: "error", kErrorKey: error.localizedDescription])
     }
-
+    
     // MARK: Convert Functions
     
     func mapFromFields(_ fields: [String: InquiryField]) -> [String: Any] {
         var result : [String : Any] = [:]
-    
+        
         for (key, field) in fields {
             
             switch field {
-                case .bool(let value):
-                    result[key] = value
-                case .string(let value):
-                    result[key] = value
-                case .int(let value):
-                    result[key] = value
-                case .float(let value):
-                    result[key] = value
-                case .date(let value):
-                    if let aux = value {
-                        result[key] = dateFormatter().string(from: aux)
-                    }
-                case .datetime(let value):
-                    if let aux = value {
-                        result[key] = dateFormatter().string(from: aux)
-                    }
-                default:
-                    break
+            case .bool(let value):
+                result[key] = value
+            case .string(let value):
+                result[key] = value
+            case .int(let value):
+                result[key] = value
+            case .float(let value):
+                result[key] = value
+            case .date(let value):
+                if let aux = value {
+                    result[key] = dateFormatter().string(from: aux)
+                }
+            case .datetime(let value):
+                if let aux = value {
+                    result[key] = dateFormatter().string(from: aux)
+                }
+            default:
+                break
             }
         }
         
@@ -199,24 +173,24 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
     
     func fieldsFromMap(_ map: [String: Any]) -> [String: InquiryField] {
         var result : [String : InquiryField] = [:]
-    
+        
         for (key, value) in map {
             
             switch value {
-                case is Bool:
-                    result[key] = InquiryField.bool(value as? Bool)
-                case is String:
-                    result[key] = InquiryField.string(value as? String)
-                case is Int:
-                    result[key] = InquiryField.int(value as? Int)
-                case is Float:
-                    result[key] = InquiryField.float(value as? Float)
-                case is Date:
-                    if let dateString = value as? String {
-                        result[key] = InquiryField.date(dateFormatter().date(from: dateString))
-                    }
-                default:
-                    break
+            case is Bool:
+                result[key] = InquiryField.bool(value as? Bool)
+            case is String:
+                result[key] = InquiryField.string(value as? String)
+            case is Int:
+                result[key] = InquiryField.int(value as? Int)
+            case is Float:
+                result[key] = InquiryField.float(value as? Float)
+            case is Date:
+                if let dateString = value as? String {
+                    result[key] = InquiryField.date(dateFormatter().date(from: dateString))
+                }
+            default:
+                break
             }
         }
         
@@ -386,6 +360,11 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         if let buttonTextColor = map["buttonTextColor"] as? String {
             theme.buttonTextColor = UIColor.init(hex: buttonTextColor);
         }
+        if let buttonFontFamily = map["buttonFontFamily"] as? String {
+            if let buttonFont = UIFont(name: buttonFontFamily, size: map["buttonFontSize"] as? CGFloat ?? 18) {
+                theme.buttonFont = buttonFont;
+            }
+        }
         if let buttonDisabledTextColor = map["buttonDisabledTextColor"] as? String {
             theme.buttonDisabledTextColor = UIColor.init(hex: buttonDisabledTextColor);
         }
@@ -393,10 +372,10 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
             let buttonShadowAlpha = map["buttonShadowAlpha"] as? CGFloat;
             theme.buttonShadowColor = UIColor.init(hex: buttonShadowColor).withAlphaComponent(buttonShadowAlpha ?? 0.5);
         }
-
+        
         let buttonShadowWidth = map["buttonShadowWidth"] as? CGFloat;
         let buttonShadowHeight = map["buttonShadowHeight"] as? CGFloat;
-
+        
         theme.buttonShadowOffset = CGSize(width:buttonShadowWidth ?? 0, height:buttonShadowHeight ?? 0);
         
         if let buttonShadowRadius = map["buttonShadowRadius"] as? CGFloat {
@@ -530,5 +509,21 @@ extension UIColor {
         }
         
         self.init()
+    }
+}
+
+extension Environment {
+    public static func from(rawValue: String?) -> Environment {
+        // If nil, return default: production
+        guard let rawValue = rawValue else {
+            return .production
+        }
+        
+        // If garbage passed in and can't be converted to Environment, then return default: production
+        if let environment = Environment(rawValue: rawValue) {
+            return environment
+        } else {
+            return .production
+        }
     }
 }

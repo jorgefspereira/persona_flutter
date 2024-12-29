@@ -22,7 +22,8 @@ class InquiryComplete extends InquiryEvent {
     return InquiryComplete(
       inquiryId: json["inquiryId"],
       status: json["status"],
-      fields: (json['fields'] as Map).map((key, value) => MapEntry<String, dynamic>(key.toString(), value)),
+      fields: (json['fields'] as Map).map(
+          (key, value) => MapEntry<String, dynamic>(key.toString(), value)),
     );
   }
 }

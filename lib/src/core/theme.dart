@@ -58,8 +58,8 @@ class InquiryTheme {
     this.textFieldFontSize,
     this.textFieldPlaceholderFontFamily,
     this.textFieldPlaceholderFontSize,
-    this.pickerFontFamily,
-    this.pickerFontSize,
+    this.pickerTextFontFamily,
+    this.pickerTextFontSize,
     this.cameraInstructionsTextColor,
     this.cameraButtonAlternateBackgroundColor,
     this.cameraButtonAlternateTextColor,
@@ -72,8 +72,6 @@ class InquiryTheme {
     this.footnoteTextFontSize,
     this.formLabelTextFontFamily,
     this.formLabelTextFontSize,
-    this.pickerTextFontFamily,
-    this.pickerTextFontSize,
     this.footerBackgroundColor,
     this.footerBorderColor,
     this.footerBorderWidth,
@@ -163,10 +161,10 @@ class InquiryTheme {
   final double? textFieldPlaceholderFontSize;
 
   /// Picker font family
-  final String? pickerFontFamily;
+  final String? pickerTextFontFamily;
 
   /// Picker font size
-  final double? pickerFontSize;
+  final double? pickerTextFontSize;
 
   /// The text color for picker items.
   final Color? pickerTextColor;
@@ -276,12 +274,6 @@ class InquiryTheme {
   /// Form label font size
   final double? formLabelTextFontSize;
 
-  /// Picker font family
-  final String? pickerTextFontFamily;
-
-  /// Picker font size
-  final double? pickerTextFontSize;
-
   /// Footer background color
   final Color? footerBackgroundColor;
 
@@ -343,8 +335,8 @@ class InquiryTheme {
       'textFieldPlaceholderFontFamily': textFieldPlaceholderFontFamily,
       'textFieldFontSize': textFieldFontSize,
       'textFieldFontFamily': textFieldFontFamily,
-      'pickerFontSize': pickerFontSize,
-      'pickerFontFamily': pickerFontFamily,
+      'pickerTextFontSize': pickerTextFontSize,
+      'pickerTextFontFamily': pickerTextFontFamily,
       'cameraHintTextColor': _toHex(cameraHintTextColor),
       'cameraInstructionsTextColor': _toHex(cameraInstructionsTextColor),
       'cameraGuideCornersColor': _toHex(cameraGuideCornersColor),
@@ -352,15 +344,15 @@ class InquiryTheme {
       'cameraButtonTextColor': _toHex(cameraButtonTextColor),
       'cameraButtonBackgroundColor': _toHex(cameraButtonBackgroundColor),
       'cameraButtonAlternateTextColor': _toHex(cameraButtonAlternateTextColor),
-      'cameraButtonAlternateBackgroundColor': _toHex(cameraButtonAlternateBackgroundColor),
+      'cameraButtonAlternateBackgroundColor':
+          _toHex(cameraButtonAlternateBackgroundColor),
       'cancelButtonAlternateTextColor': _toHex(cancelButtonAlternateTextColor),
-      'cancelButtonAlternateBackgroundColor': _toHex(cancelButtonAlternateBackgroundColor),
+      'cancelButtonAlternateBackgroundColor':
+          _toHex(cancelButtonAlternateBackgroundColor),
       'footnoteTextFontFamily': footnoteTextFontFamily,
       'footnoteTextFontSize': footnoteTextFontSize,
       'formLabelTextFontFamily': formLabelTextFontFamily,
       'formLabelTextFontSize': formLabelTextFontSize,
-      'pickerTextFontFamily': pickerTextFontFamily,
-      'pickerTextFontSize': pickerTextFontSize,
       'footerBackgroundColor': _toHex(footerBackgroundColor),
       'footerBorderColor': _toHex(footerBorderColor),
       'footerBorderWidth': footerBorderWidth,
