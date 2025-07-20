@@ -1,3 +1,8 @@
+## 3.2.9
+
+* Updated Android SDK to 2.20.0
+* Updated iOS SDK to 2.28.1
+
 ## 3.2.8
 
 * Fixed iOS SDK version

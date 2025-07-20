@@ -1,17 +1,16 @@
 # Persona Inquiry for Flutter
 
 [![pub](https://img.shields.io/pub/v/persona_flutter.svg)](https://pub.dev/packages/persona_flutter)
-[![points](https://img.shields.io/pub/points/persona_flutter)](https://pub.dev/packages/persona_flutter)
-[![popularity](https://img.shields.io/pub/popularity/persona_flutter)](https://pub.dev/packages/persona_flutter)
 [![likes](https://img.shields.io/pub/likes/persona_flutter)](https://pub.dev/packages/persona_flutter)
+[![downloads](https://img.shields.io/pub/dm/persona_flutter)](https://pub.dev/packages/persona_flutter)
 [![donate](https://img.shields.io/badge/Buy%20me%20a%20beer-orange.svg)](https://www.buymeacoffee.com/jpereira)
 
 Native implementation of the [Persona Inquiry flow](https://docs.withpersona.com/docs) for Flutter.
 
 This plugin integrates the native v2 SDKs:
 
-- [Persona iOS v2 SDK](https://docs.withpersona.com/docs/android-sdk-v2-integration-guide)
-- [Persona Android v2 SDK](https://docs.withpersona.com/docs/ios-sdk-v2-integration-guide)
+- [Persona iOS v2 SDK](https://docs.withpersona.com/docs/ios-sdk-v2-integration-guide)
+- [Persona Android v2 SDK](https://docs.withpersona.com/docs/android-sdk-v2-integration-guide)
 
 Feel free to leave any feedback [here](https://github.com/jorgefspereira/persona_flutter/issues).
 
