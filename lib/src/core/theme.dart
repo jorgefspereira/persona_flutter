@@ -360,6 +360,8 @@ class InquiryTheme {
   }
 
   String? _toHex(Color? color) {
-    return color != null ? '#${color.value.toRadixString(16)}' : null;
+    return color != null
+        ? '#${color.toARGB32().toRadixString(16).padLeft(8, '0')}'
+        : null;
   }
 }

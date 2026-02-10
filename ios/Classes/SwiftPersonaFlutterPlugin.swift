@@ -9,6 +9,7 @@ private let kStatusKey = "status";
 private let kFieldsKey = "fields";
 private let kErrorKey = "error";
 
+@MainActor
 public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, FlutterStreamHandler {
     var _eventSink: FlutterEventSink?
     var _inquiry: Inquiry?
@@ -37,7 +38,6 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
             var theme: InquiryTheme?
             var fields: [String: InquiryField]?
             var referenceId: String? = arguments["referenceId"] as? String
-            var routingCountry: String? = arguments["routingCountry"] as? String
             var environmentId: String? = arguments["environmentId"] as? String
             var environment = arguments["environment"] as? String
             var sessionToken = arguments["sessionToken"] as? String
@@ -60,10 +60,15 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 
                 var builder = Inquiry.from(inquiryId: inquiryId, delegate: self)
                 
-                builder = builder.sessionToken(sessionToken)
-                builder = builder.routingCountry(routingCountry)
-                builder = builder.theme(theme)
-                builder = builder.locale(locale)
+                if let sessionToken = sessionToken {
+                    builder = builder.sessionToken(sessionToken)
+                }
+                if let theme = theme {
+                    builder = builder.theme(theme)
+                }
+                if let locale = locale {
+                    builder = builder.locale(locale)
+                }
                 
                 _inquiry = builder.build()
                 
@@ -78,12 +83,21 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                     builder = Inquiry.from(templateId: templateId, delegate: self)
                 }
                 
-                builder = builder?.referenceId(referenceId)
-                builder = builder?.routingCountry(routingCountry)
-                builder = builder?.environmentId(environmentId)
-                builder = builder?.fields(fields)
-                builder = builder?.theme(theme)
-                builder = builder?.locale(locale)
+                if let referenceId = referenceId {
+                    builder = builder?.referenceId(referenceId)
+                }
+                if let environmentId = environmentId {
+                    builder = builder?.environmentId(environmentId)
+                }
+                if let fields = fields {
+                    builder = builder?.fields(fields)
+                }
+                if let theme = theme {
+                    builder = builder?.theme(theme)
+                }
+                if let locale = locale {
+                    builder = builder?.locale(locale)
+                }
                 
                 if let envString = environment,
                    let env = Environment(rawValue: envString) {
@@ -508,10 +522,22 @@ extension UIColor {
                     self.init(red: r, green: g, blue: b, alpha: a)
                     return
                 }
+            } else if hexColor.count == 6 {
+                let scanner = Scanner(string: hexColor)
+                var hexNumber: UInt64 = 0
+                
+                if scanner.scanHexInt64(&hexNumber) {
+                    r = CGFloat((hexNumber & 0xff0000) >> 16) / 255
+                    g = CGFloat((hexNumber & 0x00ff00) >> 8) / 255
+                    b = CGFloat(hexNumber & 0x0000ff) / 255
+                    
+                    self.init(red: r, green: g, blue: b, alpha: 1.0)
+                    return
+                }
             }
         }
         
-        self.init()
+        self.init(red: 0, green: 0, blue: 0, alpha: 1)
     }
 }
 

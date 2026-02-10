@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:persona_flutter/persona_flutter.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   late InquiryConfiguration _configuration;
 
   late StreamSubscription<InquiryCanceled> _streamCanceled;
@@ -27,16 +29,6 @@ class _MyAppState extends State<MyApp> {
       templateId: "itmpl_Q6ymLRwKfY8PGEjqsCjhUUfu",
       environment: InquiryEnvironment.sandbox,
       // locale: "pt-BR",
-      // Client theming is deprecated and will be removed in the future.
-      theme: InquiryTheme(
-        source: InquiryThemeSource.client,
-        accentColor: Color(0xff22CB8E),
-        primaryColor: Color(0xff22CB8E),
-        buttonBackgroundColor: Color(0xff22CB8E),
-        darkPrimaryColor: Color(0xff167755),
-        buttonCornerRadius: 8,
-        textFieldCornerRadius: 0,
-      ),
     );
 
     _streamCanceled = PersonaInquiry.onCanceled.listen(_onCanceled);
@@ -53,24 +45,24 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onCanceled(InquiryCanceled event) {
-    print("InquiryCanceled");
-    print("- inquiryId: ${event.inquiryId}");
-    print("- sessionToken: ${event.sessionToken}");
+    debugPrint("InquiryCanceled");
+    debugPrint("- inquiryId: ${event.inquiryId}");
+    debugPrint("- sessionToken: ${event.sessionToken}");
   }
 
   void _onError(InquiryError event) {
-    print("InquiryError");
-    print("- error: ${event.error}");
+    debugPrint("InquiryError");
+    debugPrint("- error: ${event.error}");
   }
 
   void _onComplete(InquiryComplete event) {
-    print("InquiryComplete");
-    print("- inquiryId: ${event.inquiryId}");
-    print("- status: ${event.status}");
+    debugPrint("InquiryComplete");
+    debugPrint("- inquiryId: ${event.inquiryId}");
+    debugPrint("- status: ${event.status}");
 
-    print("- fields:");
+    debugPrint("- fields:");
     for (var key in event.fields.keys) {
-      print("-- key: $key, value: ${event.fields[key]}");
+      debugPrint("-- key: $key, value: ${event.fields[key]}");
     }
   }
 
@@ -86,7 +78,7 @@ class _MyAppState extends State<MyApp> {
                 PersonaInquiry.init(configuration: _configuration);
                 PersonaInquiry.start();
               },
-              child: Text("Start Inquiry"),
+              child: const Text("Start Inquiry"),
             ),
           ),
         ),
