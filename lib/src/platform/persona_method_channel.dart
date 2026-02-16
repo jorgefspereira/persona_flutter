@@ -9,7 +9,8 @@ class PersonaMethodChannel extends PersonaPlatformInterface {
   final MethodChannel _channel = const MethodChannel('persona_flutter');
 
   /// The event channel used to receive changes from the native platform.
-  final EventChannel _eventChannel = const EventChannel('persona_flutter/events');
+  final EventChannel _eventChannel =
+      const EventChannel('persona_flutter/events');
 
   /// A broadcast stream from the native platform
   Stream<InquiryEvent>? _stream;

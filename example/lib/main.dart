@@ -78,7 +78,8 @@ class MyAppState extends State<MyApp> {
     debugPrint("InquiryEventOccurred");
     debugPrint("- type: ${event.type}");
     if (event.inquiryId != null) debugPrint("- inquiryId: ${event.inquiryId}");
-    if (event.sessionToken != null) debugPrint("- sessionToken: ${event.sessionToken}");
+    if (event.sessionToken != null)
+      debugPrint("- sessionToken: ${event.sessionToken}");
     if (event.name != null) debugPrint("- name: ${event.name}");
     if (event.path != null) debugPrint("- path: ${event.path}");
   }
