@@ -16,7 +16,7 @@
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 
-    <style name="Persona.Inquiry.Theme" parent="@style/Base.Persona.Inquiry.Theme">
+    <style name="Persona.Inquiry2.Theme" parent="@style/Base.Persona.Inquiry2.Theme">
         <item name="colorPrimary">#22CB8E</item>
         <item name="colorAccent">#22CB8E</item>
         <item name="colorPrimaryDark">#167755</item>

@@ -91,10 +91,10 @@ This SDK collects a user’s [App-Set ID](https://developer.android.com/trainin
 
 #### Theming
 
-Using the `styles.xml` of your app, you can set colors, buttons and more to customize the Persona flow to your own style. Just extend the base Persona style `Base.Persona.Inquiry.Theme` and name it `Persona.Inquiry.Theme`.
+Using the `styles.xml` of your app, you can set colors, buttons and more to customize the Persona flow to your own style. Just extend the base Persona style `Base.Persona.Inquiry2.Theme` and name it `Persona.Inquiry2.Theme`.
 
 ```xml
-<style name="Persona.Inquiry.Theme" parent="@style/Base.Persona.Inquiry.Theme">
+<style name="Persona.Inquiry2.Theme" parent="@style/Base.Persona.Inquiry2.Theme">
     <item name="colorPrimary">#22CB8E</item>
     <item name="colorAccent">#22CB8E</item>
     <item name="colorPrimaryDark">#167755</item>
