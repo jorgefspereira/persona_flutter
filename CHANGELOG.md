@@ -6,6 +6,10 @@
 * Updated Kotlin to 2.1.0
 * Requires JDK 17+
 * Removed `routingCountry` parameter
+* Added dispose method
+* Implemented the InquiryCollectionDelegate protocol.
+* The init method now accepts and processes additional arguments: accountId, themeSetId, environmentId, styleVariant, disablePresentationAnimation, returnCollectedData.
+* Added the inquiryEventOccurred delegate method to forward granular inquiry events
 
 ## 3.2.10
 

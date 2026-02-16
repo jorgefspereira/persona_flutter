@@ -9,8 +9,7 @@ class PersonaMethodChannel extends PersonaPlatformInterface {
   final MethodChannel _channel = const MethodChannel('persona_flutter');
 
   /// The event channel used to receive changes from the native platform.
-  final EventChannel _eventChannel =
-      const EventChannel('persona_flutter/events');
+  final EventChannel _eventChannel = const EventChannel('persona_flutter/events');
 
   /// A broadcast stream from the native platform
   Stream<InquiryEvent>? _stream;
@@ -44,6 +43,8 @@ class PersonaMethodChannel extends PersonaPlatformInterface {
           return InquiryError.fromJson(event);
         case 'canceled':
           return InquiryCanceled.fromJson(event);
+        case 'event':
+          return InquiryEventOccurred.fromJson(event);
         default:
           throw MissingPluginException('Event was fired but has no handler');
       }

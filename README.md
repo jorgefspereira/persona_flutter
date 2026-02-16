@@ -24,10 +24,8 @@ Add `persona_flutter` as a [dependency in your pubspec.yaml file](https://flutte
 
 Version 4.0.0 includes several breaking changes:
 
-- **Native SDK updates:** Android SDK updated to 2.32.0, iOS SDK updated to 2.40.0.
-- **Build toolchain:** Requires AGP 8.9.1, Gradle 8.11.1, Kotlin 2.1.0, compileSdk 36, and **JDK 17+**.
+- **Toolchain Upgraded:** Requires AGP 8.9.1, Gradle 8.11.1, Kotlin 2.1.0, compileSdk 36, and **JDK 17+**.
 - **Removed `routingCountry` parameter:** The `routingCountry` option has been removed from all configuration classes (`TemplateIdConfiguration`, `TemplateVersionConfiguration`, `InquiryIdConfiguration`). If you were using this parameter, remove it from your configuration calls.
-- **Dart/Flutter SDK:** Requires Dart >=3.4.0 and Flutter >=3.10.0.
 
 ## iOS
 

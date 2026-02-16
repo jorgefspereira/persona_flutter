@@ -3,30 +3,28 @@ import 'package:persona_flutter/persona_flutter.dart';
 import '../platform/persona_platform_interface.dart';
 
 class PersonaInquiry {
-  static PersonaPlatformInterface get _platform =>
-      PersonaPlatformInterface.instance;
+  static PersonaPlatformInterface get _platform => PersonaPlatformInterface.instance;
 
   /// Called on a completed inquiry.
   /// - [inquiryId] a unique Persona-generated identifier for the inquiry
   /// - [status] result from the Inquiry flow
   /// - [fields] fields data extracted from the Inquiry flow
-  static Stream<InquiryComplete> get onComplete =>
-      _platform.onEvent.where((event) => event is InquiryComplete).cast();
+  static Stream<InquiryComplete> get onComplete => _platform.onEvent.where((event) => event is InquiryComplete).cast();
 
   /// Called when the individual cancels the inquiry.
   /// - [inquiryId] a unique Persona-generated identifier for the inquiry
   /// - [sessionToken] the session token used for this inquiry
-  static Stream<InquiryCanceled> get onCanceled =>
-      _platform.onEvent.where((event) => event is InquiryCanceled).cast();
+  static Stream<InquiryCanceled> get onCanceled => _platform.onEvent.where((event) => event is InquiryCanceled).cast();
 
   /// Called when there is a problem during the Inquiry flow.
   /// - [error] the reason why the Inquiry did not complete correctly
-  static Stream<InquiryError> get onError =>
-      _platform.onEvent.where((event) => event is InquiryError).cast();
+  static Stream<InquiryError> get onError => _platform.onEvent.where((event) => event is InquiryError).cast();
+
+  /// Called when a granular inquiry event occurs (e.g. start, page_change).
+  static Stream<InquiryEventOccurred> get onEvent => _platform.onEvent.where((event) => event is InquiryEventOccurred).cast();
 
   /// Creates a new Inquiry based on a [InquiryConfiguration]
-  static Future<void> init(
-      {required InquiryConfiguration configuration}) async {
+  static Future<void> init({required InquiryConfiguration configuration}) async {
     return _platform.init(configuration: configuration);
   }
 

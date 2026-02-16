@@ -6,6 +6,11 @@ abstract class InquiryConfiguration {
   InquiryConfiguration({
     this.theme,
     this.locale,
+    this.accountId,
+    this.themeSetId,
+    this.styleVariant,
+    this.disablePresentationAnimation,
+    this.returnCollectedData,
   });
 
   /// Inquiry themes control the look and feel of a given flow.
@@ -14,6 +19,21 @@ abstract class InquiryConfiguration {
 
   /// Override the device locale with desired language.
   final String? locale;
+
+  /// The account id to associate with the inquiry.
+  final String? accountId;
+
+  /// The theme set id to use for the inquiry.
+  final String? themeSetId;
+
+  /// The style variant to use for the inquiry.
+  final String? styleVariant;
+
+  /// Whether to disable the presentation animation when starting the inquiry.
+  final bool? disablePresentationAnimation;
+
+  /// Whether to return the collected data in the [InquiryComplete] event.
+  final bool? returnCollectedData;
 
   Map<String, dynamic> toJson();
 }
@@ -27,6 +47,11 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
     this.fields = const {},
     super.theme,
     super.locale,
+    super.accountId,
+    super.themeSetId,
+    super.styleVariant,
+    super.disablePresentationAnimation,
+    super.returnCollectedData,
   });
 
   /// The identifier can be used to monitor user progress in newly created inquiries.
@@ -54,9 +79,14 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
     super.referenceId,
     super.environment,
     super.environmentId,
+    super.accountId,
+    super.themeSetId,
     super.fields,
     super.theme,
     super.locale,
+    super.styleVariant,
+    super.disablePresentationAnimation,
+    super.returnCollectedData,
   });
 
   /// An existing template version that determines how the flow is customized.
@@ -68,10 +98,15 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
       'templateVersion': templateVersion,
       'referenceId': referenceId,
       'environmentId': environmentId,
+      'accountId': accountId,
+      'themeSetId': themeSetId,
       'environment': environment?.toString().split('.').last,
       'fields': fields,
       'theme': theme?.toJson(),
       'locale': locale,
+      'styleVariant': styleVariant,
+      'disablePresentationAnimation': disablePresentationAnimation,
+      'returnCollectedData': returnCollectedData,
     };
   }
 }
@@ -83,9 +118,14 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
     super.referenceId,
     super.environment,
     super.environmentId,
+    super.accountId,
+    super.themeSetId,
     super.fields,
     super.theme,
     super.locale,
+    super.styleVariant,
+    super.disablePresentationAnimation,
+    super.returnCollectedData,
   });
 
   /// An existing template id that determines how the flow is customized.
@@ -97,10 +137,15 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
       'templateId': templateId,
       'referenceId': referenceId,
       'environmentId': environmentId,
+      'accountId': accountId,
+      'themeSetId': themeSetId,
       'environment': environment?.toString().split('.').last,
       'fields': fields,
       'theme': theme?.toJson(),
       'locale': locale,
+      'styleVariant': styleVariant,
+      'disablePresentationAnimation': disablePresentationAnimation,
+      'returnCollectedData': returnCollectedData,
     };
   }
 }
@@ -112,6 +157,9 @@ class InquiryIdConfiguration extends InquiryConfiguration {
     this.sessionToken,
     super.theme,
     super.locale,
+    super.styleVariant,
+    super.disablePresentationAnimation,
+    super.returnCollectedData,
   });
 
   /// An existing inquiry.
@@ -127,6 +175,9 @@ class InquiryIdConfiguration extends InquiryConfiguration {
       'sessionToken': sessionToken,
       'theme': theme?.toJson(),
       'locale': locale,
+      'styleVariant': styleVariant,
+      'disablePresentationAnimation': disablePresentationAnimation,
+      'returnCollectedData': returnCollectedData,
     };
   }
 }

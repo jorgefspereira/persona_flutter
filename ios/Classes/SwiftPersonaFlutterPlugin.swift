@@ -8,11 +8,14 @@ private let kSessionTokenKey = "sessionToken";
 private let kStatusKey = "status";
 private let kFieldsKey = "fields";
 private let kErrorKey = "error";
+private let kCollectedDataKey = "collectedData";
 
 @MainActor
-public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, FlutterStreamHandler {
+public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, InquiryCollectionDelegate, FlutterStreamHandler {
     var _eventSink: FlutterEventSink?
     var _inquiry: Inquiry?
+    var _collectedData: InquiryData?
+    var _disablePresentationAnimation: Bool = false
     
     
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -35,13 +38,28 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         case "init":
             let arguments = call.arguments as! [String: Any]
             
+            // Core identifiers
+            let inquiryId = arguments["inquiryId"] as? String
+            let templateId = arguments["templateId"] as? String
+            let templateVersion = arguments["templateVersion"] as? String
+            
+            // Optional configuration
+            let referenceId = arguments["referenceId"] as? String
+            let accountId = arguments["accountId"] as? String
+            let environmentId = arguments["environmentId"] as? String
+            let environmentString = arguments["environment"] as? String
+            let sessionToken = arguments["sessionToken"] as? String
+            let themeSetId = arguments["themeSetId"] as? String
+            let locale = arguments["locale"] as? String
+            
+            // Flags
+            let returnCollectedData = arguments["returnCollectedData"] as? Bool ?? false
+            _disablePresentationAnimation = arguments["disablePresentationAnimation"] as? Bool ?? false
+            
+            // Models
             var theme: InquiryTheme?
             var fields: [String: InquiryField]?
-            var referenceId: String? = arguments["referenceId"] as? String
-            var environmentId: String? = arguments["environmentId"] as? String
-            var environment = arguments["environment"] as? String
-            var sessionToken = arguments["sessionToken"] as? String
-            var locale = arguments["locale"] as? String
+            var styleVariant: StyleVariant?
             
             /// Theme
             if let map = arguments["theme"] as? [String: Any] {
@@ -56,60 +74,74 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 fields = fieldsFromMap(value)
             }
             
-            if let inquiryId = arguments["inquiryId"] as? String {
+            /// Style Variant
+            if let variantString = arguments["styleVariant"] as? String {
+                styleVariant = StyleVariant(rawValue: variantString)
+            }
+            
+            var builder: InquiryTemplateBuilder?
+            var inquiryBuilder: InquiryBuilder?
+            
+            // Initialize the appropriate builder
+            if let inquiryId = inquiryId {
+                inquiryBuilder = Inquiry.from(inquiryId: inquiryId, delegate: self)
+            } else if let templateVersion = templateVersion {
+                builder = Inquiry.from(templateVersion: templateVersion, delegate: self)
+            } else if let templateId = templateId {
+                builder = Inquiry.from(templateId: templateId, delegate: self)
+            }
+            
+            // Apply common configurations to builder (template/version based)
+            if var builder = builder { // Use var to allow modification
+                if let referenceId = referenceId { builder = builder.referenceId(referenceId) }
+                if let accountId = accountId { builder = builder.accountId(accountId) }
+                if let environmentId = environmentId { builder = builder.environmentId(environmentId) }
+                if let fields = fields { builder = builder.fields(fields) }
+                if let theme = theme { builder = builder.theme(theme) }
+                if let themeSetId = themeSetId { builder = builder.themeSetId(themeSetId) }
+                if let locale = locale { builder = builder.locale(locale) }
+                if let styleVariant = styleVariant { builder = builder.styleVariant(styleVariant) }
                 
-                var builder = Inquiry.from(inquiryId: inquiryId, delegate: self)
+                if let envString = environmentString,
+                   let env = Environment(rawValue: envString) {
+                    builder = builder.environment(env)
+                }
                 
-                if let sessionToken = sessionToken {
-                    builder = builder.sessionToken(sessionToken)
+                if returnCollectedData {
+                    builder = builder.collectionDelegate(self)
                 }
-                if let theme = theme {
-                    builder = builder.theme(theme)
-                }
-                if let locale = locale {
-                    builder = builder.locale(locale)
-                }
+                
+                // Add conditional adapters here if needed (NFC, SNA, WebRTC)
                 
                 _inquiry = builder.build()
-                
-            } else {
-                
-                var builder: InquiryTemplateBuilder?
-                
-                if let templateVersion = arguments["templateVersion"] as? String {
-                    builder = Inquiry.from(templateVersion: templateVersion, delegate: self)
-                    
-                } else if let templateId = arguments["templateId"] as? String {
-                    builder = Inquiry.from(templateId: templateId, delegate: self)
-                }
-                
-                if let referenceId = referenceId {
-                    builder = builder?.referenceId(referenceId)
-                }
-                if let environmentId = environmentId {
-                    builder = builder?.environmentId(environmentId)
-                }
-                if let fields = fields {
-                    builder = builder?.fields(fields)
-                }
-                if let theme = theme {
-                    builder = builder?.theme(theme)
-                }
-                if let locale = locale {
-                    builder = builder?.locale(locale)
-                }
-                
-                if let envString = environment,
-                   let env = Environment(rawValue: envString) {
-                    builder = builder?.environment(env)
-                }
-                
-                _inquiry = builder?.build()
             }
+            
+            // Apply common configurations to inquiryBuilder (inquiryId based)
+            if var inquiryBuilder = inquiryBuilder { // Use var to allow modification
+                if let sessionToken = sessionToken { inquiryBuilder = inquiryBuilder.sessionToken(sessionToken) }
+                if let theme = theme { inquiryBuilder = inquiryBuilder.theme(theme) }
+                if let locale = locale { inquiryBuilder.locale(locale) }
+                if let styleVariant = styleVariant { inquiryBuilder = inquiryBuilder.styleVariant(styleVariant) }
+                
+                if returnCollectedData {
+                    inquiryBuilder = inquiryBuilder.collectionDelegate(self)
+                }
+                
+                // Add conditional adapters here if needed (NFC, SNA, WebRTC)
+                
+                _inquiry = inquiryBuilder.build()
+            }
+            
+            // Reset collected data
+            _collectedData = nil
+            
+            result(nil)
             
         case "start":
             if let inquiry = _inquiry, let controller = UIApplication.shared.delegate?.window??.rootViewController {
-                inquiry.start(from: controller)
+                inquiry.start(from: controller, animated: !_disablePresentationAnimation)
+            } else {
+                result(FlutterError(code: "not_initialized", message: "Inquiry not initialized", details: nil))
             }
             
         case "dispose":
@@ -147,7 +179,19 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         }
         
         let fieldsArray = mapFromFields(fields)
-        events([kTypeKey: "complete", kInquiryIdKey: inquiryId, kStatusKey: status, kFieldsKey: fieldsArray] as [String : Any])
+        
+        var eventData: [String: Any] = [
+            kTypeKey: "complete",
+            kInquiryIdKey: inquiryId,
+            kStatusKey: status,
+            kFieldsKey: fieldsArray
+        ]
+        
+        if let collectedData = _collectedData {
+            eventData[kCollectedDataKey] = collectedData.toDictionary()
+        }
+        
+        events(eventData)
     }
     
     public func inquiryCanceled(inquiryId: String?, sessionToken: String?) {
@@ -166,7 +210,51 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         events([kTypeKey: "error", kErrorKey: error.localizedDescription])
     }
     
+    public func inquiryEventOccurred(event: InquiryEvent) {
+        let canProcessEvent = switch event {
+        case .start, .pageChange:
+            true
+        @unknown default:
+            false
+        }
+        
+        guard canProcessEvent, let events = _eventSink else { return }
+        
+        events([
+            kTypeKey: "event",
+            "event": inquiryEventToDictionary(event: event)
+        ])
+    }
+    
+    // MARK: InquiryCollectionDelegate
+
+    public func collectionComplete(data: InquiryData) {
+        _collectedData = data
+    }
+    
     // MARK: Convert Functions
+    
+    func inquiryEventToDictionary(event: InquiryEvent) -> [String: String] {
+        switch event {
+            case .start(let value):
+                return [
+                    "type": "start",
+                    "inquiryId": value.inquiryId,
+                    "sessionToken": value.sessionToken,
+                ]
+            case .pageChange(let value):
+                return [
+                    "type": "page_change",
+                    "name": value.name,
+                    "path": value.path,
+                ]
+            @unknown default:
+                return [
+                    "type": "unknown",
+                    "value": "unknown"
+                ]
+        }
+    }
     
     func mapFromFields(_ fields: [String: InquiryField]) -> [String: Any] {
         var result : [String : Any] = [:]
@@ -564,5 +652,105 @@ extension Environment {
         } else {
             return .production
         }
+    }
+}
+
+extension StyleVariant {
+    public static func from(rawValue: String?) -> StyleVariant? {
+        guard let rawValue = rawValue else {
+            return nil
+        }
+        
+        if let styleVariant = StyleVariant(rawValue: rawValue) {
+            return styleVariant
+        } else {
+            return nil
+        }
+    }
+}
+
+extension InquiryData {
+    func toDictionary() -> [String: Any?] {
+        var inquiryData = [[String: Any?]]()
+        for data in self.stepData {
+            var currentStepData = [String: Any?]()
+
+            switch data {
+            case .ui(let uiData):
+                currentStepData["type"] = "UiStepData"
+                currentStepData["stepName"] = uiData.name
+                currentStepData["componentParams"] = uiData.componentData.reduce(into: [[String: Any?]]()) { partial, element in
+                    switch element {
+                    case .int(let key, let value):
+                        partial.append([key: value])
+                    case .bool(let key, let value):
+                        partial.append([key: value])
+                    case .string(let key, let value):
+                        partial.append([key: value])
+                    case .strings(let key, let value):
+                        partial.append([key: value])
+                    case .double(let key, let value):
+                        partial.append([key: value])
+                    case .address(let key, let value):
+                        partial.append([key: value])
+                    default:
+                        return
+                    }
+                }
+            case .selfie(let selfieData):
+                currentStepData["type"] = "SelfieStepData"
+                currentStepData["stepName"] = selfieData.name
+                if let centerPhoto = selfieData.centerPhoto {
+                    currentStepData["centerCapture"] = [
+                        "captureMethod": centerPhoto.captureMethod,
+                        "absoluteFilePath": centerPhoto.filePath
+                    ]
+                }
+
+                if let leftPhoto = selfieData.leftPhoto {
+                    currentStepData["leftCapture"] = [
+                        "captureMethod": leftPhoto.captureMethod,
+                        "absoluteFilePath": leftPhoto.filePath
+                    ]
+                }
+
+                if let rightPhoto = selfieData.rightPhoto {
+                    currentStepData["rightCapture"] = [
+                        "captureMethod": rightPhoto.captureMethod,
+                        "absoluteFilePath": rightPhoto.filePath
+                    ]
+                }
+
+            case .governmentId(let govIdData):
+                currentStepData["type"] = "GovernmentIdStepData"
+                currentStepData["stepName"] = govIdData.name
+
+                var captures = [[String: Any]]()
+                for file in govIdData.files {
+                    captures.append([
+                        "idClass": govIdData.idClass,
+                        "captureMethod": file.captureMethod,
+                        "side": file.page,
+                        "frames": file.frames.map {
+                            ["absoluteFilePath": $0.filePath]
+                        }
+                    ])
+                }
+                currentStepData["captures"] = captures
+            case .document(let docData):
+                currentStepData["type"] = "DocumentStepData"
+                currentStepData["stepName"] = docData.name
+
+                var documents = [[String: String]]()
+                for file in docData.files {
+                    documents.append(["absoluteFilePath": file.filePath])
+                }
+                currentStepData["documents"] = documents
+            default:
+                continue
+            }
+            inquiryData.append(currentStepData)
+        }
+        return ["stepData": inquiryData]
     }
 }

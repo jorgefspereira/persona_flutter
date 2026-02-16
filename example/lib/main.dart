@@ -20,6 +20,7 @@ class MyAppState extends State<MyApp> {
   late StreamSubscription<InquiryCanceled> _streamCanceled;
   late StreamSubscription<InquiryError> _streamError;
   late StreamSubscription<InquiryComplete> _streamComplete;
+  late StreamSubscription<InquiryEventOccurred> _streamEvent;
 
   @override
   void initState() {
@@ -28,12 +29,13 @@ class MyAppState extends State<MyApp> {
     _configuration = TemplateIdConfiguration(
       templateId: "itmpl_Q6ymLRwKfY8PGEjqsCjhUUfu",
       environment: InquiryEnvironment.sandbox,
-      // locale: "pt-BR",
+      returnCollectedData: true,
     );
 
     _streamCanceled = PersonaInquiry.onCanceled.listen(_onCanceled);
     _streamError = PersonaInquiry.onError.listen(_onError);
     _streamComplete = PersonaInquiry.onComplete.listen(_onComplete);
+    _streamEvent = PersonaInquiry.onEvent.listen(_onEvent);
   }
 
   @override
@@ -41,6 +43,7 @@ class MyAppState extends State<MyApp> {
     _streamCanceled.cancel();
     _streamError.cancel();
     _streamComplete.cancel();
+    _streamEvent.cancel();
     super.dispose();
   }
 
@@ -64,6 +67,20 @@ class MyAppState extends State<MyApp> {
     for (var key in event.fields.keys) {
       debugPrint("-- key: $key, value: ${event.fields[key]}");
     }
+
+    if (event.collectedData != null) {
+      debugPrint("- collectedData:");
+      debugPrint(event.collectedData.toString());
+    }
+  }
+
+  void _onEvent(InquiryEventOccurred event) {
+    debugPrint("InquiryEventOccurred");
+    debugPrint("- type: ${event.type}");
+    if (event.inquiryId != null) debugPrint("- inquiryId: ${event.inquiryId}");
+    if (event.sessionToken != null) debugPrint("- sessionToken: ${event.sessionToken}");
+    if (event.name != null) debugPrint("- name: ${event.name}");
+    if (event.path != null) debugPrint("- path: ${event.path}");
   }
 
   @override
@@ -73,7 +90,7 @@ class MyAppState extends State<MyApp> {
         body: Container(
           color: Colors.grey[200],
           child: Center(
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
@@ -81,9 +98,9 @@ class MyAppState extends State<MyApp> {
                     PersonaInquiry.init(configuration: _configuration);
                     PersonaInquiry.start();
                   },
-                  child: Text("Start Inquiry"),
+                  child: const Text("Start Inquiry"),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     PersonaInquiry.dispose();
@@ -92,7 +109,7 @@ class MyAppState extends State<MyApp> {
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                   ),
-                  child: Text("Dispose Inquiry"),
+                  child: const Text("Dispose Inquiry"),
                 ),
               ],
             ),

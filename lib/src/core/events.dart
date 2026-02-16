@@ -12,18 +12,62 @@ class InquiryComplete extends InquiryEvent {
   /// Fields data extracted from the Inquiry flow
   Map<String, dynamic> fields;
 
+  /// Collected data from the Inquiry flow
+  Map<String, dynamic>? collectedData;
+
   InquiryComplete({
     this.inquiryId,
     required this.status,
     required this.fields,
+    this.collectedData,
   });
 
   factory InquiryComplete.fromJson(dynamic json) {
     return InquiryComplete(
       inquiryId: json["inquiryId"],
       status: json["status"],
-      fields: (json['fields'] as Map).map(
-          (key, value) => MapEntry<String, dynamic>(key.toString(), value)),
+      fields: (json['fields'] as Map).map((key, value) => MapEntry<String, dynamic>(key.toString(), value)),
+      collectedData: json['collectedData'] != null ? Map<String, dynamic>.from(json['collectedData']) : null,
+    );
+  }
+}
+
+/// Inquiry event occurred (e.g. start, page_change)
+class InquiryEventOccurred extends InquiryEvent {
+  /// The type of event (e.g. "start", "page_change")
+  final String type;
+
+  /// The inquiry ID (for "start" events)
+  final String? inquiryId;
+
+  /// The session token (for "start" events)
+  final String? sessionToken;
+
+  /// The name of the page (for "page_change" events)
+  final String? name;
+
+  /// The path of the page (for "page_change" events)
+  final String? path;
+
+  InquiryEventOccurred({
+    required this.type,
+    this.inquiryId,
+    this.sessionToken,
+    this.name,
+    this.path,
+  });
+
+  factory InquiryEventOccurred.fromJson(dynamic json) {
+    if (json['event'] == null) {
+      return InquiryEventOccurred(type: 'unknown');
+    }
+    final eventData = Map<String, dynamic>.from(json['event']);
+    return InquiryEventOccurred(
+      type: eventData['type'] ?? 'unknown',
+      inquiryId: eventData['inquiryId'],
+      sessionToken: eventData['sessionToken'],
+      name: eventData['name'],
+      path: eventData['path'],
     );
   }
 }
