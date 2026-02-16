@@ -112,6 +112,16 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
                 inquiry.start(from: controller)
             }
             
+        case "dispose":
+            if let inquiry = _inquiry {
+                // Dismiss if currently presented
+                if let controller = UIApplication.shared.delegate?.window??.rootViewController {
+                    controller.dismiss(animated: true, completion: nil)
+                }
+                _inquiry = nil
+            }
+            result(nil)
+            
         default:
             result(FlutterMethodNotImplemented)
         }

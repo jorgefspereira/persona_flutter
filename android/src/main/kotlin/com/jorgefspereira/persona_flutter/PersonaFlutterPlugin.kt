@@ -154,6 +154,10 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                 inquiry.start(activity, requestCode)
                 result.success("Inquiry started with templateId")
             }
+            "dispose" -> {
+                inquiry = null
+                result.success(null)
+            }
             else -> result.notImplemented()
 
         }

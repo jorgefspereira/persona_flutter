@@ -73,12 +73,28 @@ class MyAppState extends State<MyApp> {
         body: Container(
           color: Colors.grey[200],
           child: Center(
-            child: ElevatedButton(
-              onPressed: () {
-                PersonaInquiry.init(configuration: _configuration);
-                PersonaInquiry.start();
-              },
-              child: const Text("Start Inquiry"),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    PersonaInquiry.init(configuration: _configuration);
+                    PersonaInquiry.start();
+                  },
+                  child: Text("Start Inquiry"),
+                ),
+                SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    PersonaInquiry.dispose();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: Text("Dispose Inquiry"),
+                ),
+              ],
             ),
           ),
         ),

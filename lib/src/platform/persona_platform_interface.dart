@@ -36,4 +36,9 @@ abstract class PersonaPlatformInterface extends PlatformInterface {
   Future<void> start() async {
     throw UnimplementedError('start() has not been implemented.');
   }
+
+  /// Disposes of the current inquiry and cleans up resources.
+  Future<void> dispose() async {
+    throw UnimplementedError('dispose() has not been implemented.');
+  }
 }

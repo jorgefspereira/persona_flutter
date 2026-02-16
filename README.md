@@ -14,7 +14,7 @@ This plugin integrates the native v2 SDKs:
 
 Feel free to leave any feedback [here](https://github.com/jorgefspereira/persona_flutter/issues).
 
-*Important: Persona stopped support for **v1** on December 31, 2022. If you need the older mobile integration, check the version **2.1.5** of this plugin or **v1** branch of this repository.*
+_Important: Persona stopped support for **v1** on December 31, 2022. If you need the older mobile integration, check the version **2.1.5** of this plugin or **v1** branch of this repository._
 
 ## Installation
 
@@ -36,29 +36,30 @@ Version 4.0.0 includes several breaking changes:
 - iOS 13.0 or later is required.
 - Update your `ios/Runner/Info.plist`:
 
-    ```xml
-    <key>NSCameraUsageDescription</key>
-    <string>This app requires access to the camera.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app requires access to the photo library.</string>
-    ```
-    
+  ```xml
+  <key>NSCameraUsageDescription</key>
+  <string>This app requires access to the camera.</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>This app requires access to the photo library.</string>
+  ```
+
 - **Optionally** if you need support for video, NFC verifications or GPS collections, add to your `ios/Runner/Info.plist`:
 
-    ```xml
-    <key>NSMicrophoneUsageDescription</key>
-    <string>This app requires access to the microphone.</string>
-    <key>NFCReaderUsageDescription</key>
-    <string>This app requires access to the NFC.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app requires access to the Location when in use.</string>
-    ```
+  ```xml
+  <key>NSMicrophoneUsageDescription</key>
+  <string>This app requires access to the microphone.</string>
+  <key>NFCReaderUsageDescription</key>
+  <string>This app requires access to the NFC.</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>This app requires access to the Location when in use.</string>
+  ```
 
 Note: Cocoapods 1.9.3 has a bug that prevents builds from selecting the correct architecture. See more details [here.](https://github.com/CocoaPods/CocoaPods/pull/9790) Please downgrade to 1.8.x or upgrade to 1.10.x
 
 #### Privacy
 
 The Persona SDK collects a user’s IDFV for fraud prevention purposes. In App Store Connect > Your App > App Privacy, if you haven’t already add in a “Device Identifier,” and fill out the questionnaire with the following answers:
+
 - Usage: App Functionality (covers fraud prevention)
 - Are the device IDs collected from this app linked to the user’s identity? Yes
 - Do you or your third-party partners use device IDs for tracking purposes? No
@@ -71,18 +72,18 @@ Be sure to also update your privacy manifest according to the features you are m
 
 - **JDK 17** or later is required.
 - Change the `minSdkVersion` to 21 (or higher) in your `android/app/build.gradle` file.
-      
 - Declare the following permissions:
-  
-    ```xml
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    ```
 
-#### Privacy 
+  ```xml
+  <uses-permission android:name="android.permission.CAMERA" />
+  <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  ```
+
+#### Privacy
 
 This SDK collects a user’s [App-Set ID](https://developer.android.com/training/articles/app-set-id) for Fraud Prevention purposes. When publishing to the Play Store, disclose the usage of Device Identifiers as follows:
+
 - Data Types: Device or other IDs
 - Collected: Yes
 - Shared: No
@@ -110,4 +111,69 @@ theme: InquiryTheme(source: InquiryThemeSource.client)
 ...
 ```
 
-*__Important:__ Client side theming is __deprecated__. Themes can be managed in the Dashboard with Persona's visual editor. See the detailed [tutorial](https://help.withpersona.com/articles/6SIHupp847yaEuVMucKAff/tutorial-configure-a-theme-with-flow-editor/) for more information.*
+_**Important:** Client side theming is **deprecated**. Themes can be managed in the Dashboard with Persona's visual editor. See the detailed [tutorial](https://help.withpersona.com/articles/6SIHupp847yaEuVMucKAff/tutorial-configure-a-theme-with-flow-editor/) for more information._
+
+## Usage
+
+### Starting an Inquiry
+
+To start a Persona inquiry flow, first initialize it with a configuration, then call start:
+
+```dart
+// Initialize the inquiry
+await PersonaInquiry.init(configuration: yourConfiguration);
+
+// Start the inquiry flow
+await PersonaInquiry.start();
+```
+
+### Disposing an Inquiry
+
+If you need to programmatically close the inquiry flow and clean up resources, use the `dispose()` method:
+
+```dart
+await PersonaInquiry.dispose();
+```
+
+This is useful when:
+
+- You need to cancel an ongoing inquiry from your app's logic
+- You want to clean up resources before starting a new inquiry
+- Your app needs to navigate away while an inquiry is in progress
+
+**Note:** On iOS, calling `dispose()` will dismiss the inquiry UI if it's currently presented. On Android, it will clear the inquiry reference.
+
+### Listening to Events
+
+Subscribe to inquiry events to handle completion, cancellation, and errors:
+
+```dart
+// Listen for successful completion
+PersonaInquiry.onComplete.listen((InquiryComplete event) {
+  print('Inquiry completed: ${event.inquiryId}');
+  print('Status: ${event.status}');
+  print('Fields: ${event.fields}');
+});
+
+// Listen for cancellation
+PersonaInquiry.onCanceled.listen((InquiryCanceled event) {
+  print('Inquiry canceled: ${event.inquiryId}');
+});
+
+// Listen for errors
+PersonaInquiry.onError.listen((InquiryError event) {
+  print('Inquiry error: ${event.error}');
+});
+```
+
+Remember to cancel your stream subscriptions when disposing your widget:
+
+```dart
+@override
+void dispose() {
+  _streamComplete.cancel();
+  _streamCanceled.cancel();
+  _streamError.cancel();
+  super.dispose();
+}
+```
