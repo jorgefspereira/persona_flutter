@@ -1,3 +1,12 @@
+## 4.0.0
+
+* Updated Android SDK to 2.32.0
+* Updated iOS SDK to 2.40.0
+* Updated AGP to 8.9.1, Gradle to 8.11.1, compileSdk to 36
+* Updated Kotlin to 2.1.0
+* Requires JDK 17+
+* Removed `routingCountry` parameter
+
 ## 3.2.10
 
 * Updated Android SDK to 2.21.0

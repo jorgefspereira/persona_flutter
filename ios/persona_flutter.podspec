@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'persona_flutter'
-  s.version          = '0.0.1'
+  s.version          = '4.0.0'
   s.summary          = 'Persona Inquiry SDK for Flutter'
   s.description      = <<-DESC
 Integrate the Persona Inquiry flow directly into your app with native SDK.
@@ -16,7 +16,7 @@ Integrate the Persona Inquiry flow directly into your app with native SDK.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'PersonaInquirySDK2', '2.29.2'
+  s.dependency 'PersonaInquirySDK2', '2.40.0'
   s.static_framework = true
   s.platform = :ios, '13.0'
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.

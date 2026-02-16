@@ -6,7 +6,6 @@ abstract class InquiryConfiguration {
   InquiryConfiguration({
     this.theme,
     this.locale,
-    this.routingCountry,
   });
 
   /// Inquiry themes control the look and feel of a given flow.
@@ -15,9 +14,6 @@ abstract class InquiryConfiguration {
 
   /// Override the device locale with desired language.
   final String? locale;
-
-  /// Set the country to route requests to directly. Only set this if you have been instructed to do so by the Persona team.
-  final String? routingCountry;
 
   Map<String, dynamic> toJson();
 }
@@ -31,7 +27,6 @@ class _BaseTemplateConfiguration extends InquiryConfiguration {
     this.fields = const {},
     super.theme,
     super.locale,
-    super.routingCountry,
   });
 
   /// The identifier can be used to monitor user progress in newly created inquiries.
@@ -61,7 +56,6 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
     super.environmentId,
     super.fields,
     super.theme,
-    super.routingCountry,
     super.locale,
   });
 
@@ -77,7 +71,6 @@ class TemplateVersionConfiguration extends _BaseTemplateConfiguration {
       'environment': environment?.toString().split('.').last,
       'fields': fields,
       'theme': theme?.toJson(),
-      'routingCountry': routingCountry,
       'locale': locale,
     };
   }
@@ -92,7 +85,6 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
     super.environmentId,
     super.fields,
     super.theme,
-    super.routingCountry,
     super.locale,
   });
 
@@ -108,7 +100,6 @@ class TemplateIdConfiguration extends _BaseTemplateConfiguration {
       'environment': environment?.toString().split('.').last,
       'fields': fields,
       'theme': theme?.toJson(),
-      'routingCountry': routingCountry,
       'locale': locale,
     };
   }

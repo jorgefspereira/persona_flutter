@@ -62,7 +62,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                 var environment: Environment? = null
                 var environmentId: String? = null
                 var theme: Map<String, Any?>? = null
-                var routingCountry: String? = null
                 var sessionToken: String? = null
                 var referenceId: String? = null
                 var locale: String? = null
@@ -83,10 +82,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                 (arguments["fields"] as?  Map<String, Any?>)?.let  {
                     fields = fieldsFromMap(it)
                 }
-                // Routing Country
-                (arguments["routingCountry"] as? String)?.let {
-                    routingCountry = it
-                }
                 // Session Token
                 (arguments["sessionToken"] as?  String)?.let  {
                     sessionToken = it
@@ -106,7 +101,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                     var builder: InquiryBuilder? = Inquiry.fromInquiry(it)
 
                     builder = builder?.sessionToken(sessionToken)
-                    builder = builder?.routingCountry(routingCountry)
                     builder = builder?.locale(locale)
 
                     theme?.let {
@@ -129,7 +123,6 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                         builder = Inquiry.fromTemplate(templateId)
                     }
 
-                    builder = builder?.routingCountry(routingCountry)
                     builder = builder?.fields(fields)
                     builder = builder?.referenceId(referenceId)
                     builder = builder?.locale(locale)
