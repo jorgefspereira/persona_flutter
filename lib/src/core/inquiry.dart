@@ -35,4 +35,10 @@ class PersonaInquiry {
   static Future<void> start() async {
     return _platform.start();
   }
+
+  /// Disposes of the current inquiry and cleans up resources.
+  /// Call this when you want to programmatically end the inquiry flow.
+  static Future<void> dispose() async {
+    return _platform.dispose();
+  }
 }

@@ -27,6 +27,12 @@ class PersonaMethodChannel extends PersonaPlatformInterface {
     return _channel.invokeMethod('start');
   }
 
+  /// Disposes of the current inquiry and cleans up resources.
+  @override
+  Future<void> dispose() async {
+    return _channel.invokeMethod('dispose');
+  }
+
   /// A broadcast stream from the native platform
   @override
   Stream<InquiryEvent> get onEvent {
