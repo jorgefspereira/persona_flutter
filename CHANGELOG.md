@@ -1,3 +1,7 @@
+## 4.0.1
+
+* fix: PlatformException (PlatformException(not_initialized, Inquiry not initialized, null, null)). Thanks @mistermoe
+
 ## 4.0.0
 
 * Updated Android SDK to 2.32.0
