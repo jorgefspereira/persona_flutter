@@ -211,23 +211,33 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
 
                     inquiry = builder?.build()
                 }
+
+                result.success(null)
             }
             "start" -> {
-                val activity = this.activity ?: return
-                val inquiry = this.inquiry ?: return
+                val inquiry = this.inquiry
+                if (inquiry == null) {
+                    result.error("not_initialized", "Inquiry not initialized", null)
+                    return
+                }
+                val activity = this.activity
+                if (activity == null) {
+                    result.error("no_activity", "Could not find activity", null)
+                    return
+                }
 
                 isResultSubmitted = false
-                
+
                 if (disablePresentationAnimation) {
-                     activity.overridePendingTransition(0, 0)
+                    activity.overridePendingTransition(0, 0)
                 }
 
                 inquiry.start(activity, requestCode)
-                
-                 if (disablePresentationAnimation) {
-                     activity.overridePendingTransition(0, 0)
+
+                if (disablePresentationAnimation) {
+                    activity.overridePendingTransition(0, 0)
                 }
-                
+
                 result.success("Inquiry started")
             }
             "dispose" -> {

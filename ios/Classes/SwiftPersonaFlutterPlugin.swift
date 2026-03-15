@@ -120,7 +120,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
             if var inquiryBuilder = inquiryBuilder { // Use var to allow modification
                 if let sessionToken = sessionToken { inquiryBuilder = inquiryBuilder.sessionToken(sessionToken) }
                 if let theme = theme { inquiryBuilder = inquiryBuilder.theme(theme) }
-                if let locale = locale { inquiryBuilder.locale(locale) }
+                if let locale = locale { inquiryBuilder = inquiryBuilder.locale(locale) }
                 if let styleVariant = styleVariant { inquiryBuilder = inquiryBuilder.styleVariant(styleVariant) }
                 
                 if returnCollectedData {
@@ -138,11 +138,16 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
             result(nil)
             
         case "start":
-            if let inquiry = _inquiry, let controller = UIApplication.shared.delegate?.window??.rootViewController {
-                inquiry.start(from: controller, animated: !_disablePresentationAnimation)
-            } else {
+            guard let inquiry = _inquiry else {
                 result(FlutterError(code: "not_initialized", message: "Inquiry not initialized", details: nil))
+                return
             }
+            guard let controller = Self.rootViewController else {
+                result(FlutterError(code: "no_view_controller", message: "Could not find root view controller", details: nil))
+                return
+            }
+            inquiry.start(from: controller, animated: !_disablePresentationAnimation)
+            result(nil)
             
         case "dispose":
             if let inquiry = _inquiry {
@@ -591,7 +596,21 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
     }
     
     // MARK: Helpers
-    
+
+    private static var rootViewController: UIViewController? {
+        if let controller = UIApplication.shared.delegate?.window??.rootViewController {
+            return controller
+        }
+        if #available(iOS 13.0, *) {
+            return UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }?
+                .rootViewController
+        }
+        return nil
+    }
+
     func dateFormatter() -> DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
