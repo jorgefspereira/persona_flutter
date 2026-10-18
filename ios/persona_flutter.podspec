@@ -13,8 +13,7 @@ Integrate the Persona Inquiry flow directly into your app with native SDK.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Jorge Pereira' => 'jorgefspereira@icloud.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'persona_flutter/Sources/persona_flutter/**/*.swift'
   s.dependency 'Flutter'
   s.dependency 'PersonaInquirySDK2', '2.41.1'
   s.static_framework = true

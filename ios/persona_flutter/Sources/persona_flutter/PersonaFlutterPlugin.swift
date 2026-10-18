@@ -11,7 +11,7 @@ private let kErrorKey = "error";
 private let kCollectedDataKey = "collectedData";
 
 @MainActor
-public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, InquiryCollectionDelegate, FlutterStreamHandler {
+public class PersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, InquiryCollectionDelegate, FlutterStreamHandler {
     var _eventSink: FlutterEventSink?
     var _inquiry: Inquiry?
     var _collectedData: InquiryData?
@@ -22,7 +22,7 @@ public class SwiftPersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate
         let methodChannel = FlutterMethodChannel(name: "persona_flutter", binaryMessenger: registrar.messenger())
         let eventChannel = FlutterEventChannel(name: "persona_flutter/events", binaryMessenger: registrar.messenger())
         
-        let instance = SwiftPersonaFlutterPlugin()
+        let instance = PersonaFlutterPlugin()
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
         eventChannel.setStreamHandler(instance)
     }
