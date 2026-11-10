@@ -618,6 +618,9 @@ public class PersonaFlutterPlugin: NSObject, FlutterPlugin, InquiryDelegate, Inq
     }
 }
 
+@available(*, deprecated, renamed: "PersonaFlutterPlugin")
+public typealias SwiftPersonaFlutterPlugin = PersonaFlutterPlugin
+
 extension UIColor {
     public convenience init(hex: String) {
         let r, g, b, a: CGFloat

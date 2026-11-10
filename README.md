@@ -20,6 +20,12 @@ _Important: Persona stopped support for **v1** on December 31, 2022. If you need
 
 Add `persona_flutter` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
+## Migrating from 4.0.x to 4.1.0
+
+Version 4.1.0 updates the Persona Inquiry SDKs to Android 2.48.0 and iOS 2.51.1. The Android SDK now requires a minimum SDK version of 23; update your app's `minSdk` if needed.
+
+If your Android app overrides the selfie processing animation, rename `raw/pi2_id_scan_loading` to `raw/pi2_selfie_processing`. Native page-change values also changed: Android reports the review page as `check` instead of `check-upload`, and iOS page paths now align more closely with Android and web.
+
 ## Migrating from 3.x to 4.0.0
 
 Version 4.0.0 includes several breaking changes:
@@ -70,7 +76,7 @@ Be sure to also update your privacy manifest according to the features you are m
 #### Requirements
 
 - **JDK 17** or later is required.
-- Change the `minSdkVersion` to 21 (or higher) in your `android/app/build.gradle` file.
+- Change the `minSdkVersion` to 23 (or higher) in your `android/app/build.gradle` file.
 - Declare the following permissions:
 
   ```xml

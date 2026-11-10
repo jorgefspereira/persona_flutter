@@ -13,8 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
-        // Keep in sync with the PersonaInquirySDK2 version in ios/persona_flutter.podspec.
-        .package(url: "https://github.com/persona-id/inquiry-ios-2.git", exact: "2.41.1")
+        .package(url: "https://github.com/persona-id/inquiry-ios-2.git", exact: "2.51.1")
     ],
     targets: [
         .target(

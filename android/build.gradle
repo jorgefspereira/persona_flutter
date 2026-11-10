@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
     }
 
     kotlinOptions {
@@ -56,5 +56,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "com.withpersona.sdk2:inquiry:2.32.0"
+    implementation "com.withpersona.sdk2:inquiry:2.48.0"
 }

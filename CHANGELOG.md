@@ -1,6 +1,11 @@
-## Unreleased
+## 4.1.0
 
-* iOS: add Swift Package Manager support alongside CocoaPods. The plugin now lives in `ios/persona_flutter/` (`Package.swift`, `Sources/persona_flutter/`), depends on the Persona SDK package (`persona-id/inquiry-ios-2`, exact 2.41.1 like the pod), and the Swift class is registered directly as `PersonaFlutterPlugin` (the Objective-C registrant was removed because SwiftPM targets cannot mix languages).
+* Updated Android SDK to 2.48.0
+* Updated iOS SDK to 2.51.1
+* Added Swift Package Manager support for iOS
+* Raised the minimum Android SDK version from 21 to 23
+* Android selfie processing resource overrides must use `pi2_selfie_processing` instead of `pi2_id_scan_loading`
+* Native page-change values now align more closely across Android, iOS, and web
 
 ## 4.0.1
 
