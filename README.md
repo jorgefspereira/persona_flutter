@@ -32,6 +32,7 @@ Version 4.0.0 includes several breaking changes:
 #### Requirements
 
 - iOS 13.0 or later is required.
+- Both Swift Package Manager and CocoaPods are supported. SwiftPM support needs a Flutter version that provides the `FlutterFramework` package (3.44 or later); with CocoaPods the plugin behaves as before. The Persona iOS SDK version is pinned identically in `ios/persona_flutter.podspec` and `ios/persona_flutter/Package.swift`.
 - Update your `ios/Runner/Info.plist`:
 
   ```xml
