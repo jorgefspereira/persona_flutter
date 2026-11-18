@@ -37,7 +37,10 @@ class InquiryComplete extends InquiryEvent {
 
 /// Inquiry event occurred (e.g. start, page_change)
 class InquiryEventOccurred extends InquiryEvent {
-  /// The type of event (e.g. "start", "page_change")
+  /// The type of event (e.g. "start", "page_change").
+  ///
+  /// Android also reports the experimental `video_capture_fallback` and
+  /// `slow_inquiry_start` types.
   final String type;
 
   /// The inquiry ID (for "start" events)

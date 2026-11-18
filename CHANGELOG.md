@@ -1,7 +1,8 @@
 ## 4.1.0
 
-* Updated Android SDK to 2.48.0
-* Updated iOS SDK to 2.51.1
+* Updated Android SDK to 2.56.0
+* Updated iOS SDK to 2.55.0
+* Android now forwards the experimental `video_capture_fallback` and `slow_inquiry_start` events through `onEvent`
 * Added Swift Package Manager support for iOS
 * Raised the minimum Android SDK version from 21 to 23
 * Android selfie processing resource overrides must use `pi2_selfie_processing` instead of `pi2_id_scan_loading`

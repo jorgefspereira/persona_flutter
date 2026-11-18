@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "inquiry-ios-2",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/persona-id/inquiry-ios-2.git",
+      "state" : {
+        "revision" : "c0086a22f9b23f27af1e34c0225237a212e46e37",
+        "version" : "2.55.0"
+      }
+    }
+  ],
+  "version" : 2
+}

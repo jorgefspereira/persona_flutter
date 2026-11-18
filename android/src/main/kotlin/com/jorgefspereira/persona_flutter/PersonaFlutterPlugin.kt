@@ -342,6 +342,16 @@ class PersonaFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Stre
                         map["path"] = event.path
                         map
                     }
+                    is InquiryEvent.MiscInquiryEvent.VideoCaptureFallback -> {
+                        val map = hashMapOf<String, Any?>()
+                        map["type"] = "video_capture_fallback"
+                        map
+                    }
+                    is InquiryEvent.MiscInquiryEvent.SlowInquiryStart -> {
+                        val map = hashMapOf<String, Any?>()
+                        map["type"] = "slow_inquiry_start"
+                        map
+                    }
                     else -> null
                 }
 

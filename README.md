@@ -22,7 +22,7 @@ Add `persona_flutter` as a [dependency in your pubspec.yaml file](https://flutte
 
 ## Migrating from 4.0.x to 4.1.0
 
-Version 4.1.0 updates the Persona Inquiry SDKs to Android 2.48.0 and iOS 2.51.1. The Android SDK now requires a minimum SDK version of 23; update your app's `minSdk` if needed.
+Version 4.1.0 updates the Persona Inquiry SDKs to Android 2.56.0 and iOS 2.55.0. The Android SDK now requires a minimum SDK version of 23; update your app's `minSdk` if needed.
 
 If your Android app overrides the selfie processing animation, rename `raw/pi2_id_scan_loading` to `raw/pi2_selfie_processing`. Native page-change values also changed: Android reports the review page as `check` instead of `check-upload`, and iOS page paths now align more closely with Android and web.
 
